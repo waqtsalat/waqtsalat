@@ -1,4 +1,4 @@
-# PRD — صلاتي Salati
+# PRD — وقت الصلاة WaqtSalat
 
 > PWA horaires de prière — Maroc uniquement — Rite Malikite — Méthode Habous
 
@@ -41,11 +41,12 @@ Application marocaine de horaires de prière. Un seul fichier HTML compilé, aut
 
 | Fichier | Rôle |
 |---------|------|
-| `index.html` | App complète, tout inliné |
-| `sw.js` | Service Worker (fichier séparé obligatoire par la spec navigateur) |
-| `manifest.webmanifest` | Manifest PWA (fichier séparé obligatoire par la spec PWA) |
+| `index.html` | **L'application complète** — tout inliné, rien d'autre nécessaire |
+| `sw.js` | Service Worker (séparé, contrainte navigateur) |
+| `manifest.webmanifest` | Manifest PWA (séparé, contrainte spec) |
 | `icons/` | Icônes installation (SVG ou PNG minimal) |
-| `test/` | Tests + dataset de référence (non livré à l'utilisateur) |
+
+C'est tout. Pas de package.json, pas de node_modules, pas de dossier dist. L'utilisateur reçoit ces fichiers et c'est fini.
 
 ---
 
@@ -72,9 +73,9 @@ Ministère des Habous et des Affaires Islamiques — Maroc. Non paramétrable.
 
 Optionnel (activable dans les paramètres) : milieu de la nuit, dernier tiers de la nuit.
 
-### Bibliothèque
+### Calcul astronomique
 
-**adhan** (npm) — algorithmes Jean Meeus, supporte la méthode Habous. Bundlée dans le HTML. Seuls les exports utilisés sont importés (tree shaking).
+Les algorithmes de calcul doivent être basés sur le livre "Astronomical Algorithms" de Jean Meeus (référence US Naval Observatory). La bibliothèque adhan ou équivalent peut être utilisée et doit être inlinée dans le HTML final.
 
 ### Timezone et DST
 
@@ -185,7 +186,7 @@ Dictionnaires intégrés dans le JS (pas de fichiers séparés). Fonction de tra
 
 ### Calcul
 
-Via adhan (déjà bundlée). Depuis le Maroc : ~80° à ~110° ESE selon la ville. Distance Maroc → Kaaba : ~4 000 à 5 500 km.
+Via la même bibliothèque que les prières. Depuis le Maroc : ~80° à ~110° ESE selon la ville. Distance Maroc → Kaaba : ~4 000 à 5 500 km.
 
 ### Mode 1 : Boussole 2D (toujours)
 
@@ -213,11 +214,11 @@ Responsive max 280px. S'adapte au thème clair/sombre. `role="img"` + `aria-labe
 
 ### Manifest
 
-Nom : "صلاتي — Salati". Mode `standalone`. Icônes toutes tailles (48→512) + maskable. Raccourcis : Horaires, Qibla. Design icône : motif géométrique islamique simple, monochrome.
+Nom : "وقت الصلاة — WaqtSalat". Mode `standalone`. Icônes toutes tailles (48→512) + maskable. Raccourcis : Horaires, Qibla. Design icône : motif géométrique islamique simple, monochrome.
 
 ### Service Worker
 
-Précache `index.html` + manifest + icônes. Cache-First pour tout. Mise à jour : bannière "Mise à jour disponible. Actualiser ?" — l'utilisateur choisit.
+Précache `index.html` + manifest + icônes. Cache-First pour tout.
 
 ### Prompt d'installation
 
@@ -231,7 +232,48 @@ Après premier chargement : mode avion → recharger → tout fonctionne → nav
 
 ---
 
-## 10. UI et Accessibilité
+## 10. Mise à Jour de la PWA (bonnes pratiques)
+
+La mise à jour est le point le plus délicat d'une PWA. L'application doit être maintenable dans le temps sans jamais bloquer l'utilisateur.
+
+### Versioning
+
+- Le Service Worker contient un numéro de version (ex: `const SW_VERSION = '1.2.0'`) incrémenté à chaque déploiement.
+- Le cache porte le nom de cette version (ex: `waqtsalat-v1.2.0`).
+- À l'activation du nouveau SW, les anciens caches sont supprimés.
+
+### Détection de mise à jour
+
+- Le navigateur vérifie automatiquement le SW à chaque navigation et environ toutes les 24h.
+- Le fichier `sw.js` doit être servi avec `Cache-Control: no-cache` pour que le navigateur détecte les changements.
+- L'app peut aussi appeler `registration.update()` manuellement (ex: au retour au premier plan).
+
+### Cycle de mise à jour sûr
+
+1. Le navigateur détecte que `sw.js` a changé (comparaison byte-à-byte).
+2. Le nouveau SW s'installe et entre en état **waiting** (il ne prend PAS le contrôle immédiatement).
+3. L'app détecte le SW en attente via l'événement `updatefound` + état `installed`.
+4. L'app affiche une **bannière discrète** : "Mise à jour disponible. Actualiser ?"
+5. L'utilisateur clique → l'app envoie un message `SKIP_WAITING` au nouveau SW.
+6. Le nouveau SW appelle `self.skipWaiting()` → il prend le contrôle.
+7. L'app écoute `controllerchange` → `window.location.reload()`.
+8. La page se recharge avec les nouveaux fichiers du nouveau cache.
+
+### Règles critiques
+
+- **Jamais de `skipWaiting()` automatique dans le `install`** — cela remplacerait le SW pendant que l'utilisateur est en train d'utiliser l'app, causant un état incohérent (vieux HTML + nouveau SW).
+- **Toujours demander le consentement** de l'utilisateur avant d'activer la mise à jour.
+- **Versionner le cache** — chaque version du SW utilise un nom de cache différent et nettoie les anciens à l'activation.
+- **Ne jamais supprimer le fichier `sw.js`** — si le fichier disparaît ou change d'URL, le navigateur ne pourra pas retirer l'ancien SW de ses clients.
+- **Tester le scénario** : déployer une v2 → vérifier que la bannière s'affiche → cliquer → vérifier que la v2 est active → vérifier que le vieux cache est supprimé.
+
+### Gestion du SW en attente au rechargement
+
+Si l'utilisateur a rejeté la bannière de mise à jour puis recharge la page, le nouveau SW est toujours en état waiting. L'app doit le détecter au chargement (`registration.waiting`) et réafficher la bannière.
+
+---
+
+## 11. UI et Accessibilité
 
 ### Principes
 
@@ -285,61 +327,63 @@ Arc en cours mis en évidence. Heure digitale optionnelle au centre.
 
 ---
 
-## 11. Compilation
+## 12. Compilation
 
-### Build
+### Résultat final
 
-Vite + `vite-plugin-singlefile`. Développement en fichiers séparés (TypeScript, CSS, SVG). Build final : tout inliné dans `index.html`.
+Un seul fichier `index.html` contenant TOUT : HTML, CSS dans `<style>`, JavaScript dans `<script>`, SVG inline, données des villes, traductions. Minifié. Aucun fichier externe référencé depuis le HTML.
 
-### Optimisations
+Claude Code choisit les outils de build. Le PRD ne dicte pas la chaîne d'outils — uniquement le résultat.
 
-- JS : tree shaking adhan, Terser 2 passes, suppression console/debugger, cible ES2020+
-- CSS : minification, variables CSS thème, pas de préfixes inutiles
-- SVG : SVGO (suppression métadonnées, simplification paths)
-- HTML : minifié
-- Calculs lourds : Web Worker inliné via Blob URL
+### Exigences sur le résultat
+
+- Tout le JS minifié, sans console.log ni debugger
+- Tout le CSS minifié
+- SVG optimisés (pas de métadonnées inutiles)
+- Aucune requête réseau dans le code (pas de CDN, pas de font externe, pas d'API)
+- Calculs lourds dans un Web Worker si nécessaire (inliné via Blob URL)
 
 ### Compression
 
-Brotli (prioritaire) + Gzip. Pré-génération `.br` et `.gz` possible.
+Le fichier doit être < 100 KB en gzip. Brotli souhaité si l'hébergement le permet.
 
 ---
 
-## 12. Stockage
+## 13. Stockage
 
 ### Principes
 
-Aucun cookie. Aucune requête réseau sortante avec des données. Aucun analytics. Tout en localStorage, préfixe `salat-`.
+Aucun cookie. Aucune requête réseau sortante avec des données. Aucun analytics. Tout en localStorage, préfixe `waqt-`.
 
 ### Clés
 
 | Clé | Contenu | Défaut |
 |-----|---------|--------|
-| `salat-locale` | ar, fr, en | Détection → ar |
-| `salat-theme` | light, dark, system | system |
-| `salat-position` | {lat, lng, cityName, source, timestamp} | null → setup |
-| `salat-adjustments` | {fajr, dhuhr, asr, maghrib, isha} en minutes | Tous 0 |
-| `salat-notifications` | Config par prière (on/off, pré-notif) | Toutes activées |
-| `salat-dnd` | NPD on/off, plage, exemptions | Désactivé |
-| `salat-installed` | Booléen | false |
-| `salat-install-dismissed` | Timestamp | null |
-| `salat-onboarded` | Booléen | false |
+| `waqt-locale` | ar, fr, en | Détection → ar |
+| `waqt-theme` | light, dark, system | system |
+| `waqt-position` | {lat, lng, cityName, source, timestamp} | null → setup |
+| `waqt-adjustments` | {fajr, dhuhr, asr, maghrib, isha} en minutes | Tous 0 |
+| `waqt-notifications` | Config par prière (on/off, pré-notif) | Toutes activées |
+| `waqt-dnd` | NPD on/off, plage, exemptions | Désactivé |
+| `waqt-installed` | Booléen | false |
+| `waqt-install-dismissed` | Timestamp | null |
+| `waqt-onboarded` | Booléen | false |
 
 ### Export / Import / Reset
 
-**Export** : bouton → JSON téléchargé via Blob + `<a download>`, fichier `salati-config-YYYY-MM-DD.json`.
+**Export** : bouton → JSON téléchargé via Blob + `<a download>`, fichier `waqtsalat-config-YYYY-MM-DD.json`.
 
 **Import** : sélecteur fichier → validation JSON → confirmation → remplacement → rechargement.
 
-**Reset** : confirmation → efface toutes clés `salat-*` → retour à l'onboarding.
+**Reset** : confirmation → efface toutes clés `waqt-*` → retour à l'onboarding.
 
 ### Onboarding
 
-Au premier lancement : choix langue → choix ville (GPS ou liste) → proposition notifications → proposition installation → `salat-onboarded` = true.
+Au premier lancement : choix langue → choix ville (GPS ou liste) → proposition notifications → proposition installation → `waqt-onboarded` = true.
 
 ---
 
-## 13. TDD et Dataset
+## 14. TDD et Dataset
 
 ### Cycle
 
@@ -347,7 +391,7 @@ RED (test échoue) → GREEN (code minimal) → REFACTOR. Aucune fonction publiq
 
 ### Outils
 
-Vitest (unitaire), Testing Library (composants), Playwright (E2E), c8 (couverture).
+Claude Code choisit le framework de test. Exigences : tests unitaires, tests de composants, tests E2E (scénario offline), mesure de couverture.
 
 ### Couverture
 
@@ -362,27 +406,49 @@ Vitest (unitaire), Testing Library (composants), Playwright (E2E), c8 (couvertur
 | UI | 80% |
 | **Global** | **85%** |
 
-### Dataset de référence
+### Dataset de référence — SOURCES OFFICIELLES
 
-Claude Code génère un JSON : 12 villes marocaines × 20+ dates × 6 prières. Sert de golden master (tolérance ±1 min).
+Le dataset de test DOIT être généré à partir de données officielles ou de référence, PAS uniquement à partir de calculs internes.
 
-**Villes** : Rabat, Casablanca, Fès, Marrakech, Agadir, Tanger, Oujda, Laâyoune, Dakhla, Ifrane, Errachidia, Nador.
+#### Source 1 : API Al Adhan (RECOMMANDÉE — REST, JSON, gratuite, sans clé)
 
-**Dates par ville** : 1er de chaque mois (12), solstices (2), équinoxes (2), jours de changement DST, estimation début/fin Ramadan. Total ≥ 20 dates par ville.
+L'API `aladhan.com` supporte nativement la méthode **MOROCCO (id=21)** : Fajr 19°, Isha 17°.
 
-**Format** : ville, date, 6 horaires en HH:mm (Africa/Casablanca).
+Endpoints :
+- Horaires du jour : `https://api.aladhan.com/v1/timingsByCity?city=Rabat&country=Morocco&method=21`
+- Calendrier d'un mois : `https://api.aladhan.com/v1/calendarByCity/{year}/{month}?city=Rabat&country=Morocco&method=21`
+- Liste des méthodes : `https://api.aladhan.com/v1/methods` → méthode `MOROCCO` id=21
 
-**Test** : recalculer → comparer → tolérance ±1 min → échec si déviation.
+Pour chaque ville, remplacer `city=Rabat` par le nom de la ville. On peut aussi utiliser les coordonnées GPS directement : `https://api.aladhan.com/v1/timings/{timestamp}?latitude=34.02&longitude=-6.84&method=21`
+
+#### Source 2 : API Fondation Mohammed VI
+
+`https://apisearch.hadithm6.com/api/prieres/ville/{id}` — liée à la Fondation Mohammed VI du Hadith. Retourne les horaires par ville avec les mêmes données que habous.gov.ma.
+
+#### Source 3 : Site officiel Habous (scraping)
+
+`https://habous.gov.ma/prieres/horaire_hijri_2.php?ville={id}` — page HTML officielle du Ministère des Habous. Nécessite du scraping (pas de JSON natif). IDs connus : Rabat=1, Casablanca=58, Fès=81, Meknès=99, Marrakech=104, Agadir=117, Tanger=14, Oujda=31.
+
+Un wrapper API non-officiel existe : `habous-prayer-times-api.onrender.com` (free tier, peut être lent au démarrage).
+
+#### Processus de génération du dataset
+
+1. Appeler l'API Al Adhan (source 1, la plus fiable) pour chaque ville × chaque mois
+2. Vérifier par échantillonnage avec la source 2 ou 3
+3. Stocker en JSON : ville, date, 6 horaires (Fajr, Chourouk, Dhuhr, Asr, Maghrib, Isha)
+4. Couvrir au minimum 8 villes × 12 mois
+5. Ce JSON devient le **golden master** : les horaires calculés par l'app sont comparés à ces données
+6. Tolérance : **±1 minute**. Au-delà → le test échoue.
 
 ---
 
-## 14. Sprints
+## 15. Sprints
 
 | Sprint | Contenu |
 |--------|---------|
-| 1 | Setup Vite/TS/Vitest. Calcul prières Habous + tests. Timezone Maroc + DST + tests. Génération dataset. |
+| 1 | Calcul prières Habous + tests. Timezone Maroc + DST + tests. Génération dataset via API Al Adhan (méthode MOROCCO id=21). |
 | 2 | UI horaires. Horloge analogique + arcs. Countdown. Thème clair/sombre. Accessibilité ARIA. |
-| 3 | Service Worker + cache. Manifest + icônes SVG. Prompt installation. Vérification offline. |
+| 3 | Service Worker + cache versionné. Manifest + icônes SVG. Prompt installation. Cycle de mise à jour sûr. Vérification offline. |
 | 4 | Permission notifications. Scheduling local. NPD + exemptions. |
 | 5 | Trilinguisme AR/FR/EN. RTL. Boussole Qibla 2D SVG. Vue AR si capteurs. |
-| 6 | Inlining single-file. Minification. Audit Lighthouse. Tests E2E. |
+| 6 | Compilation single-file HTML. Minification. Audit Lighthouse. Tests E2E. |
