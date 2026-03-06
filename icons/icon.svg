@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#1a8d5f"/>
+  <g transform="translate(256,256)">
+    <!-- Outer circle -->
+    <circle r="180" fill="none" stroke="#fff" stroke-width="8"/>
+    <!-- Inner geometric pattern (8-pointed star) -->
+    <polygon points="0,-140 36,-36 140,0 36,36 0,140 -36,36 -140,0 -36,-36" fill="none" stroke="#fff" stroke-width="4" opacity="0.6"/>
+    <polygon points="0,-140 36,-36 140,0 36,36 0,140 -36,36 -140,0 -36,-36" fill="none" stroke="#fff" stroke-width="4" opacity="0.6" transform="rotate(45)"/>
+    <!-- Moon crescent -->
+    <circle cx="0" cy="-40" r="50" fill="#fff"/>
+    <circle cx="15" cy="-50" r="42" fill="#1a8d5f"/>
+    <!-- Dot (star) -->
+    <circle cx="-30" cy="-70" r="6" fill="#fff"/>
+  </g>
+</svg>
