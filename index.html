@@ -459,6 +459,9 @@ nav.bottom-bar button:focus-visible{
     <button class="btn-action" id="btn-import"></button>
     <button class="btn-action btn-danger" id="btn-reset"></button>
   </div>
+  <div class="settings-section">
+    <button class="btn-action btn-danger" id="btn-hard-refresh"></button>
+  </div>
   <input type="file" id="import-file" accept=".json" style="display:none">
 </section>
 
@@ -553,6 +556,7 @@ next:'التالي',done:'تم',north:'ش',south:'ج',east:'شر',west:'غ',
 enableAR:'الواقع المعزز',arNotSupported:'جهازك لا يدعم الواقع المعزز',arNeedsCompass:'يجب تفعيل البوصلة أولاً',exitAR:'إغلاق',
 installApp:'تثبيت التطبيق',installDesc:'ثبّت التطبيق للوصول السريع والعمل بدون إنترنت',install:'تثبيت',
 notifBlocked:'الإشعارات محظورة — فعّلها من إعدادات المتصفح لتلقي تنبيهات الصلاة',
+hardRefresh:'تحديث شامل',hardRefreshConfirm:'سيتم مسح جميع البيانات المخزنة وإعادة تحميل التطبيق. هل تريد المتابعة؟',hardRefreshing:'جارٍ التحديث…',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -574,6 +578,7 @@ north:'N',south:'S',east:'E',west:'O',
 enableAR:'Réalité augmentée',arNotSupported:'Votre appareil ne prend pas en charge la RA',arNeedsCompass:'Activez d\'abord la boussole',exitAR:'Fermer',
 installApp:'Installer l\'application',installDesc:'Installez l\'app pour un accès rapide et hors ligne',install:'Installer',
 notifBlocked:'Notifications bloquées — activez-les dans les paramètres du navigateur pour les rappels de prière',
+hardRefresh:'Actualisation complète',hardRefreshConfirm:'Toutes les données en cache seront supprimées et l\'application sera rechargée. Continuer ?',hardRefreshing:'Actualisation…',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -595,6 +600,7 @@ north:'N',south:'S',east:'E',west:'W',
 enableAR:'Augmented Reality',arNotSupported:'Your device does not support AR',arNeedsCompass:'Enable the compass first',exitAR:'Close',
 installApp:'Install App',installDesc:'Install the app for quick access and offline use',install:'Install',
 notifBlocked:'Notifications blocked — enable them in browser settings to receive prayer reminders',
+hardRefresh:'Hard Refresh',hardRefreshConfirm:'All cached data will be cleared and the app will reload. Continue?',hardRefreshing:'Refreshing…',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -1114,6 +1120,7 @@ function renderSettings(){
   $('btn-export').textContent=t('exportConfig');
   $('btn-import').textContent=t('importConfig');
   $('btn-reset').textContent=t('resetConfig');
+  $('btn-hard-refresh').textContent=t('hardRefresh');
 }
 
 function populateCitySelect(sel){
@@ -1217,6 +1224,9 @@ function setupEvents(){
     keys.forEach(k=>localStorage.removeItem(k));
     location.reload();
   });
+
+  // Hard refresh
+  $('btn-hard-refresh').addEventListener('click',hardRefresh);
 
   // Visibility change: recalculate
   document.addEventListener('visibilitychange',()=>{
@@ -1390,6 +1400,38 @@ function checkNotifBlocked(){
   }else{
     bar.classList.remove('show');
   }
+}
+
+// ─── Hard Refresh ────────────────────────────────────────────
+async function hardRefresh(){
+  if(!confirm(t('hardRefreshConfirm')))return;
+  const btn=$('btn-hard-refresh');
+  btn.disabled=true;
+  btn.textContent=t('hardRefreshing');
+
+  // 1. Delete all Cache Storage entries
+  if('caches' in window){
+    const keys=await caches.keys();
+    await Promise.all(keys.map(k=>caches.delete(k)));
+  }
+
+  // 2. Unregister all service workers and purge their caches
+  if('serviceWorker' in navigator){
+    const registrations=await navigator.serviceWorker.getRegistrations();
+    for(const reg of registrations){
+      if(reg.active)reg.active.postMessage({type:'PURGE_CACHES'});
+      await reg.unregister();
+    }
+  }
+
+  // 3. Clear all localStorage
+  localStorage.clear();
+
+  // 4. Clear all sessionStorage
+  sessionStorage.clear();
+
+  // 5. Force reload from network (bypass browser cache)
+  location.reload(true);
 }
 
 // ─── Service Worker ───────────────────────────────────────────
