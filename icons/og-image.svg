@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d5a2e"/>
+      <stop offset="100%" stop-color="#082816"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a8d5f" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1a8d5f" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle geometric pattern -->
+  <g opacity="0.06" stroke="#fff" stroke-width="1" fill="none">
+    <circle cx="600" cy="315" r="260"/>
+    <circle cx="600" cy="315" r="200"/>
+    <polygon points="600,55 740,175 740,455 600,575 460,455 460,175" transform="rotate(0,600,315)"/>
+    <polygon points="600,55 740,175 740,455 600,575 460,455 460,175" transform="rotate(45,600,315)"/>
+  </g>
+
+  <!-- App icon (centered, above text) -->
+  <g transform="translate(600,220)">
+    <circle r="90" fill="none" stroke="#fff" stroke-width="4" opacity="0.9"/>
+    <!-- 8-pointed star -->
+    <polygon points="0,-70 18,-18 70,0 18,18 0,70 -18,18 -70,0 -18,-18" fill="none" stroke="#fff" stroke-width="2" opacity="0.4"/>
+    <polygon points="0,-70 18,-18 70,0 18,18 0,70 -18,18 -70,0 -18,-18" fill="none" stroke="#fff" stroke-width="2" opacity="0.4" transform="rotate(45)"/>
+    <!-- Moon crescent -->
+    <circle cx="0" cy="-20" r="25" fill="#fff"/>
+    <circle cx="8" cy="-25" r="21" fill="#0d5a2e"/>
+    <!-- Star dot -->
+    <circle cx="-15" cy="-35" r="3" fill="#fff"/>
+  </g>
+
+  <!-- App name -->
+  <text x="600" y="370" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="52" font-weight="700" fill="#fff" letter-spacing="2">WaqtSalat</text>
+
+  <!-- Arabic name -->
+  <text x="600" y="420" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="36" fill="rgba(255,255,255,0.7)" letter-spacing="1">وقت الصلاة</text>
+
+  <!-- Tagline -->
+  <text x="600" y="480" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="22" fill="rgba(255,255,255,0.5)">Prayer Times for Morocco</text>
+
+  <!-- Bottom accent line -->
+  <rect x="500" y="510" width="200" height="3" rx="1.5" fill="#c9a84c" opacity="0.7"/>
+
+  <!-- Morocco flag colors accent -->
+  <rect x="0" y="625" width="1200" height="5" fill="#c9a84c" opacity="0.4"/>
+</svg>
