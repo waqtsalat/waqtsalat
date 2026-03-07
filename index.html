@@ -615,18 +615,54 @@ nav.bottom-bar button:focus-visible{
 }
 .btn-install:hover{background:#d4b35a}
 
-/* AR overlay */
+/* AR overlay (Three.js Qibla Finder) */
 .ar-overlay{
   position:fixed;inset:0;z-index:1000;background:#000;
 }
 .ar-overlay.hidden{display:none}
 #ar-video{width:100%;height:100%;object-fit:cover}
-#ar-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#ar-3d-container{position:absolute;inset:0;pointer-events:none}
+#ar-3d-container canvas{width:100%!important;height:100%!important}
 .ar-close{
-  position:absolute;top:1rem;right:1rem;z-index:1001;
-  width:2.5rem;height:2.5rem;border-radius:50%;border:none;
-  background:rgba(0,0,0,0.5);color:#fff;font-size:1.5rem;
+  position:absolute;top:max(1rem,env(safe-area-inset-top));right:1rem;z-index:1002;
+  width:2.75rem;height:2.75rem;border-radius:50%;border:none;
+  background:rgba(0,0,0,0.6);color:#fff;font-size:1.5rem;
   display:flex;align-items:center;justify-content:center;cursor:pointer;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.ar-hud{
+  position:absolute;inset:0;z-index:1001;pointer-events:none;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:max(1rem,env(safe-area-inset-top)) 1rem max(1.5rem,env(safe-area-inset-bottom));
+}
+.ar-hud-top{
+  display:flex;gap:0.75rem;justify-content:center;
+  margin-top:3.5rem;
+}
+.ar-metric{
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-radius:0.75rem;padding:0.6rem 1.2rem;text-align:center;
+  border:1px solid rgba(255,255,255,0.1);min-width:5.5rem;
+}
+.ar-metric-value{
+  display:block;font-size:1.4rem;font-weight:700;color:#fff;
+  font-variant-numeric:tabular-nums;letter-spacing:0.02em;
+}
+.ar-metric-label{
+  display:block;font-size:0.65rem;color:rgba(255,255,255,0.6);
+  text-transform:uppercase;letter-spacing:0.08em;margin-top:0.15rem;
+}
+.ar-calibration{
+  align-self:center;background:rgba(243,156,18,0.85);
+  color:#fff;padding:0.6rem 1.2rem;border-radius:2rem;
+  font-size:0.8rem;font-weight:500;text-align:center;
+  animation:pulse-cal 2s ease-in-out infinite;
+  pointer-events:auto;
+}
+.ar-direction-hint{
+  align-self:center;padding:0.7rem 1.5rem;border-radius:2rem;
+  font-size:0.9rem;font-weight:600;color:#fff;text-align:center;
+  transition:background 0.3s,opacity 0.3s;margin-bottom:1rem;
 }
 .btn-ar{margin-top:var(--sp-sm)}
 
@@ -712,6 +748,7 @@ nav.bottom-bar button:focus-visible{
   flex-shrink:0;
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content" id="skip-link">Skip to content</a>
@@ -781,10 +818,24 @@ nav.bottom-bar button:focus-visible{
   </div>
 </div>
 
-<!-- AR Overlay -->
+<!-- AR Overlay (Three.js WebXR Qibla Finder) -->
 <div class="ar-overlay hidden" id="ar-overlay">
   <video id="ar-video" autoplay playsinline muted></video>
-  <canvas id="ar-canvas"></canvas>
+  <div id="ar-3d-container"></div>
+  <div class="ar-hud">
+    <div class="ar-hud-top">
+      <div class="ar-metric">
+        <span class="ar-metric-value" id="ar-bearing">--°</span>
+        <span class="ar-metric-label" id="ar-bearing-label"></span>
+      </div>
+      <div class="ar-metric">
+        <span class="ar-metric-value" id="ar-distance">-- km</span>
+        <span class="ar-metric-label" id="ar-distance-label"></span>
+      </div>
+    </div>
+    <div class="ar-calibration" id="ar-calibration" style="display:none"></div>
+    <div class="ar-direction-hint" id="ar-direction-hint" style="display:none"></div>
+  </div>
   <button class="ar-close" id="ar-close" aria-label="Close AR">&times;</button>
 </div>
 
@@ -1636,121 +1687,310 @@ function addOrientationListener(handler){
   }
 }
 
-// ─── AR Camera Mode ───────────────────────────────────────────
+// ─── AR Camera Mode (Three.js Qibla Finder) ──────────────────
 let arStream=null;
 let arAnimFrame=null;
 let arHeading=null;
+let arPitch=0;
+let arTargetHeading=null;
+let arTargetPitch=0;
+let arRenderer=null;
+let arScene=null;
+let arCamera=null;
+let arQiblaGroup=null;
+let arPitchListener=null;
 
 function startAR(){
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
     alert(t('arNotSupported'));return;
   }
+  if(typeof THREE==='undefined'){
+    alert(t('arNotSupported'));return;
+  }
+
   const overlay=$('ar-overlay');
   const video=$('ar-video');
-  const canvas=$('ar-canvas');
-  const ctx=canvas.getContext('2d');
 
-  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
+  navigator.mediaDevices.getUserMedia({
+    video:{facingMode:'environment',width:{ideal:1920},height:{ideal:1080}}
+  }).then(stream=>{
     arStream=stream;
     video.srcObject=stream;
     overlay.classList.remove('hidden');
 
-    // Start orientation tracking for AR (uses smoothed heading)
-    const orientHandler=e=>{
+    initARScene();
+
+    // Heading from orientation system
+    addOrientationListener(e=>{
       if(e._processedHeading!==undefined){
-        arHeading=e._processedHeading;
+        arTargetHeading=e._processedHeading;
       }else{
         const raw=extractHeading(e);
-        if(raw!==null)arHeading=processHeading(raw);
+        if(raw!==null)arTargetHeading=processHeading(raw);
+      }
+    });
+
+    // Pitch from deviceorientation for vertical look
+    arPitchListener=e=>{
+      if(e.beta!==null&&e.beta!==undefined){
+        arTargetPitch=Math.max(-85,Math.min(85,90-e.beta));
       }
     };
-    addOrientationListener(orientHandler);
+    window.addEventListener('deviceorientation',arPitchListener,true);
 
-    function drawAR(){
-      canvas.width=canvas.clientWidth;
-      canvas.height=canvas.clientHeight;
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-
-      if(state.position&&arHeading!==null){
-        const qAngle=calcQibla(state.position.lat,state.position.lng);
-        let diff=qAngle-arHeading;
-        diff=((diff+180)%360+360)%360-180;
-
-        // Map diff to screen X position (±45° = full screen width)
-        const screenX=canvas.width/2+(diff/45)*(canvas.width/2);
-
-        // Draw qibla indicator — arrow and line on ground plane pointing away from user
-        const cy=canvas.height*0.6;
-        const arrowLen=130;
-        const arrowW=44;
-        const headLen=50;
-
-        // Yellow direction line — on ground plane, running toward/away from user
-        ctx.save();
-        ctx.translate(screenX,cy);
-        ctx.scale(0.35,1);
-        const lineExtent=canvas.height*2;
-        ctx.strokeStyle='#fdd835';ctx.lineWidth=16;
-        ctx.beginPath();
-        ctx.moveTo(0, -lineExtent);
-        ctx.lineTo(0, lineExtent);
-        ctx.stroke();
-        ctx.restore();
-
-        // Arrow pointing away from user (upward on screen = forward in ground plane)
-        ctx.save();
-        ctx.translate(screenX,cy);
-        ctx.scale(0.35,1);
-
-        ctx.fillStyle='#2ecc71';ctx.strokeStyle='#1a9c58';ctx.lineWidth=3;
-        ctx.beginPath();
-        ctx.moveTo(-arrowW/3, arrowLen/2);
-        ctx.lineTo(-arrowW/3, -(arrowLen/2 - headLen));
-        ctx.lineTo(-arrowW, -(arrowLen/2 - headLen));
-        ctx.lineTo(0, -arrowLen/2);
-        ctx.lineTo(arrowW, -(arrowLen/2 - headLen));
-        ctx.lineTo(arrowW/3, -(arrowLen/2 - headLen));
-        ctx.lineTo(arrowW/3, arrowLen/2);
-        ctx.closePath();
-        ctx.fill();ctx.stroke();
-
-        ctx.restore();
-
-        // Label below arrow
-        ctx.save();
-        ctx.fillStyle='#fff';ctx.font='bold 20px system-ui';ctx.textAlign='center';
-        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=6;
-        ctx.fillText(t('qiblaDirection'),screenX,cy+arrowLen/2+30);
-        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+arrowLen/2+54);
-        ctx.restore();
-
-        // Crosshair center
-        ctx.save();
-        ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;
-        ctx.beginPath();
-        ctx.moveTo(canvas.width/2-20,canvas.height/2);
-        ctx.lineTo(canvas.width/2+20,canvas.height/2);
-        ctx.moveTo(canvas.width/2,canvas.height/2-20);
-        ctx.lineTo(canvas.width/2,canvas.height/2+20);
-        ctx.stroke();
-        ctx.restore();
-      }else{
-        // No heading data — show message
-        ctx.fillStyle='#fff';ctx.font='16px system-ui';ctx.textAlign='center';
-        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=4;
-        ctx.fillText(t('arNeedsCompass'),canvas.width/2,canvas.height/2);
-      }
-      arAnimFrame=requestAnimationFrame(drawAR);
-    }
-    drawAR();
+    updateARHUD();
+    arRenderLoop();
   }).catch(()=>{alert(t('arNotSupported'))});
+}
+
+function initARScene(){
+  const container=$('ar-3d-container');
+
+  arScene=new THREE.Scene();
+
+  // Camera FOV matches typical phone camera
+  arCamera=new THREE.PerspectiveCamera(
+    60,container.clientWidth/container.clientHeight,0.1,500
+  );
+  arCamera.position.set(0,1.6,0);
+  arCamera.rotation.order='YXZ';
+
+  arRenderer=new THREE.WebGLRenderer({alpha:true,antialias:true});
+  arRenderer.setSize(container.clientWidth,container.clientHeight);
+  arRenderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  arRenderer.setClearColor(0x000000,0);
+  container.appendChild(arRenderer.domElement);
+
+  createQiblaObjects();
+  window.addEventListener('resize',onARResize);
+}
+
+function createQiblaObjects(){
+  if(!state.position)return;
+  const qAngle=calcQibla(state.position.lat,state.position.lng);
+  const qRad=qAngle*DEG;
+
+  arQiblaGroup=new THREE.Group();
+
+  // Objects extend along -Z (North); group rotates to Qibla bearing
+  const dist=80;
+
+  // ── Blue beam (core + glow) ──
+  const beamGeom=new THREE.CylinderGeometry(0.06,0.06,dist,8);
+  const beamMat=new THREE.MeshBasicMaterial({color:0x2979FF,transparent:true,opacity:0.7});
+  const beam=new THREE.Mesh(beamGeom,beamMat);
+  beam.rotation.x=Math.PI/2;
+  beam.position.set(0,0.05,-dist/2);
+  arQiblaGroup.add(beam);
+
+  const glowGeom=new THREE.CylinderGeometry(0.18,0.18,dist,8);
+  const glowMat=new THREE.MeshBasicMaterial({color:0x2979FF,transparent:true,opacity:0.18});
+  const glow=new THREE.Mesh(glowGeom,glowMat);
+  glow.rotation.x=Math.PI/2;
+  glow.position.set(0,0.05,-dist/2);
+  arQiblaGroup.add(glow);
+
+  // Wider ground-level glow strip
+  const stripGeom=new THREE.PlaneGeometry(1.2,dist);
+  const stripMat=new THREE.MeshBasicMaterial({
+    color:0x2979FF,transparent:true,opacity:0.08,side:THREE.DoubleSide
+  });
+  const strip=new THREE.Mesh(stripGeom,stripMat);
+  strip.rotation.x=-Math.PI/2;
+  strip.position.set(0,-0.48,-dist/2);
+  arQiblaGroup.add(strip);
+
+  // ── 3D Kaaba at end of line ──
+  const kaabaGrp=new THREE.Group();
+  kaabaGrp.position.set(0,2,-dist);
+  kaabaGrp.userData.isKaaba=true;
+
+  // Main body
+  const bodyGeom=new THREE.BoxGeometry(3,3.5,3);
+  const bodyMat=new THREE.MeshBasicMaterial({color:0x1a1a1a});
+  kaabaGrp.add(new THREE.Mesh(bodyGeom,bodyMat));
+
+  // Kiswa gold bands
+  const bandGeom=new THREE.BoxGeometry(3.06,0.22,3.06);
+  const bandMat=new THREE.MeshBasicMaterial({color:0xc9a84c});
+  const band1=new THREE.Mesh(bandGeom,bandMat);
+  band1.position.y=0.5;
+  kaabaGrp.add(band1);
+  const band2=new THREE.Mesh(bandGeom.clone(),bandMat.clone());
+  band2.position.y=-0.15;
+  kaabaGrp.add(band2);
+  const topTrim=new THREE.Mesh(
+    new THREE.BoxGeometry(3.06,0.12,3.06),
+    new THREE.MeshBasicMaterial({color:0xc9a84c})
+  );
+  topTrim.position.y=1.75;
+  kaabaGrp.add(topTrim);
+
+  // Gold wireframe edges
+  kaabaGrp.add(new THREE.LineSegments(
+    new THREE.EdgesGeometry(bodyGeom),
+    new THREE.LineBasicMaterial({color:0xc9a84c})
+  ));
+
+  arQiblaGroup.add(kaabaGrp);
+
+  // ── Ground dots for depth perception ──
+  for(let i=5;i<dist;i+=5){
+    const dotGeom=new THREE.CircleGeometry(0.12,16);
+    const dotMat=new THREE.MeshBasicMaterial({
+      color:0x2979FF,transparent:true,
+      opacity:Math.max(0.06,0.35-i/dist*0.3),side:THREE.DoubleSide
+    });
+    const dot=new THREE.Mesh(dotGeom,dotMat);
+    dot.rotation.x=-Math.PI/2;
+    dot.position.set(0,-0.49,-i);
+    arQiblaGroup.add(dot);
+  }
+
+  // ── Concentric ground rings at Kaaba ──
+  [2,4,6].forEach(r=>{
+    const ringGeom=new THREE.RingGeometry(r-0.04,r+0.04,48);
+    const ringMat=new THREE.MeshBasicMaterial({
+      color:0xc9a84c,transparent:true,opacity:0.15,side:THREE.DoubleSide
+    });
+    const ring=new THREE.Mesh(ringGeom,ringMat);
+    ring.rotation.x=-Math.PI/2;
+    ring.position.set(0,-0.48,-dist);
+    arQiblaGroup.add(ring);
+  });
+
+  // Rotate group to Qibla bearing
+  arQiblaGroup.rotation.y=-qRad;
+
+  arScene.add(arQiblaGroup);
+}
+
+function onARResize(){
+  if(!arRenderer||!arCamera)return;
+  const c=$('ar-3d-container');
+  arCamera.aspect=c.clientWidth/c.clientHeight;
+  arCamera.updateProjectionMatrix();
+  arRenderer.setSize(c.clientWidth,c.clientHeight);
+}
+
+function arRenderLoop(){
+  if(!arRenderer)return;
+
+  // Smooth heading (circular interpolation)
+  if(arTargetHeading!==null){
+    if(arHeading===null){arHeading=arTargetHeading}
+    else{
+      let d=arTargetHeading-arHeading;
+      d=((d+540)%360)-180;
+      arHeading=(arHeading+d*0.12+360)%360;
+    }
+    arCamera.rotation.y=-arHeading*DEG;
+  }
+
+  // Smooth pitch
+  arPitch+=(arTargetPitch-arPitch)*0.1;
+  arCamera.rotation.x=arPitch*DEG;
+
+  // Animate Kaaba (gentle float + slow rotation)
+  if(arQiblaGroup){
+    arQiblaGroup.traverse(obj=>{
+      if(obj.userData.isKaaba){
+        obj.position.y=2+Math.sin(Date.now()*0.0015)*0.35;
+        obj.rotation.y+=0.003;
+      }
+    });
+
+    // Pulse beam opacity
+    arQiblaGroup.children.forEach(c=>{
+      if(c.isMesh&&c.material&&c.material.opacity>0.1&&c.material.opacity<0.75
+          &&c.geometry.type==='CylinderGeometry'){
+        const base=c.material.userData?.baseOpacity;
+        if(!base){c.material.userData={baseOpacity:c.material.opacity}}
+        const b=c.material.userData.baseOpacity;
+        c.material.opacity=b+Math.sin(Date.now()*0.003)*0.1;
+      }
+    });
+  }
+
+  // Update direction hint + calibration
+  updateDirectionHint();
+  updateARCalibration();
+
+  arRenderer.render(arScene,arCamera);
+  arAnimFrame=requestAnimationFrame(arRenderLoop);
+}
+
+function updateDirectionHint(){
+  if(!state.position||arHeading===null)return;
+  const hint=$('ar-direction-hint');
+  const qAngle=calcQibla(state.position.lat,state.position.lng);
+  let diff=qAngle-arHeading;
+  diff=((diff+180)%360+360)%360-180;
+
+  if(Math.abs(diff)>30){
+    hint.style.display='flex';
+    hint.textContent=(diff>0?'\u2192 ':'\u2190 ')+t('qiblaDirection');
+    hint.style.background=diff>0
+      ?'linear-gradient(90deg,transparent,rgba(41,121,255,0.35))'
+      :'linear-gradient(270deg,transparent,rgba(41,121,255,0.35))';
+  }else if(Math.abs(diff)<5){
+    hint.style.display='flex';
+    hint.textContent='\u2713 '+t('qiblaDirection');
+    hint.style.background='rgba(46,204,113,0.35)';
+  }else{
+    hint.style.display='none';
+  }
+}
+
+function updateARCalibration(){
+  const cal=$('ar-calibration');
+  const variance=getHeadingVariance();
+  if(variance>20){
+    cal.style.display='block';
+    cal.textContent=t('calibrationHint');
+  }else{
+    cal.style.display='none';
+  }
+}
+
+function updateARHUD(){
+  if(!state.position)return;
+  const qAngle=calcQibla(state.position.lat,state.position.lng);
+  const dist=distKaaba(state.position.lat,state.position.lng);
+  $('ar-bearing').textContent=qAngle.toFixed(1)+'\u00B0';
+  $('ar-bearing-label').textContent=t('qiblaAngle');
+  $('ar-distance').textContent=Math.round(dist)+' '+t('km');
+  $('ar-distance-label').textContent=t('qiblaDistance');
 }
 
 function stopAR(){
   $('ar-overlay').classList.add('hidden');
   if(arStream){arStream.getTracks().forEach(t=>t.stop());arStream=null}
   if(arAnimFrame){cancelAnimationFrame(arAnimFrame);arAnimFrame=null}
-  arHeading=null;
+  if(arPitchListener){
+    window.removeEventListener('deviceorientation',arPitchListener,true);
+    arPitchListener=null;
+  }
+  if(arRenderer){
+    arRenderer.dispose();
+    const c=$('ar-3d-container');
+    if(c)c.innerHTML='';
+    arRenderer=null;
+  }
+  if(arScene){
+    arScene.traverse(o=>{
+      if(o.geometry)o.geometry.dispose();
+      if(o.material){
+        if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());
+        else o.material.dispose();
+      }
+    });
+    arScene=null;
+  }
+  arCamera=null;arQiblaGroup=null;
+  arHeading=null;arPitch=0;
+  arTargetHeading=null;arTargetPitch=0;
+  window.removeEventListener('resize',onARResize);
 }
 
 // ─── Qibla ────────────────────────────────────────────────────
