@@ -13,6 +13,10 @@ const RAD = 180 / Math.PI;
 const FAJR_ANGLE = 19;
 const ISHA_ANGLE = 17;
 
+// Habous method time offsets in minutes (applied after astronomical calculation)
+const DHUHR_OFFSET = 5;   // safety margin past solar noon
+const MAGHRIB_OFFSET = 5; // safety margin past astronomical sunset
+
 // ─── Julian Date ───────────────────────────────────────────────
 
 export function toJulianDate(year, month, day) {
@@ -123,9 +127,9 @@ export function calculatePrayerTimes(date, lat, lng) {
   const asrAngle = asrShadowAngle(dec, lat);
   const hAsr = hourAngle(-asrAngle); // negative because it's above horizon
 
-  const dhuhr = transit;
+  const dhuhr = transit + DHUHR_OFFSET / 60;
   const sunrise = hSun !== null ? transit - hSun : null;
-  const sunset = hSun !== null ? transit + hSun : null;
+  const sunset = hSun !== null ? transit + hSun + MAGHRIB_OFFSET / 60 : null;
   const fajr = hFajr !== null ? transit - hFajr : null;
   const isha = hIsha !== null ? transit + hIsha : null;
   const asr = hAsr !== null ? transit + hAsr : null;
@@ -181,8 +185,9 @@ export function getPrayerTimesForDate(date, lat, lng, adjustments = {}) {
     // Normalize to 0-1440
     totalMinutes = ((totalMinutes % 1440) + 1440) % 1440;
 
-    const h = Math.floor(totalMinutes / 60);
-    const m = Math.round(totalMinutes % 60);
+    let h = Math.floor(totalMinutes / 60);
+    let m = Math.round(totalMinutes % 60);
+    if (m === 60) { m = 0; h = (h + 1) % 24; }
     result[prayer] = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
   }
   return result;

@@ -490,6 +490,7 @@ nav.bottom-bar button:focus-visible{
 // ─── Constants ────────────────────────────────────────────────
 const DEG=Math.PI/180,RAD=180/Math.PI;
 const FAJR_ANGLE=19,ISHA_ANGLE=17;
+const DHUHR_OFFSET=5,MAGHRIB_OFFSET=5;
 const KAABA_LAT=21.4225,KAABA_LNG=39.8262;
 const PRAYER_KEYS=['fajr','sunrise','dhuhr','asr','maghrib','isha'];
 const TZ='Africa/Casablanca';
@@ -681,9 +682,9 @@ function calcPrayerTimes(date,lat,lng){
   return{
     fajr:hFajr!==null?transit-hFajr:null,
     sunrise:hSun!==null?transit-hSun:null,
-    dhuhr:transit,
+    dhuhr:transit+DHUHR_OFFSET/60,
     asr:hAsr!==null?transit+hAsr:null,
-    maghrib:hSun!==null?transit+hSun:null,
+    maghrib:hSun!==null?transit+hSun+MAGHRIB_OFFSET/60:null,
     isha:hIsha!==null?transit+hIsha:null,
   };
 }
@@ -707,7 +708,8 @@ function getPrayerTimesLocal(date,lat,lng,adj){
     if(utc[k]===null){res[k]=null;continue}
     let tot=utc[k]*60+off+(adj[k]||0);
     tot=((tot%1440)+1440)%1440;
-    const h=Math.floor(tot/60),m=Math.round(tot%60);
+    let h=Math.floor(tot/60),m=Math.round(tot%60);
+    if(m===60){m=0;h=(h+1)%24;}
     res[k]=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
   }
   return res;
