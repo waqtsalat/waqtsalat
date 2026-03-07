@@ -1632,50 +1632,49 @@ function startAR(){
         // Map diff to screen X position (±45° = full screen width)
         const screenX=canvas.width/2+(diff/45)*(canvas.width/2);
 
-        // Draw qibla indicator — arrow and line in horizontal ground plane
-        const cy=canvas.height*0.55;
+        // Draw qibla indicator — arrow and line on ground plane pointing away from user
+        const cy=canvas.height*0.6;
         const arrowLen=130;
-        const arrowH=44;
+        const arrowW=44;
         const headLen=50;
+
+        // Yellow direction line — on ground plane, running toward/away from user
         ctx.save();
-
-        // Apply perspective foreshortening to simulate horizontal/ground plane
         ctx.translate(screenX,cy);
-        ctx.scale(1,0.35);
+        ctx.scale(0.35,1);
+        const lineExtent=canvas.height*2;
+        ctx.strokeStyle='#fdd835';ctx.lineWidth=16;
+        ctx.beginPath();
+        ctx.moveTo(0, -lineExtent);
+        ctx.lineTo(0, lineExtent);
+        ctx.stroke();
+        ctx.restore();
 
-        // Arrow body: shaft + triangular head, fully filled green
+        // Arrow pointing away from user (upward on screen = forward in ground plane)
+        ctx.save();
+        ctx.translate(screenX,cy);
+        ctx.scale(0.35,1);
+
         ctx.fillStyle='#2ecc71';ctx.strokeStyle='#1a9c58';ctx.lineWidth=3;
         ctx.beginPath();
-        ctx.moveTo(-arrowLen/2, -arrowH/3);
-        ctx.lineTo(arrowLen/2 - headLen, -arrowH/3);
-        ctx.lineTo(arrowLen/2 - headLen, -arrowH);
-        ctx.lineTo(arrowLen/2, 0);
-        ctx.lineTo(arrowLen/2 - headLen, arrowH);
-        ctx.lineTo(arrowLen/2 - headLen, arrowH/3);
-        ctx.lineTo(-arrowLen/2, arrowH/3);
+        ctx.moveTo(-arrowW/3, arrowLen/2);
+        ctx.lineTo(-arrowW/3, -(arrowLen/2 - headLen));
+        ctx.lineTo(-arrowW, -(arrowLen/2 - headLen));
+        ctx.lineTo(0, -arrowLen/2);
+        ctx.lineTo(arrowW, -(arrowLen/2 - headLen));
+        ctx.lineTo(arrowW/3, -(arrowLen/2 - headLen));
+        ctx.lineTo(arrowW/3, arrowLen/2);
         ctx.closePath();
         ctx.fill();ctx.stroke();
 
         ctx.restore();
 
-        // Yellow direction line — in ground plane, extending to screen edges
-        ctx.save();
-        ctx.translate(screenX,cy);
-        ctx.scale(1,0.35);
-        const lineExtent=canvas.width*2;
-        ctx.strokeStyle='#fdd835';ctx.lineWidth=16;
-        ctx.beginPath();
-        ctx.moveTo(-lineExtent, 60);
-        ctx.lineTo(lineExtent, 60);
-        ctx.stroke();
-        ctx.restore();
-
-        // Label below
+        // Label below arrow
         ctx.save();
         ctx.fillStyle='#fff';ctx.font='bold 20px system-ui';ctx.textAlign='center';
         ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=6;
-        ctx.fillText(t('qiblaDirection'),screenX,cy+50);
-        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+74);
+        ctx.fillText(t('qiblaDirection'),screenX,cy+arrowLen/2+30);
+        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+arrowLen/2+54);
         ctx.restore();
 
         // Crosshair center
