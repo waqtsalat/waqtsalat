@@ -507,6 +507,57 @@ nav.bottom-bar button:focus-visible{
 .btn-action:hover,.btn-action:focus-visible{background:rgba(255,255,255,0.06)}
 .btn-danger{color:#e74c3c}
 
+/* Notification prayer toggles grid */
+.notif-prayers-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:var(--sp-sm);
+  padding:var(--sp-sm) var(--sp-lg) var(--sp-md);
+}
+.notif-prayer-chip{
+  display:flex;align-items:center;gap:var(--sp-xs);
+  padding:var(--sp-sm) var(--sp-md);
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  border-radius:var(--sp-sm);cursor:pointer;transition:all 0.2s;
+  font-size:var(--fs-xs);color:rgba(255,255,255,0.7);
+}
+.notif-prayer-chip:hover{background:rgba(255,255,255,0.1)}
+.notif-prayer-chip.active{
+  background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);
+}
+.notif-prayer-chip input{display:none}
+.notif-prayer-chip .chip-dot{
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3);
+  transition:background 0.2s;flex-shrink:0;
+}
+.notif-prayer-chip.active .chip-dot{background:var(--gold)}
+.notif-sub-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:var(--sp-sm) var(--sp-lg);border-bottom:1px solid rgba(255,255,255,0.05);
+  gap:var(--sp-md);
+}
+.notif-sub-row:last-child{border-bottom:none}
+.notif-sub-row label{font-size:var(--fs-xs);flex:1;color:rgba(255,255,255,0.8)}
+.notif-sub-row select{
+  font-size:var(--fs-xs);padding:var(--sp-xs) var(--sp-sm);
+  background:rgba(255,255,255,0.08);color:#fff;
+  border:1px solid rgba(255,255,255,0.12);border-radius:var(--sp-xs);
+  min-width:6rem;
+}
+.notif-sound-row{display:flex;align-items:center;gap:var(--sp-sm)}
+.btn-test-sound{
+  padding:var(--sp-xs) var(--sp-sm);font-size:var(--fs-xs);
+  background:rgba(255,255,255,0.1);color:var(--gold);border-radius:var(--sp-xs);
+  border:1px solid rgba(201,168,76,0.3);cursor:pointer;transition:all 0.2s;
+  white-space:nowrap;
+}
+.btn-test-sound:hover{background:rgba(201,168,76,0.15)}
+.notif-dnd-hint{
+  padding:var(--sp-sm) var(--sp-lg);font-size:var(--fs-xs);
+  color:rgba(255,255,255,0.5);line-height:1.5;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.notif-detail{display:none}
+.notif-detail.show{display:block}
+
 /* Toggle switch */
 .toggle{position:relative;width:2.5rem;height:1.375rem;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0;position:absolute}
@@ -986,7 +1037,35 @@ nav.bottom-bar button:focus-visible{
       <label id="s-notif-label"></label>
       <label class="toggle"><input type="checkbox" id="s-notif-toggle"><span></span></label>
     </div>
-    <div id="s-notif-prayers"></div>
+    <div class="notif-detail" id="s-notif-detail">
+      <div class="notif-prayers-grid" id="s-notif-prayers-grid"></div>
+      <div class="notif-sub-row">
+        <label id="s-notif-advance-label"></label>
+        <select id="s-notif-advance">
+          <option value="0" id="opt-adv-0"></option>
+          <option value="5" id="opt-adv-5"></option>
+          <option value="10" id="opt-adv-10"></option>
+          <option value="15" id="opt-adv-15"></option>
+          <option value="30" id="opt-adv-30"></option>
+        </select>
+      </div>
+      <div class="notif-sub-row">
+        <label id="s-notif-sound-label"></label>
+        <div class="notif-sound-row">
+          <select id="s-notif-sound">
+            <option value="silent" id="opt-snd-silent"></option>
+            <option value="tone" id="opt-snd-tone"></option>
+            <option value="adhan" id="opt-snd-adhan"></option>
+          </select>
+          <button class="btn-test-sound" id="btn-test-sound"></button>
+        </div>
+      </div>
+      <div class="notif-sub-row">
+        <label id="s-notif-vibrate-label"></label>
+        <label class="toggle"><input type="checkbox" id="s-notif-vibrate"><span></span></label>
+      </div>
+      <div class="notif-dnd-hint" id="s-notif-dnd-hint"></div>
+    </div>
   </div>
   <div class="settings-section">
     <h3 id="s-adj-title"></h3>
@@ -1102,6 +1181,13 @@ helpInfo:'المساعدة',betaWarning:'نسخة تجريبية — قد تخت
 helpContribute:'المساهمة',helpContributeDesc:'عرض الكود المصدري والمساهمة',
 helpReport:'الإبلاغ عن خطأ',helpReportDesc:'الإبلاغ عن مشاكل أو طلب ميزات',helpClose:'إغلاق',
 helpShare:'مشاركة',helpShareDesc:'شارك وقت الصلاة مع الأهل والأصدقاء',shareCopied:'تم نسخ الرابط',
+notifPrayers:'صلوات الإشعار',notifSelectPrayers:'اختر الصلوات التي تريد إشعاراً لها',
+notifAdvance:'تنبيه مسبق',notifAdvanceDesc:'تنبيه قبل وقت الصلاة',
+notifAdvance0:'عند الأذان',notifAdvance5:'قبل 5 دقائق',notifAdvance10:'قبل 10 دقائق',notifAdvance15:'قبل 15 دقائق',notifAdvance30:'قبل 30 دقيقة',
+notifSound:'صوت الإشعار',notifSoundSilent:'صامت',notifSoundTone:'نغمة',notifSoundAdhan:'أذان',
+notifSoundTest:'تجربة',notifAthanTime:'حان وقت صلاة',notifMinBefore:'دقائق قبل',
+notifSnooze:'تأجيل 5 دقائق',notifDismiss:'إغلاق',notifDndHint:'لتلقي الإشعارات أثناء وضع عدم الإزعاج، فعّل «الإشعارات ذات الأولوية» من إعدادات هاتفك',
+notifVibrate:'اهتزاز',notifWakeScreen:'إيقاظ الشاشة',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -1130,6 +1216,13 @@ helpInfo:'Aide',betaWarning:'Bêta — Les horaires de prière peuvent légèrem
 helpContribute:'Contribuer',helpContributeDesc:'Voir le code source et contribuer',
 helpReport:'Signaler un bug',helpReportDesc:'Signaler un problème ou demander une fonctionnalité',helpClose:'Fermer',
 helpShare:'Partager',helpShareDesc:'Partagez WaqtSalat avec vos proches',shareCopied:'Lien copié',
+notifPrayers:'Prières à notifier',notifSelectPrayers:'Choisissez les prières pour les notifications',
+notifAdvance:'Alerte anticipée',notifAdvanceDesc:'Notification avant l\'heure de prière',
+notifAdvance0:'À l\'adhan',notifAdvance5:'5 min avant',notifAdvance10:'10 min avant',notifAdvance15:'15 min avant',notifAdvance30:'30 min avant',
+notifSound:'Son de notification',notifSoundSilent:'Silencieux',notifSoundTone:'Tonalité',notifSoundAdhan:'Adhan',
+notifSoundTest:'Tester',notifAthanTime:'C\'est l\'heure de la prière',notifMinBefore:'min avant',
+notifSnooze:'Reporter 5 min',notifDismiss:'Fermer',notifDndHint:'Pour recevoir les notifications en mode Ne pas déranger, activez les « Notifications prioritaires » dans les paramètres de votre téléphone',
+notifVibrate:'Vibration',notifWakeScreen:'Réveiller l\'écran',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -1158,6 +1251,13 @@ helpInfo:'Help & Info',betaWarning:'Beta — Prayer times may differ slightly fr
 helpContribute:'Contribute',helpContributeDesc:'View source code & contribute',
 helpReport:'Report a bug',helpReportDesc:'Report issues or request features',helpClose:'Close',
 helpShare:'Share',helpShareDesc:'Share WaqtSalat with friends & family',shareCopied:'Link copied',
+notifPrayers:'Notification Prayers',notifSelectPrayers:'Choose which prayers to be notified for',
+notifAdvance:'Advance Alert',notifAdvanceDesc:'Get notified before prayer time',
+notifAdvance0:'At adhan time',notifAdvance5:'5 min before',notifAdvance10:'10 min before',notifAdvance15:'15 min before',notifAdvance30:'30 min before',
+notifSound:'Notification Sound',notifSoundSilent:'Silent',notifSoundTone:'Tone',notifSoundAdhan:'Adhan',
+notifSoundTest:'Test',notifAthanTime:'It\'s time for',notifMinBefore:'min before',
+notifSnooze:'Snooze 5 min',notifDismiss:'Dismiss',notifDndHint:'To receive notifications during Do Not Disturb, enable "Priority notifications" in your phone settings',
+notifVibrate:'Vibration',notifWakeScreen:'Wake screen',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -1167,7 +1267,7 @@ const state={
   locale:'ar',theme:'system',
   position:null,// {lat,lng,cityId,cityName}
   adjustments:{fajr:0,sunrise:0,dhuhr:0,asr:0,maghrib:0,isha:0},
-  notifications:{enabled:false},
+  notifications:{enabled:false,prayers:{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},advance:0,sound:'adhan',vibrate:true},
   onboarded:false,
   currentView:'prayers',
 };
@@ -1183,7 +1283,7 @@ function loadState(){
     const adj=localStorage.getItem('waqt-adjustments');
     if(adj)state.adjustments={...state.adjustments,...JSON.parse(adj)};
     const notif=localStorage.getItem('waqt-notifications');
-    if(notif)state.notifications=JSON.parse(notif);
+    if(notif)state.notifications={...state.notifications,...JSON.parse(notif)};
     state.onboarded=localStorage.getItem('waqt-onboarded')==='true';
   }catch(e){}
 }
@@ -2168,6 +2268,58 @@ function renderSettings(){
   $('s-notif-label').textContent=t('enableNotifications');
   $('s-notif-toggle').checked=state.notifications.enabled;
 
+  // Show/hide detail panel
+  const notifDetail=$('s-notif-detail');
+  if(state.notifications.enabled)notifDetail.classList.add('show');
+  else notifDetail.classList.remove('show');
+
+  // Per-prayer toggle chips
+  const prayerGrid=$('s-notif-prayers-grid');
+  prayerGrid.innerHTML='';
+  const prayers=state.notifications.prayers||{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true};
+  ['fajr','dhuhr','asr','maghrib','isha'].forEach(k=>{
+    const chip=document.createElement('label');
+    chip.className='notif-prayer-chip'+(prayers[k]?' active':'');
+    const cb=document.createElement('input');
+    cb.type='checkbox';cb.checked=prayers[k];cb.dataset.prayer=k;
+    const dot=document.createElement('span');
+    dot.className='chip-dot';
+    const name=document.createElement('span');
+    name.textContent=t(k);
+    chip.appendChild(cb);chip.appendChild(dot);chip.appendChild(name);
+    cb.addEventListener('change',()=>{
+      state.notifications.prayers[k]=cb.checked;
+      chip.classList.toggle('active',cb.checked);
+      saveState('waqt-notifications',state.notifications);
+      scheduleNotifications();
+    });
+    prayerGrid.appendChild(chip);
+  });
+
+  // Advance alert
+  $('s-notif-advance-label').textContent=t('notifAdvance');
+  $('opt-adv-0').textContent=t('notifAdvance0');
+  $('opt-adv-5').textContent=t('notifAdvance5');
+  $('opt-adv-10').textContent=t('notifAdvance10');
+  $('opt-adv-15').textContent=t('notifAdvance15');
+  $('opt-adv-30').textContent=t('notifAdvance30');
+  $('s-notif-advance').value=state.notifications.advance||0;
+
+  // Sound
+  $('s-notif-sound-label').textContent=t('notifSound');
+  $('opt-snd-silent').textContent=t('notifSoundSilent');
+  $('opt-snd-tone').textContent=t('notifSoundTone');
+  $('opt-snd-adhan').textContent=t('notifSoundAdhan');
+  $('s-notif-sound').value=state.notifications.sound||'adhan';
+  $('btn-test-sound').textContent=t('notifSoundTest');
+
+  // Vibrate
+  $('s-notif-vibrate-label').textContent=t('notifVibrate');
+  $('s-notif-vibrate').checked=state.notifications.vibrate!==false;
+
+  // DND hint
+  $('s-notif-dnd-hint').textContent=t('notifDndHint');
+
   // Adjustments
   $('s-adj-title').textContent=t('adjustments');
   const adjRows=$('s-adj-rows');
@@ -2261,8 +2413,43 @@ function setupEvents(){
   $('s-notif-toggle').addEventListener('change',e=>{
     state.notifications.enabled=e.target.checked;
     saveState('waqt-notifications',state.notifications);
-    if(e.target.checked)requestNotifPermission();
+    if(e.target.checked){
+      requestNotifPermission();
+      $('s-notif-detail').classList.add('show');
+    }else{
+      $('s-notif-detail').classList.remove('show');
+      notifTimeouts.forEach(clearTimeout);
+      notifTimeouts=[];
+    }
     checkNotifBlocked();
+  });
+
+  // Notification advance
+  $('s-notif-advance').addEventListener('change',e=>{
+    state.notifications.advance=parseInt(e.target.value,10);
+    saveState('waqt-notifications',state.notifications);
+    scheduleNotifications();
+  });
+
+  // Notification sound
+  $('s-notif-sound').addEventListener('change',e=>{
+    state.notifications.sound=e.target.value;
+    saveState('waqt-notifications',state.notifications);
+  });
+
+  // Test sound button
+  $('btn-test-sound').addEventListener('click',()=>{
+    const snd=state.notifications.sound||'adhan';
+    if(snd!=='silent')playNotifSound(snd);
+    if(state.notifications.vibrate&&navigator.vibrate){
+      navigator.vibrate([200,100,200,100,300]);
+    }
+  });
+
+  // Vibrate toggle
+  $('s-notif-vibrate').addEventListener('change',e=>{
+    state.notifications.vibrate=e.target.checked;
+    saveState('waqt-notifications',state.notifications);
   });
 
   // Help popup
@@ -2354,9 +2541,12 @@ function setupEvents(){
   // Hard refresh
   $('btn-hard-refresh').addEventListener('click',hardRefresh);
 
-  // Visibility change: recalculate
+  // Visibility change: recalculate and reschedule notifications
   document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden&&state.position)renderPrayers();
+    if(!document.hidden&&state.position){
+      renderPrayers();
+      scheduleNotifications();
+    }
   });
 
   // System theme change
@@ -2440,6 +2630,106 @@ function setupOnboarding(){
   });
 }
 
+// ─── Audio Synthesis (Web Audio API) ─────────────────────────
+let audioCtx=null;
+function getAudioCtx(){
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended')audioCtx.resume();
+  return audioCtx;
+}
+
+// Islamic-scale tone generator — pentatonic Hijaz-inspired melody
+function playTone(){
+  const ctx=getAudioCtx();
+  const now=ctx.currentTime;
+  // Hijaz scale notes (D4-based): D4, Eb4, F#4, G4, A4, Bb4, C#5, D5
+  const freqs=[293.66,311.13,369.99,392.00,440.00,466.16,554.37,587.33];
+  const melody=[0,4,3,2,1,0,2,4,7,4]; // indices into freqs
+  const durations=[0.4,0.3,0.3,0.5,0.3,0.3,0.4,0.3,0.6,0.8];
+  const gain=ctx.createGain();
+  gain.gain.setValueAtTime(0.3,now);
+  gain.connect(ctx.destination);
+
+  let t0=now;
+  melody.forEach((ni,i)=>{
+    const osc=ctx.createOscillator();
+    const noteGain=ctx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(freqs[ni],t0);
+    noteGain.gain.setValueAtTime(0,t0);
+    noteGain.gain.linearRampToValueAtTime(0.3,t0+0.05);
+    noteGain.gain.setValueAtTime(0.3,t0+durations[i]*0.7);
+    noteGain.gain.linearRampToValueAtTime(0,t0+durations[i]);
+    osc.connect(noteGain);noteGain.connect(gain);
+    osc.start(t0);osc.stop(t0+durations[i]+0.05);
+    t0+=durations[i];
+  });
+  return t0-now; // total duration
+}
+
+// Full adhan melody — longer, more elaborate sequence
+function playAdhan(){
+  const ctx=getAudioCtx();
+  const now=ctx.currentTime;
+  // Adhan-inspired melodic phrases using Hijaz maqam
+  const freqs=[220.00,233.08,277.18,293.66,329.63,349.23,415.30,440.00,466.16,554.37,587.33];
+  // Allahu Akbar phrase pattern (melodic contour)
+  const phrases=[
+    {notes:[3,7,7,5,3],durs:[0.5,0.6,0.6,0.5,0.8],gap:0.4},
+    {notes:[3,7,7,5,3],durs:[0.5,0.6,0.6,0.5,0.8],gap:0.4},
+    {notes:[3,5,7,8,7,5],durs:[0.4,0.4,0.5,0.6,0.4,0.7],gap:0.5},
+    {notes:[3,5,7,8,7,5],durs:[0.4,0.4,0.5,0.6,0.4,0.7],gap:0.5},
+    {notes:[7,8,7,5,3,5,3],durs:[0.5,0.4,0.4,0.5,0.4,0.4,0.9],gap:0.5},
+    {notes:[3,5,7,5,3],durs:[0.4,0.5,0.6,0.5,1.0],gap:0.3},
+  ];
+  const master=ctx.createGain();
+  master.gain.setValueAtTime(0.25,now);
+  master.connect(ctx.destination);
+
+  let t0=now;
+  phrases.forEach(phrase=>{
+    phrase.notes.forEach((ni,i)=>{
+      const osc=ctx.createOscillator();
+      const noteGain=ctx.createGain();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(freqs[ni],t0);
+      // Add slight vibrato for vocal quality
+      const vibrato=ctx.createOscillator();
+      const vibratoGain=ctx.createGain();
+      vibrato.frequency.setValueAtTime(5,t0);
+      vibratoGain.gain.setValueAtTime(3,t0);
+      vibrato.connect(vibratoGain);vibratoGain.connect(osc.frequency);
+      vibrato.start(t0);vibrato.stop(t0+phrase.durs[i]+0.05);
+
+      noteGain.gain.setValueAtTime(0,t0);
+      noteGain.gain.linearRampToValueAtTime(0.3,t0+0.06);
+      noteGain.gain.setValueAtTime(0.3,t0+phrase.durs[i]*0.75);
+      noteGain.gain.linearRampToValueAtTime(0,t0+phrase.durs[i]);
+      osc.connect(noteGain);noteGain.connect(master);
+      osc.start(t0);osc.stop(t0+phrase.durs[i]+0.05);
+      t0+=phrase.durs[i];
+    });
+    t0+=phrase.gap;
+  });
+  return t0-now;
+}
+
+function playNotifSound(type){
+  if(type==='tone')return playTone();
+  if(type==='adhan')return playAdhan();
+  return 0;
+}
+
+// ─── Screen Wake Lock ────────────────────────────────────────
+async function wakeScreen(){
+  if(!('wakeLock' in navigator))return null;
+  try{
+    const lock=await navigator.wakeLock.request('screen');
+    setTimeout(()=>lock.release(),30000); // hold 30s
+    return lock;
+  }catch(e){return null}
+}
+
 // ─── Notifications ────────────────────────────────────────────
 function requestNotifPermission(){
   if(!('Notification' in window))return;
@@ -2456,25 +2746,85 @@ function scheduleNotifications(){
   notifTimeouts.forEach(clearTimeout);
   notifTimeouts=[];
   if(!state.notifications.enabled||!state.position||!prayerTimes)return;
+  if(Notification.permission!=='granted')return;
 
   const now=nowInCasa();
   const nowMs=now.getTime();
+  const advanceMin=state.notifications.advance||0;
+  const prayers=state.notifications.prayers||{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true};
 
   ['fajr','dhuhr','asr','maghrib','isha'].forEach(k=>{
-    if(!prayerTimes[k])return;
+    if(!prayers[k]||!prayerTimes[k])return;
     const[h,m]=prayerTimes[k].split(':').map(Number);
     const target=new Date(now);
     target.setHours(h,m,0,0);
-    const diff=target.getTime()-nowMs;
+    const prayerMs=target.getTime();
+
+    // Schedule advance notification
+    if(advanceMin>0){
+      const advDiff=prayerMs-advanceMin*60000-nowMs;
+      if(advDiff>0&&advDiff<86400000){
+        notifTimeouts.push(setTimeout(()=>fireNotification(k,true),advDiff));
+      }
+    }
+
+    // Schedule at-time notification
+    const diff=prayerMs-nowMs;
     if(diff>0&&diff<86400000){
-      const tid=setTimeout(()=>{
-        if(Notification.permission==='granted'){
-          new Notification(t(k),{body:t('prayerTimes')+' — '+prayerTimes[k],icon:'icons/icon.svg'});
-        }
-      },diff);
-      notifTimeouts.push(tid);
+      notifTimeouts.push(setTimeout(()=>fireNotification(k,false),diff));
     }
   });
+}
+
+async function fireNotification(prayerKey,isAdvance){
+  if(Notification.permission!=='granted')return;
+  const snd=state.notifications.sound||'tone';
+  const advMin=state.notifications.advance||0;
+
+  // Build notification content
+  const title=isAdvance
+    ?(advMin+' '+t('notifMinBefore')+' '+t(prayerKey))
+    :(t('notifAthanTime')+' '+t(prayerKey));
+  const body=t('prayerTimes')+' — '+prayerTimes[prayerKey];
+  const vibPattern=state.notifications.vibrate?[200,100,200,100,300,100,200]:[0];
+
+  // Play sound via Web Audio API (works even when page in background briefly)
+  if(snd!=='silent'&&!isAdvance){
+    try{playNotifSound(snd)}catch(e){}
+  }else if(snd!=='silent'&&isAdvance){
+    try{playTone()}catch(e){}
+  }
+
+  // Vibrate
+  if(state.notifications.vibrate&&navigator.vibrate){
+    navigator.vibrate(vibPattern);
+  }
+
+  // Wake screen
+  wakeScreen();
+
+  // Show notification via Service Worker for persistence & actions
+  if(navigator.serviceWorker&&navigator.serviceWorker.controller){
+    const reg=await navigator.serviceWorker.ready;
+    reg.showNotification(title,{
+      body,
+      icon:'icons/icon.svg',
+      badge:'icons/icon.svg',
+      tag:'waqtsalat-'+prayerKey+(isAdvance?'-advance':''),
+      renotify:true,
+      requireInteraction:!isAdvance,
+      vibrate:vibPattern,
+      silent:true, // we handle sound ourselves via Web Audio
+      data:{prayer:prayerKey,isAdvance,sound:snd},
+      actions:[
+        {action:'dismiss',title:t('notifDismiss')},
+        ...(!isAdvance?[{action:'snooze',title:t('notifSnooze')}]:[])
+      ]
+    });
+  }else{
+    // Fallback: basic Notification API
+    new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-'+prayerKey,requireInteraction:!isAdvance});
+  }
 }
 
 // ─── PWA Install Prompt ──────────────────────────────────────
