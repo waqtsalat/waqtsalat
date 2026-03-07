@@ -1020,61 +1020,54 @@ function startAR(){
         // Map diff to screen X position (±45° = full screen width)
         const screenX=canvas.width/2+(diff/45)*(canvas.width/2);
 
-        // Draw qibla indicator — arrow and line in horizontal ground plane
-        const cy=canvas.height*0.55;
-        const arrowLen=130;
-        const arrowH=44;
-        const headLen=50;
+        // Google Qibla-style: single line from bottom to horizon, Kaaba icon at end
+        // Line is locked to Qibla bearing and slides across screen as you rotate
+
+        // Green line from bottom of screen to vanishing point near horizon
+        const lineX=screenX;
+        const horizonY=canvas.height*0.25;
+        const bottomY=canvas.height;
+
+        // Glow behind the line
         ctx.save();
-
-        // Apply perspective foreshortening to simulate horizontal/ground plane
-        ctx.translate(screenX,cy);
-        ctx.scale(1,0.35);
-
-        // Arrow body: shaft + triangular head, fully filled green
-        ctx.fillStyle='#2ecc71';ctx.strokeStyle='#1a9c58';ctx.lineWidth=3;
+        ctx.strokeStyle='rgba(46,204,113,0.25)';
+        ctx.lineWidth=12;
         ctx.beginPath();
-        ctx.moveTo(-arrowLen/2, -arrowH/3);
-        ctx.lineTo(arrowLen/2 - headLen, -arrowH/3);
-        ctx.lineTo(arrowLen/2 - headLen, -arrowH);
-        ctx.lineTo(arrowLen/2, 0);
-        ctx.lineTo(arrowLen/2 - headLen, arrowH);
-        ctx.lineTo(arrowLen/2 - headLen, arrowH/3);
-        ctx.lineTo(-arrowLen/2, arrowH/3);
-        ctx.closePath();
-        ctx.fill();ctx.stroke();
-
-        ctx.restore();
-
-        // Yellow direction line — in ground plane, extending to screen edges
-        ctx.save();
-        ctx.translate(screenX,cy);
-        ctx.scale(1,0.35);
-        const lineExtent=canvas.width*2;
-        ctx.strokeStyle='#fdd835';ctx.lineWidth=16;
-        ctx.beginPath();
-        ctx.moveTo(-lineExtent, 60);
-        ctx.lineTo(lineExtent, 60);
+        ctx.moveTo(lineX,bottomY);
+        ctx.lineTo(lineX,horizonY);
         ctx.stroke();
         ctx.restore();
 
-        // Label below
+        // Main green line
         ctx.save();
-        ctx.fillStyle='#fff';ctx.font='bold 20px system-ui';ctx.textAlign='center';
-        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=6;
-        ctx.fillText(t('qiblaDirection'),screenX,cy+50);
-        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+74);
+        ctx.strokeStyle='#2ecc71';
+        ctx.lineWidth=4;
+        ctx.shadowColor='rgba(46,204,113,0.6)';
+        ctx.shadowBlur=10;
+        ctx.beginPath();
+        ctx.moveTo(lineX,bottomY);
+        ctx.lineTo(lineX,horizonY);
+        ctx.stroke();
         ctx.restore();
 
-        // Crosshair center
+        // Kaaba icon at the end of the line (horizon point)
         ctx.save();
-        ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;
-        ctx.beginPath();
-        ctx.moveTo(canvas.width/2-20,canvas.height/2);
-        ctx.lineTo(canvas.width/2+20,canvas.height/2);
-        ctx.moveTo(canvas.width/2,canvas.height/2-20);
-        ctx.lineTo(canvas.width/2,canvas.height/2+20);
-        ctx.stroke();
+        ctx.font='36px serif';
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.shadowColor='rgba(0,0,0,0.5)';
+        ctx.shadowBlur=8;
+        ctx.fillText('\u{1F54B}',lineX,horizonY-24);
+        ctx.restore();
+
+        // Bearing label below the Kaaba icon
+        ctx.save();
+        ctx.fillStyle='#fff';
+        ctx.font='bold 16px system-ui';
+        ctx.textAlign='center';
+        ctx.shadowColor='rgba(0,0,0,0.7)';
+        ctx.shadowBlur=6;
+        ctx.fillText(qAngle.toFixed(1)+'°',lineX,horizonY+16);
         ctx.restore();
       }else{
         // No heading data — show message
