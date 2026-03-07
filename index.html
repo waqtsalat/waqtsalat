@@ -390,13 +390,26 @@ nav.bottom-bar button:focus-visible{
   transition:opacity 0.2s;
 }
 .prayer-list li:last-child{border-bottom:none}
-.prayer-list li.passed{opacity:0.45}
-.prayer-list li.current{
-  background:transparent;color:#fff;font-weight:700;
+.prayer-list li.passed{opacity:0.35}
+.prayer-list li.current-prayer{
+  background:transparent;color:var(--gold);font-weight:700;
   border-radius:0;font-size:1.05rem;opacity:1;
+  text-shadow:0 1px 6px rgba(0,0,0,0.5);
+}
+.prayer-list li.next-prayer{
+  background:transparent;color:#fff;font-weight:700;
+  border-radius:0;font-size:1rem;opacity:1;
 }
 .prayer-list li .prayer-name{font-size:0.95rem}
 .prayer-list li .prayer-time{font-size:0.95rem;font-variant-numeric:tabular-nums}
+@media(prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) .prayer-list li.current-prayer{
+    text-shadow:0 1px 8px rgba(255,255,255,0.6);
+  }
+}
+[data-theme="light"] .prayer-list li.current-prayer{
+  text-shadow:0 1px 8px rgba(255,255,255,0.6);
+}
 .prayer-list li.tomorrow-fajr{
   border-top:1px dashed var(--gold);
   border-bottom:none;
@@ -542,7 +555,7 @@ nav.bottom-bar button:focus-visible{
 /* High contrast */
 @media(prefers-contrast:more){
   :root{--border:#888;--muted:#444}
-  .prayer-list li.current{outline:2px solid #fff}
+  .prayer-list li.current-prayer{outline:2px solid #fff}
 }
 
 /* Focus visible */
@@ -1261,13 +1274,28 @@ function renderPrayers(){
     if(mins[i]!==null&&mins[i]>nowMin){nextIdx=i;break}
   }
 
+  // currentIdx = prayer we're in now (the one just before nextIdx)
+  const currentIdx=nextIdx>0?nextIdx-1:(nextIdx===0?-1:displayPrayers.length-1);
+  // Count future prayers after nextIdx for fading
+  const futurePrayers=nextIdx>=0?displayPrayers.length-nextIdx-1:0;
+
   displayPrayers.forEach((key,i)=>{
     const li=document.createElement('li');
     li.setAttribute('role','listitem');
     const passed=mins[i]!==null&&mins[i]<=nowMin;
-    const current=i===nextIdx;
-    if(passed&&!current)li.classList.add('passed');
-    if(current){li.classList.add('current');li.setAttribute('aria-current','true')}
+
+    if(i===currentIdx){
+      li.classList.add('current-prayer');li.setAttribute('aria-current','true');
+    }else if(i===nextIdx){
+      li.classList.add('next-prayer');
+    }else if(passed){
+      li.classList.add('passed');
+    }else if(nextIdx>=0&&i>nextIdx){
+      // Future prayers after next: fade increasingly
+      const stepsAfterNext=i-nextIdx;
+      const opacity=Math.max(0.3,0.85-stepsAfterNext*0.15);
+      li.style.opacity=opacity;
+    }
 
     const nameSpan=document.createElement('span');
     nameSpan.className='prayer-name';nameSpan.textContent=t(key);
