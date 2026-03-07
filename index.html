@@ -389,8 +389,8 @@ nav.bottom-bar button:focus-visible{
 
 /* Prayer times view */
 .header-info{text-align:center;margin-bottom:var(--sp-md)}
-.header-info .city-name{font-size:var(--fs-lg);font-weight:300;color:rgba(255,255,255,0.9);letter-spacing:0.04em}
-.header-info .date-line{font-size:var(--fs-sm);color:rgba(255,255,255,0.54);margin-top:var(--sp-xs);letter-spacing:0.02em}
+.header-info .city-name{font-size:var(--fs-xl);font-weight:700;color:rgba(255,255,255,0.95);letter-spacing:0.04em;display:flex;align-items:center;justify-content:center;gap:var(--sp-sm)}
+.header-info .city-name .flag-icon{width:1.2em;height:0.85em;flex-shrink:0}
 
 
 /* Prayer list */
@@ -409,7 +409,7 @@ nav.bottom-bar button:focus-visible{
 .prayer-list li .prayer-name{flex:1}
 .prayer-list li .prayer-time{flex-shrink:0}
 .prayer-list li:last-child{border-bottom:none}
-.prayer-list li.passed{opacity:0.36}
+.prayer-list li.passed{opacity:0.52}
 .prayer-list li.current-prayer{
   color:var(--gold);font-weight:700;opacity:1;
   text-shadow:0 1px 8px rgba(0,0,0,0.4);
@@ -630,59 +630,77 @@ nav.bottom-bar button:focus-visible{
 }
 .btn-ar{margin-top:var(--sp-sm)}
 
-/* GitHub corner — minimal, hidden on prayer view to reduce clutter */
-.github-corner{
-  position:fixed;top:0;left:0;z-index:160;
-  width:56px;height:56px;pointer-events:none;
-  opacity:0.12;transition:opacity 0.3s;
-}
-.github-corner:hover{opacity:0.3}
-[dir="rtl"] .github-corner{left:auto;right:0}
-.github-corner a{
-  display:block;width:100%;height:100%;pointer-events:auto;
-  text-decoration:none;
-}
-.github-corner svg{
-  fill:#fff;color:rgba(0,0,0,0.3);
-  width:56px;height:56px;
-  transform:scaleX(-1);
-}
-[dir="rtl"] .github-corner svg{transform:scaleX(1)}
-.github-corner .octo-arm{transform-origin:115px 100px}
-@media(hover:hover){
-  .github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}
-}
-@keyframes octocat-wave{
-  0%,100%{transform:rotate(0)}
-  20%,60%{transform:rotate(-25deg)}
-  40%,80%{transform:rotate(10deg)}
-}
-.beta-badge{display:none}
-
-/* Share button — subtle, top-right */
-.share-btn{
-  position:fixed;top:var(--sp-md);right:var(--sp-md);z-index:160;
-  width:2rem;height:2rem;border-radius:50%;color:#fff;
-  background:transparent;border:none;
+/* Help FAB */
+.help-fab{
+  position:fixed;bottom:calc(3.75rem + var(--safe-b));right:var(--sp-md);z-index:160;
+  width:2.5rem;height:2.5rem;border-radius:50%;
+  background:rgba(8,40,22,0.95);color:#fff;
   display:flex;align-items:center;justify-content:center;
-  opacity:0.3;transition:opacity 0.2s;
+  border:1px solid rgba(255,255,255,0.15);
+  box-shadow:0 2px 8px rgba(0,0,0,0.3);
+  transition:transform 0.2s;
+  cursor:pointer;
 }
-[dir="rtl"] .share-btn{right:auto;left:var(--sp-md)}
-.share-btn:hover,.share-btn:focus-visible{opacity:0.7}
-.share-btn svg{width:1rem;height:1rem}
+[dir="rtl"] .help-fab{right:auto;left:var(--sp-md)}
+.help-fab:hover,.help-fab:focus-visible{transform:scale(1.1)}
+.help-fab svg{width:1.25rem;height:1.25rem}
 
-/* Issue / feedback button — subtle */
-.issue-btn{
-  position:fixed;bottom:calc(3.75rem + var(--safe-b));right:var(--sp-md);z-index:99;
-  width:2rem;height:2rem;border-radius:50%;
-  background:transparent;color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0.2;transition:opacity 0.2s;
-  text-decoration:none;
+/* Help popup */
+.help-popup-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.5);
+  display:none;align-items:center;justify-content:center;
+  padding:var(--sp-lg);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
 }
-[dir="rtl"] .issue-btn{right:auto;left:var(--sp-md)}
-.issue-btn:hover,.issue-btn:focus-visible{opacity:0.5}
-.issue-btn svg{width:1rem;height:1rem}
+.help-popup-overlay.show{display:flex}
+.help-popup{
+  background:linear-gradient(180deg,#0d5a2e,#14704c);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--sp-md);
+  max-width:340px;width:100%;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+.help-popup-header{
+  display:flex;align-items:center;gap:var(--sp-md);
+  padding:var(--sp-lg);border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.help-popup-header .app-icon{width:2.5rem;height:2.5rem;flex-shrink:0;border-radius:var(--sp-sm)}
+.help-popup-header .app-info{display:flex;flex-direction:column;gap:var(--sp-xs)}
+.help-popup-header .app-info .app-name{font-size:var(--fs-lg);font-weight:700;color:#fff}
+.help-popup-header .app-info .app-version{font-size:var(--fs-xs);color:rgba(255,255,255,0.54)}
+.help-popup-body{padding:var(--sp-lg);display:flex;flex-direction:column;gap:var(--sp-md)}
+.help-popup-beta{
+  background:rgba(243,156,18,0.12);border:1px solid rgba(243,156,18,0.25);
+  border-radius:var(--sp-sm);padding:var(--sp-md);
+  font-size:var(--fs-xs);color:#f0c040;line-height:1.5;
+  display:flex;align-items:flex-start;gap:var(--sp-sm);
+}
+.help-popup-beta svg{flex-shrink:0;width:1rem;height:1rem;margin-top:1px}
+.help-popup-actions{
+  display:flex;flex-direction:column;gap:var(--sp-sm);
+  padding:0 var(--sp-lg) var(--sp-lg);
+}
+.help-popup-actions a{
+  display:flex;align-items:center;gap:var(--sp-md);
+  padding:var(--sp-md);border-radius:var(--sp-sm);
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);
+  color:#fff;text-decoration:none;font-size:var(--fs-sm);
+  transition:background 0.15s;
+}
+.help-popup-actions a:hover,.help-popup-actions a:focus-visible{background:rgba(255,255,255,0.1)}
+.help-popup-actions a svg{width:1.25rem;height:1.25rem;flex-shrink:0;color:var(--gold)}
+.help-popup-actions a .action-text{display:flex;flex-direction:column;gap:1px}
+.help-popup-actions a .action-label{font-weight:500}
+.help-popup-actions a .action-desc{font-size:var(--fs-xs);color:rgba(255,255,255,0.5)}
+.help-popup-close{
+  display:block;width:100%;padding:var(--sp-md);
+  text-align:center;font-size:var(--fs-sm);
+  color:rgba(255,255,255,0.48);border-top:1px solid rgba(255,255,255,0.06);
+  transition:color 0.15s;cursor:pointer;background:none;border-left:none;border-right:none;border-bottom:none;
+}
+.help-popup-close:hover{color:rgba(255,255,255,0.7)}
 
 /* Countdown hero — hidden, replaced by inline countdown */
 .countdown-hero{display:none}
@@ -698,27 +716,46 @@ nav.bottom-bar button:focus-visible{
 <body>
 <a class="skip-link" href="#main-content" id="skip-link">Skip to content</a>
 
-<!-- GitHub corner (top-left) -->
-<div class="github-corner" aria-label="View source on GitHub">
-  <a href="https://github.com/yellowsnow/waqtsalat" target="_blank" rel="noopener">
-    <svg viewBox="0 0 250 250" aria-hidden="true">
-      <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/>
-      <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin:130px 106px" class="octo-arm"/>
-      <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C ## 194.5,69.0 197.7,73.2 200.1,77.6 C## 213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C## 181.9,128.9 168.3,122.5 157.7,114.1 C## 157.9,116.9 156.7,120.9 152.7,124.9 L## 141.0,136.5 C139.8,137.7 141.3,141.5 141.4,141.5 Z" fill="currentColor"/>
-    </svg>
-  </a>
-</div>
-<span class="beta-badge" aria-hidden="true">Beta</span>
-
-<!-- Share button (top-right) -->
-<button class="share-btn" id="share-btn" aria-label="Share">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+<!-- Help FAB -->
+<button class="help-fab" id="help-fab" aria-label="Help & Info">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
 </button>
 
-<!-- Report issue button -->
-<a class="issue-btn" id="issue-btn" href="https://github.com/yellowsnow/waqtsalat/issues/new" target="_blank" rel="noopener" aria-label="Report an issue">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-</a>
+<!-- Help popup -->
+<div class="help-popup-overlay" id="help-popup-overlay">
+  <div class="help-popup" role="dialog" aria-labelledby="help-popup-title">
+    <div class="help-popup-header">
+      <img class="app-icon" src="icons/icon.svg" alt="" width="40" height="40">
+      <div class="app-info">
+        <span class="app-name" id="help-popup-title">WaqtSalat</span>
+        <span class="app-version" id="help-popup-version">v1.0.0</span>
+      </div>
+    </div>
+    <div class="help-popup-body">
+      <div class="help-popup-beta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span id="help-beta-text">Beta — Prayer times may differ slightly from official schedules. Always verify with your local mosque.</span>
+      </div>
+    </div>
+    <div class="help-popup-actions">
+      <a href="https://github.com/yellowsnow/waqtsalat" target="_blank" rel="noopener" id="help-link-contribute">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        <span class="action-text">
+          <span class="action-label" id="help-label-contribute">Contribute</span>
+          <span class="action-desc" id="help-desc-contribute">View source code & contribute</span>
+        </span>
+      </a>
+      <a href="https://github.com/yellowsnow/waqtsalat/issues/new" target="_blank" rel="noopener" id="help-link-report">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span class="action-text">
+          <span class="action-label" id="help-label-report">Report a bug</span>
+          <span class="action-desc" id="help-desc-report">Report issues or request features</span>
+        </span>
+      </a>
+    </div>
+    <button class="help-popup-close" id="help-popup-close">Close</button>
+  </div>
+</div>
 
 <div class="notif-blocked-bar" id="notif-blocked-bar" role="alert">
   <span id="notif-blocked-text"></span>
@@ -781,7 +818,6 @@ nav.bottom-bar button:focus-visible{
 <section class="view active" id="view-prayers" role="region" aria-label="Prayer Times">
   <div class="header-info">
     <div class="city-name" id="city-name"></div>
-    <div class="date-line" id="date-line"></div>
   </div>
 
   <div class="countdown-hero" role="timer" aria-live="polite" id="countdown-hero">
@@ -981,9 +1017,10 @@ installApp:'تثبيت التطبيق',installDesc:'ثبّت التطبيق لل
 notifBlocked:'الإشعارات محظورة — فعّلها من إعدادات المتصفح لتلقي تنبيهات الصلاة',
 hardRefresh:'تحديث شامل',hardRefreshConfirm:'سيتم مسح جميع البيانات المخزنة وإعادة تحميل التطبيق. هل تريد المتابعة؟',hardRefreshing:'جارٍ التحديث…',
 heading:'الاتجاه',accuracyHigh:'دقة عالية',accuracyMedium:'دقة متوسطة',accuracyLow:'دقة منخفضة',calibrationNeeded:'يرجى معايرة البوصلة',calibrationHint:'حرّك هاتفك على شكل رقم 8',
-reportIssue:'الإبلاغ عن مشكلة',
 tomorrowFajr:'فجر الغد',
-share:'مشاركة',shareText:'أوقات الصلاة في {city}: الفجر {fajr}، الظهر {dhuhr}، العصر {asr}، المغرب {maghrib}، العشاء {isha}',shareTitle:'وقت الصلاة — أوقات الصلاة',
+helpInfo:'المساعدة',betaWarning:'نسخة تجريبية — قد تختلف أوقات الصلاة قليلاً عن الجداول الرسمية. تحقق دائماً من مسجدك المحلي.',
+helpContribute:'المساهمة',helpContributeDesc:'عرض الكود المصدري والمساهمة',
+helpReport:'الإبلاغ عن خطأ',helpReportDesc:'الإبلاغ عن مشاكل أو طلب ميزات',helpClose:'إغلاق',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -1007,9 +1044,10 @@ installApp:'Installer l\'application',installDesc:'Installez l\'app pour un acc�
 notifBlocked:'Notifications bloquées — activez-les dans les paramètres du navigateur pour les rappels de prière',
 hardRefresh:'Actualisation complète',hardRefreshConfirm:'Toutes les données en cache seront supprimées et l\'application sera rechargée. Continuer ?',hardRefreshing:'Actualisation…',
 heading:'Cap',accuracyHigh:'Haute précision',accuracyMedium:'Précision moyenne',accuracyLow:'Faible précision',calibrationNeeded:'Veuillez calibrer la boussole',calibrationHint:'Faites un mouvement en 8',
-reportIssue:'Signaler un problème',
 tomorrowFajr:'Fajr demain',
-share:'Partager',shareText:'Horaires de prière à {city} : Fajr {fajr}, Dhuhr {dhuhr}, Asr {asr}, Maghrib {maghrib}, Isha {isha}',shareTitle:'WaqtSalat — Horaires de prière',
+helpInfo:'Aide',betaWarning:'Bêta — Les horaires de prière peuvent légèrement différer des horaires officiels. Vérifiez toujours auprès de votre mosquée locale.',
+helpContribute:'Contribuer',helpContributeDesc:'Voir le code source et contribuer',
+helpReport:'Signaler un bug',helpReportDesc:'Signaler un problème ou demander une fonctionnalité',helpClose:'Fermer',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -1033,9 +1071,10 @@ installApp:'Install App',installDesc:'Install the app for quick access and offli
 notifBlocked:'Notifications blocked — enable them in browser settings to receive prayer reminders',
 hardRefresh:'Hard Refresh',hardRefreshConfirm:'All cached data will be cleared and the app will reload. Continue?',hardRefreshing:'Refreshing…',
 heading:'Heading',accuracyHigh:'High accuracy',accuracyMedium:'Medium accuracy',accuracyLow:'Low accuracy',calibrationNeeded:'Please calibrate the compass',calibrationHint:'Move your phone in a figure-8 pattern',
-reportIssue:'Report an issue',
 tomorrowFajr:'Tomorrow\'s Fajr',
-share:'Share',shareText:'Prayer times in {city}: Fajr {fajr}, Dhuhr {dhuhr}, Asr {asr}, Maghrib {maghrib}, Isha {isha}',shareTitle:'WaqtSalat — Prayer Times',
+helpInfo:'Help & Info',betaWarning:'Beta — Prayer times may differ slightly from official schedules. Always verify with your local mosque.',
+helpContribute:'Contribute',helpContributeDesc:'View source code & contribute',
+helpReport:'Report a bug',helpReportDesc:'Report issues or request features',helpClose:'Close',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -1254,12 +1293,10 @@ function renderPrayers(){
 
   // City name
   const city=CITIES.find(c=>c.id===state.position.cityId);
-  $('city-name').textContent=city?(state.locale==='ar'?city.ar:city.fr):(state.position.cityName||'');
+  const cityText=city?(state.locale==='ar'?city.ar:city.fr):(state.position.cityName||'');
+  const cn=$('city-name');
+  cn.innerHTML='<svg class="flag-icon" viewBox="0 0 900 600" aria-hidden="true"><rect width="900" height="600" fill="#c1272d"/><path d="M450 175l-43.6 134.1H264.8l114.6 83.3-43.8 134.2L450 443.3l114.4 83.3-43.8-134.2 114.6-83.3H493.6z" fill="none" stroke="#006233" stroke-width="20"/></svg>'+cityText;
 
-  // Date
-  const greg=formatGregorian(now,state.locale);
-  const hijri=formatHijri(now,state.locale);
-  $('date-line').textContent=hijri?greg+' — '+hijri:greg;
 
   // Prayer list
   const list=$('prayer-list');
@@ -1299,7 +1336,7 @@ function renderPrayers(){
     }else if(nextIdx>=0&&i>nextIdx){
       // Future prayers after next: fade increasingly
       const stepsAfterNext=i-nextIdx;
-      const opacity=Math.max(0.36,0.85-stepsAfterNext*0.15);
+      const opacity=Math.max(0.52,0.85-stepsAfterNext*0.15);
       li.style.opacity=opacity;
     }
 
@@ -1821,10 +1858,16 @@ function renderSettings(){
   $('btn-import').textContent=t('importConfig');
   $('btn-reset').textContent=t('resetConfig');
   $('btn-hard-refresh').textContent=t('hardRefresh');
-  $('issue-btn').setAttribute('aria-label',t('reportIssue'));
-  $('issue-btn').title=t('reportIssue');
-  $('share-btn').setAttribute('aria-label',t('share'));
-  $('share-btn').title=t('share');
+  // Help popup i18n
+  $('help-fab').setAttribute('aria-label',t('helpInfo'));
+  $('help-fab').title=t('helpInfo');
+  $('help-beta-text').textContent=t('betaWarning');
+  $('help-label-contribute').textContent=t('helpContribute');
+  $('help-desc-contribute').textContent=t('helpContributeDesc');
+  $('help-label-report').textContent=t('helpReport');
+  $('help-desc-report').textContent=t('helpReportDesc');
+  $('help-popup-close').textContent=t('helpClose');
+  $('help-popup-title').textContent=t('appName');
 }
 
 function populateCitySelect(sel){
@@ -1838,28 +1881,6 @@ function populateCitySelect(sel){
   });
 }
 
-// ─── Share ─────────────────────────────────────────────────────
-function shareApp(){
-  const url='https://yellowsnow.github.io/waqtsalat/';
-  const city=state.position?CITIES.find(c=>c.id===state.position.cityId):null;
-  const cityName=city?(state.locale==='ar'?city.ar:city.fr):'';
-  let text=t('shareText');
-  if(prayerTimes&&cityName){
-    text=text.replace('{city}',cityName)
-      .replace('{fajr}',prayerTimes.fajr||'--:--')
-      .replace('{dhuhr}',prayerTimes.dhuhr||'--:--')
-      .replace('{asr}',prayerTimes.asr||'--:--')
-      .replace('{maghrib}',prayerTimes.maghrib||'--:--')
-      .replace('{isha}',prayerTimes.isha||'--:--');
-  }else{
-    text=t('shareTitle');
-  }
-  if(navigator.share){
-    navigator.share({title:t('shareTitle'),text:text,url:url}).catch(()=>{});
-  }else{
-    navigator.clipboard.writeText(text+'\n'+url).catch(()=>{});
-  }
-}
 
 // ─── Events ───────────────────────────────────────────────────
 function setupEvents(){
@@ -1900,8 +1921,16 @@ function setupEvents(){
     checkNotifBlocked();
   });
 
-  // Share
-  $('share-btn').addEventListener('click',shareApp);
+  // Help popup
+  $('help-fab').addEventListener('click',()=>{
+    $('help-popup-overlay').classList.add('show');
+  });
+  $('help-popup-close').addEventListener('click',()=>{
+    $('help-popup-overlay').classList.remove('show');
+  });
+  $('help-popup-overlay').addEventListener('click',(e)=>{
+    if(e.target===$('help-popup-overlay'))$('help-popup-overlay').classList.remove('show');
+  });
 
   // Compass
   $('btn-compass').addEventListener('click',startCompass);
