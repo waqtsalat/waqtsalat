@@ -83,6 +83,9 @@ export const TRANSLATIONS = {
     helpShare: 'مشاركة',
     helpShareDesc: 'شارك وقت الصلاة مع الأهل والأصدقاء',
     shareCopied: 'تم نسخ الرابط',
+    ogTitle: 'وقت الصلاة — مواقيت الصلاة في المغرب',
+    ogDescription: 'مواقيت صلاة دقيقة للمغرب بطريقة الأحباس (المذهب المالكي). +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.',
+    ogImageAlt: 'وقت الصلاة — تطبيق مواقيت الصلاة في المغرب',
   },
   fr: {
     appName: 'WaqtSalat',
@@ -163,6 +166,9 @@ export const TRANSLATIONS = {
     helpShare: 'Partager',
     helpShareDesc: 'Partagez WaqtSalat avec vos proches',
     shareCopied: 'Lien copié',
+    ogTitle: 'WaqtSalat — Horaires de prière au Maroc',
+    ogDescription: 'Horaires de prière précis pour le Maroc, méthode officielle des Habous (rite Malékite). +35 villes, boussole Qibla. Sans pub, sans tracking, sans paiement, open source.',
+    ogImageAlt: 'WaqtSalat — Application d\'horaires de prière au Maroc',
   },
   en: {
     appName: 'WaqtSalat',
@@ -243,6 +249,9 @@ export const TRANSLATIONS = {
     helpShare: 'Share',
     helpShareDesc: 'Share WaqtSalat with friends & family',
     shareCopied: 'Link copied',
+    ogTitle: 'WaqtSalat — Prayer Times for Morocco',
+    ogDescription: 'Accurate prayer times for Morocco using the official Habous method (Malikite rite). 35+ cities, Qibla compass. No ads, no tracking, no payment, open source.',
+    ogImageAlt: 'WaqtSalat — Prayer times app for Morocco',
   },
 };
 
