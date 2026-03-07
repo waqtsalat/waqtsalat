@@ -10,19 +10,19 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/yellowsnow/waqtsalat/actions/workflows/deploy.yml"><img src="https://github.com/yellowsnow/waqtsalat/actions/workflows/deploy.yml/badge.svg" alt="Deploy to GitHub Pages"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/yellowsnow/waqtsalat?color=blue" alt="License: GPL-3.0"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat/releases"><img src="https://img.shields.io/github/v/release/yellowsnow/waqtsalat?include_prereleases&sort=semver" alt="Release"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat/issues"><img src="https://img.shields.io/github/issues/yellowsnow/waqtsalat" alt="Issues"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat/pulls"><img src="https://img.shields.io/github/issues-pr/yellowsnow/waqtsalat" alt="Pull Requests"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat/stargazers"><img src="https://img.shields.io/github/stars/yellowsnow/waqtsalat?style=social" alt="Stars"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat/network/members"><img src="https://img.shields.io/github/forks/yellowsnow/waqtsalat?style=social" alt="Forks"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat/commits/main"><img src="https://img.shields.io/github/last-commit/yellowsnow/waqtsalat" alt="Last Commit"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat"><img src="https://img.shields.io/github/repo-size/yellowsnow/waqtsalat" alt="Repo Size"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat"><img src="https://img.shields.io/github/languages/top/yellowsnow/waqtsalat" alt="Top Language"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat"><img src="https://img.shields.io/github/languages/code-size/yellowsnow/waqtsalat" alt="Code Size"></a>
-  <a href="https://yellowsnow.github.io/waqtsalat/"><img src="https://img.shields.io/website?url=https%3A%2F%2Fyellowsnow.github.io%2Fwaqtsalat%2F&label=demo" alt="Website"></a>
-  <a href="https://github.com/yellowsnow/waqtsalat/graphs/contributors"><img src="https://img.shields.io/github/contributors/yellowsnow/waqtsalat" alt="Contributors"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat/actions/workflows/deploy.yml"><img src="https://github.com/waqtsalat/waqtsalat/actions/workflows/deploy.yml/badge.svg" alt="Deploy to GitHub Pages"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/waqtsalat/waqtsalat?color=blue" alt="License: GPL-3.0"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat/releases"><img src="https://img.shields.io/github/v/release/waqtsalat/waqtsalat?include_prereleases&sort=semver" alt="Release"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat/issues"><img src="https://img.shields.io/github/issues/waqtsalat/waqtsalat" alt="Issues"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat/pulls"><img src="https://img.shields.io/github/issues-pr/waqtsalat/waqtsalat" alt="Pull Requests"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat/stargazers"><img src="https://img.shields.io/github/stars/waqtsalat/waqtsalat?style=social" alt="Stars"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat/network/members"><img src="https://img.shields.io/github/forks/waqtsalat/waqtsalat?style=social" alt="Forks"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat/commits/main"><img src="https://img.shields.io/github/last-commit/waqtsalat/waqtsalat" alt="Last Commit"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat"><img src="https://img.shields.io/github/repo-size/waqtsalat/waqtsalat" alt="Repo Size"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat"><img src="https://img.shields.io/github/languages/top/waqtsalat/waqtsalat" alt="Top Language"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat"><img src="https://img.shields.io/github/languages/code-size/waqtsalat/waqtsalat" alt="Code Size"></a>
+  <a href="https://waqtsalat.github.io/waqtsalat/"><img src="https://img.shields.io/website?url=https%3A%2F%2Fwaqtsalat.github.io%2Fwaqtsalat%2F&label=demo" alt="Website"></a>
+  <a href="https://github.com/waqtsalat/waqtsalat/graphs/contributors"><img src="https://img.shields.io/github/contributors/waqtsalat/waqtsalat" alt="Contributors"></a>
   <img src="https://img.shields.io/badge/PWA-ready-5A0FC8?logo=pwa" alt="PWA Ready">
   <img src="https://img.shields.io/badge/offline-first-4CAF50" alt="Offline First">
   <img src="https://img.shields.io/badge/tracking-zero-green" alt="Zero Tracking">
@@ -64,7 +64,7 @@
 
 ## Demo
 
-Visit the live app: **[yellowsnow.github.io/waqtsalat](https://yellowsnow.github.io/waqtsalat/)**
+Visit the live app: **[waqtsalat.github.io/waqtsalat](https://waqtsalat.github.io/waqtsalat/)**
 
 ## Quick Start
 
@@ -72,7 +72,7 @@ No build step required. Just serve the files:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yellowsnow/waqtsalat.git
+git clone https://github.com/waqtsalat/waqtsalat.git
 cd waqtsalat
 
 # Serve locally (any static server works)
