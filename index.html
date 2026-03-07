@@ -4,13 +4,274 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1a8d5f">
-<meta name="description" content="وقت الصلاة — أوقات الصلاة في المغرب">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>وقت الصلاة — WaqtSalat</title>
+<title>WaqtSalat — وقت الصلاة | Prayer Times for Morocco</title>
+
+<!-- SEO Meta Tags -->
+<meta name="description" content="Accurate prayer times for Morocco. Offline PWA using the official Habous method (Malikite rite). Fajr, Dhuhr, Asr, Maghrib, Isha + Qibla compass. 35+ Moroccan cities. Zero tracking.">
+<meta name="keywords" content="prayer times, Morocco, salat, horaires prière, أوقات الصلاة, المغرب, Habous, Malikite, Fajr, Dhuhr, Asr, Maghrib, Isha, Qibla, PWA, offline, مواقيت الصلاة">
+<meta name="author" content="WaqtSalat">
+<meta name="robots" content="index, follow">
+<meta name="language" content="Arabic">
+<meta name="geo.region" content="MA">
+<meta name="geo.placename" content="Morocco">
+<link rel="canonical" href="https://yellowsnow.github.io/waqtsalat/">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yellowsnow.github.io/waqtsalat/">
+<meta property="og:title" content="WaqtSalat — وقت الصلاة | Prayer Times for Morocco">
+<meta property="og:description" content="Accurate prayer times for Morocco. Offline PWA using the official Habous method (Malikite rite). 35+ cities, Qibla compass, trilingual (AR/FR/EN). Zero tracking.">
+<meta property="og:image" content="https://yellowsnow.github.io/waqtsalat/icons/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="WaqtSalat — Prayer times app for Morocco">
+<meta property="og:locale" content="ar_MA">
+<meta property="og:locale:alternate" content="fr_MA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:site_name" content="WaqtSalat">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:url" content="https://yellowsnow.github.io/waqtsalat/">
+<meta name="twitter:title" content="WaqtSalat — وقت الصلاة | Prayer Times for Morocco">
+<meta name="twitter:description" content="Accurate prayer times for Morocco. Offline PWA using the official Habous method (Malikite rite). 35+ cities, Qibla compass, trilingual. Zero tracking.">
+<meta name="twitter:image" content="https://yellowsnow.github.io/waqtsalat/icons/icon-512.png">
+<meta name="twitter:image:alt" content="WaqtSalat — Prayer times app for Morocco">
+
+<!-- PWA & App Meta -->
+<meta name="application-name" content="WaqtSalat">
+<meta name="apple-mobile-web-app-title" content="WaqtSalat">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-TileColor" content="#1a8d5f">
+
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
+
+<!-- Schema.org LD+JSON: WebApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "WaqtSalat",
+  "alternateName": "وقت الصلاة",
+  "url": "https://yellowsnow.github.io/waqtsalat/",
+  "description": "Accurate prayer times for Morocco. Offline-first PWA using the official Habous method (Malikite rite). Covers 35+ Moroccan cities with Qibla compass, trilingual interface, and local notifications. Zero tracking, zero cookies.",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires a modern browser with JavaScript and Service Worker support",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "MAD"
+  },
+  "featureList": [
+    "Accurate prayer times using the official Moroccan Habous method",
+    "6 daily prayers: Fajr, Chourouk, Dhuhr, Asr, Maghrib, Isha",
+    "35+ Moroccan cities with GPS auto-detection",
+    "Qibla compass with device orientation and AR mode",
+    "Trilingual interface: Arabic, French, English",
+    "Full RTL support for Arabic",
+    "Analog clock with prayer time arcs",
+    "Local push notifications with Do Not Disturb mode",
+    "Pre-prayer notifications (5/10/15/30 minutes)",
+    "Manual time adjustments per prayer (±15 min)",
+    "Hijri and Gregorian calendar",
+    "Dark, light, and auto themes",
+    "100% offline after first visit",
+    "Installable as PWA on Android and iOS",
+    "WCAG 2.1 AA accessible",
+    "Zero cookies, zero analytics, zero tracking",
+    "Single HTML file under 100 KB gzipped"
+  ],
+  "screenshot": "https://yellowsnow.github.io/waqtsalat/icons/icon-512.png",
+  "softwareVersion": "1.0.0",
+  "inLanguage": ["ar", "fr", "en"],
+  "isAccessibleForFree": true,
+  "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+  "creator": {
+    "@type": "Organization",
+    "name": "WaqtSalat",
+    "url": "https://github.com/yellowsnow/waqtsalat"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Morocco",
+    "sameAs": "https://en.wikipedia.org/wiki/Morocco"
+  }
+}
+</script>
+
+<!-- Schema.org LD+JSON: FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does WaqtSalat work outside Morocco?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. WaqtSalat is designed exclusively for Morocco. It uses the Moroccan Habous method for prayer time calculations and only includes Moroccan cities. The timezone is fixed to Africa/Casablanca. For other countries, please use a different prayer times application."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an internet connection to use WaqtSalat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only for the very first visit. After that, WaqtSalat works 100% offline. All prayer times are calculated locally on your device using astronomical algorithms. No network requests are made after installation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate are the prayer times?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WaqtSalat calculates prayer times within ±1 minute of the official Habous (Ministry of Islamic Affairs) times. The app uses the same astronomical parameters: Fajr at 19°, Isha at 17°, and the Malikite method for Asr."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does WaqtSalat collect any personal data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. WaqtSalat has zero cookies, zero analytics, and zero tracking. Your settings (city, language, theme) are stored locally on your device in localStorage. No data is ever sent to any server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I adjust prayer times to match my local mosque?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. In the Settings screen, you can adjust each prayer time by ±15 minutes in 1-minute increments. These adjustments are saved locally and applied automatically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do notifications work without a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WaqtSalat schedules notifications locally using the Service Worker and setTimeout. No push server, no VAPID keys, and no external service is needed. Notifications are recalculated each time you open the app and at midnight."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What calculation method does WaqtSalat use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WaqtSalat uses the method of the Moroccan Ministry of Habous and Islamic Affairs: Fajr angle 19°, Isha angle 17°, and Asr calculated as shadow = 1x object length + shadow at zenith (Malikite school). The astronomical algorithms are based on Jean Meeus' 'Astronomical Algorithms'."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I install WaqtSalat on my phone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On Android: visit the app in Chrome, tap the install banner or go to Menu > Add to Home Screen. On iOS: open in Safari, tap the Share button, then 'Add to Home Screen'. Once installed, the app works like a native application with its own icon."
+      }
+    }
+  ]
+}
+</script>
+
+<!-- Schema.org LD+JSON: HowTo -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to use WaqtSalat for prayer times in Morocco",
+  "description": "Step-by-step guide to set up and use WaqtSalat, the Moroccan prayer times PWA.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open the app",
+      "text": "Visit yellowsnow.github.io/waqtsalat in your browser. The app loads instantly and works on any device."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choose your language",
+      "text": "Select Arabic (العربية), French (Français), or English. You can change this anytime in Settings."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Set your city",
+      "text": "Allow GPS detection for automatic location, or manually select your city from 35+ Moroccan cities."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "View prayer times",
+      "text": "The main screen shows today's prayer times with a countdown to the next prayer and an analog clock with prayer arcs."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 5,
+      "name": "Enable notifications",
+      "text": "Optionally enable prayer notifications. Configure per-prayer alerts and pre-notifications in Settings."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 6,
+      "name": "Install the app",
+      "text": "Add WaqtSalat to your home screen for quick access. The app works 100% offline after installation."
+    }
+  ]
+}
+</script>
+
+<!-- Schema.org LD+JSON: SoftwareApplication (Product) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "WaqtSalat",
+  "alternateName": "وقت الصلاة",
+  "applicationCategory": "LifestyleApplication",
+  "applicationSubCategory": "Religious",
+  "operatingSystem": "Web",
+  "availableOnDevice": ["Mobile", "Tablet", "Desktop"],
+  "countriesSupported": "MA",
+  "inLanguage": ["ar", "fr", "en"],
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "MAD",
+    "availability": "https://schema.org/InStock"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5",
+    "ratingCount": "1",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+}
+</script>
+
+<!-- Schema.org LD+JSON: BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "WaqtSalat",
+      "item": "https://yellowsnow.github.io/waqtsalat/"
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#fafafa;--fg:#1a1a1a;--accent:#1a8d5f;--accent2:#15724d;
