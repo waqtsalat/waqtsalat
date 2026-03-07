@@ -282,13 +282,13 @@
   --safe-b:env(safe-area-inset-bottom,0px);
   --gold:#c9a84c;--gold-light:rgba(201,168,76,0.15);
   /* Golden ratio type scale (φ=1.618, base=1rem, +15%) */
-  --fs-xs:0.711rem;  /* ~11px — meta, badges */
-  --fs-sm:0.879rem;  /* ~14px — captions, nav labels */
-  --fs-base:1.15rem; /* ~18px — body text */
-  --fs-lg:1.421rem;  /* ~23px — section titles */
-  --fs-xl:1.861rem;  /* ~30px — prayer highlight */
-  --fs-2xl:2.3rem;   /* ~37px — next prayer name */
-  --fs-3xl:3.011rem; /* ~48px — hero countdown */
+  --fs-xs:0.782rem;  /* ~13px — meta, badges */
+  --fs-sm:0.967rem;  /* ~15px — captions, nav labels */
+  --fs-base:1.265rem;/* ~20px — body text */
+  --fs-lg:1.563rem;  /* ~25px — section titles */
+  --fs-xl:2.047rem;  /* ~33px — prayer highlight */
+  --fs-2xl:2.53rem;  /* ~40px — next prayer name */
+  --fs-3xl:3.312rem; /* ~53px — hero countdown */
   /* Golden ratio spacing scale */
   --sp-xs:0.236rem;  /* ~4px */
   --sp-sm:0.382rem;  /* ~6px */
@@ -311,7 +311,7 @@
 html{font-size:16px;-webkit-text-size-adjust:100%}
 body{
   font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  background:linear-gradient(180deg,#0d5a2e 0%,#1a8d5f 30%,#14704c 60%,#0b4d2d 100%);
+  background:linear-gradient(180deg,#0a4825 0%,#15714c 30%,#105a3d 60%,#093e24 100%);
   color:#fff;
   min-height:100vh;min-height:100dvh;
   display:flex;flex-direction:column;
@@ -409,7 +409,7 @@ nav.bottom-bar button:focus-visible{
 .prayer-list li .prayer-name{flex:1}
 .prayer-list li .prayer-time{flex-shrink:0}
 .prayer-list li:last-child{border-bottom:none}
-.prayer-list li.passed{opacity:0.52}
+.prayer-list li.passed{opacity:0.78}
 .prayer-list li.current-prayer{
   color:var(--gold);font-weight:700;opacity:1;
   text-shadow:0 1px 8px rgba(0,0,0,0.4);
@@ -525,7 +525,7 @@ nav.bottom-bar button:focus-visible{
 
 /* Onboarding */
 .onboarding{
-  position:fixed;inset:0;background:linear-gradient(180deg,#0d5a2e 0%,#1a8d5f 30%,#14704c 60%,#0b4d2d 100%);z-index:200;
+  position:fixed;inset:0;background:linear-gradient(180deg,#0a4825 0%,#15714c 30%,#105a3d 60%,#093e24 100%);z-index:200;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:var(--sp-2xl);text-align:center;
 }
@@ -1386,7 +1386,7 @@ function renderPrayers(){
     }else if(nextIdx>=0&&i>nextIdx){
       // Future prayers after next: fade increasingly
       const stepsAfterNext=i-nextIdx;
-      const opacity=Math.max(0.52,0.85-stepsAfterNext*0.15);
+      const opacity=Math.max(0.78,0.85-stepsAfterNext*0.15);
       li.style.opacity=opacity;
     }
 
@@ -1412,8 +1412,12 @@ function renderPrayers(){
   if(tomorrowTimes.fajr){
     const li=document.createElement('li');
     li.setAttribute('role','listitem');
-    li.classList.add('tomorrow-fajr');
-    if(nextIdx<0)li.classList.add('next-prayer');
+    // From Maghrib onwards: show with normal prayer styling
+    // Before Maghrib: show with diminished tomorrow-fajr styling
+    const isMaghribOrLater=nextIdx>=5||nextIdx<0;
+    if(!isMaghribOrLater)li.classList.add('tomorrow-fajr');
+    // After Isha: tomorrow's Fajr is the next prayer
+    if(nextIdx<0){li.classList.add('next-prayer')}
     const nameSpan=document.createElement('span');
     nameSpan.className='prayer-name';nameSpan.textContent=t('tomorrowFajr');
     const timeSpan=document.createElement('span');
