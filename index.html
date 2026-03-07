@@ -561,12 +561,14 @@ nav.bottom-bar button:focus-visible{
 .update-banner{
   position:fixed;top:0;left:0;right:0;
   background:rgba(8,40,22,0.95);color:#fff;
-  display:none;align-items:center;justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   gap:var(--sp-md);padding:var(--sp-md);z-index:150;font-size:var(--fs-sm);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid rgba(255,255,255,0.08);
+  transform:translateY(-100%);opacity:0;pointer-events:none;
+  transition:transform 0.35s ease,opacity 0.35s ease;
 }
-.update-banner.show{display:flex}
+.update-banner.show{transform:translateY(0);opacity:1;pointer-events:auto}
 .update-banner button{
   padding:var(--sp-sm) var(--sp-md);border-radius:var(--sp-sm);font-weight:600;font-size:var(--fs-xs);
 }
@@ -2511,10 +2513,12 @@ async function hardRefresh(){
 }
 
 // ─── Service Worker ───────────────────────────────────────────
+const SW_UPDATE_INTERVAL=60*60*1000; // Check for updates every hour
+
 function registerSW(){
   if(!('serviceWorker' in navigator))return;
   navigator.serviceWorker.register('sw.js').then(reg=>{
-    // Check for updates
+    // Listen for new service worker installing
     reg.addEventListener('updatefound',()=>{
       const newSW=reg.installing;
       newSW.addEventListener('statechange',()=>{
@@ -2523,12 +2527,26 @@ function registerSW(){
         }
       });
     });
-    // Check if SW is already waiting
+    // SW already waiting from a previous visit
     if(reg.waiting&&navigator.serviceWorker.controller){
       showUpdateBanner(reg);
     }
+    // Periodic update checks
+    setInterval(()=>reg.update(),SW_UPDATE_INTERVAL);
+    // Check on tab focus (user returning to app)
+    document.addEventListener('visibilitychange',()=>{
+      if(document.visibilityState==='visible')reg.update();
+    });
+    // Check when coming back online
+    window.addEventListener('online',()=>reg.update());
   });
-  navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());
+  // Reload once new SW takes control
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(refreshing)return;
+    refreshing=true;
+    location.reload();
+  });
 }
 
 function showUpdateBanner(reg){
@@ -2539,7 +2557,7 @@ function showUpdateBanner(reg){
   banner.classList.add('show');
 
   $('btn-update-now').onclick=()=>{
-    reg.waiting.postMessage({type:'SKIP_WAITING'});
+    if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});
     banner.classList.remove('show');
   };
   $('btn-update-later').onclick=()=>banner.classList.remove('show');
