@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1a8d5f">
+<meta name="theme-color" content="#0d5a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>WaqtSalat — وقت الصلاة | Prayer Times for Morocco</title>
@@ -275,33 +275,72 @@
 <style>
 :root{
   --bg:#fafafa;--fg:#1a1a1a;--accent:#1a8d5f;--accent2:#15724d;
-  --surface:#fff;--surface2:#f0f0f0;--border:#e0e0e0;
-  --muted:#666;--passed:#999;
+  --surface:rgba(255,255,255,0.15);--surface2:rgba(255,255,255,0.1);--border:rgba(255,255,255,0.25);
+  --muted:rgba(255,255,255,0.7);--passed:rgba(255,255,255,0.4);
   --arc-fajr:#1a237e;--arc-sunrise:#fdd835;--arc-dhuhr:#f9a825;
   --arc-asr:#ef6c00;--arc-maghrib:#7b1fa2;--arc-isha:#0d1b2a;
   --safe-b:env(safe-area-inset-bottom,0px);
+  --gold:#c9a84c;--gold-light:rgba(201,168,76,0.15);
+  /* Golden ratio type scale (φ=1.618, base=1rem) */
+  --fs-xs:0.618rem;  /* ~10px — meta, badges */
+  --fs-sm:0.764rem;  /* ~12px — captions, nav labels */
+  --fs-base:1rem;    /* 16px — body text */
+  --fs-lg:1.236rem;  /* ~20px — section titles */
+  --fs-xl:1.618rem;  /* ~26px — prayer highlight */
+  --fs-2xl:2rem;     /* ~32px — next prayer name */
+  --fs-3xl:2.618rem; /* ~42px — hero countdown */
+  /* Golden ratio spacing scale */
+  --sp-xs:0.236rem;  /* ~4px */
+  --sp-sm:0.382rem;  /* ~6px */
+  --sp-md:0.618rem;  /* ~10px */
+  --sp-lg:1rem;      /* 16px */
+  --sp-xl:1.618rem;  /* ~26px */
+  --sp-2xl:2.618rem; /* ~42px */
 }
 @media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0a0a0a;--fg:#f0f0f0;--accent:#2ecc71;--accent2:#27ae60;
-    --surface:#1a1a1a;--surface2:#252525;--border:#333;
-    --muted:#999;--passed:#555;
+    --surface:rgba(0,0,0,0.2);--surface2:rgba(0,0,0,0.15);--border:rgba(255,255,255,0.15);
+    --muted:rgba(255,255,255,0.6);--passed:rgba(255,255,255,0.3);
   }
 }
 [data-theme="dark"]{
-  --bg:#0a0a0a;--fg:#f0f0f0;--accent:#2ecc71;--accent2:#27ae60;
-  --surface:#1a1a1a;--surface2:#252525;--border:#333;
-  --muted:#999;--passed:#555;
+  --surface:rgba(0,0,0,0.2);--surface2:rgba(0,0,0,0.15);--border:rgba(255,255,255,0.15);
+  --muted:rgba(255,255,255,0.6);--passed:rgba(255,255,255,0.3);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-text-size-adjust:100%}
 body{
   font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  background:var(--bg);color:var(--fg);
+  background:linear-gradient(180deg,#0d5a2e 0%,#1a8d5f 30%,#14704c 60%,#0b4d2d 100%);
+  color:#fff;
   min-height:100vh;min-height:100dvh;
   display:flex;flex-direction:column;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+/* Golden arabesque corner decorations */
+body::before,body::after,.app::before,.app::after{
+  content:'';position:fixed;width:100px;height:100px;z-index:0;pointer-events:none;
+  opacity:0.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1.5'%3E%3Cpath d='M0,0 Q60,10 60,60 Q10,60 0,0Z'/%3E%3Cpath d='M0,0 Q40,5 45,45 Q5,40 0,0Z'/%3E%3Cpath d='M0,0 Q20,2 25,25 Q2,20 0,0Z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='35' cy='35' r='5'/%3E%3Ccircle cx='22' cy='22' r='3'/%3E%3Cpath d='M60,60 Q55,30 30,25' stroke-dasharray='3,3'/%3E%3Cpath d='M45,45 Q42,25 20,18' stroke-dasharray='2,2'/%3E%3Cpath d='M0,60 Q15,55 25,40' stroke-dasharray='2,3'/%3E%3Cpath d='M60,0 Q55,15 40,25' stroke-dasharray='2,3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+}
+body::before{top:0;left:0;transform:rotate(0deg)}
+body::after{top:0;right:0;transform:scaleX(-1)}
+.app::before{
+  content:'';position:fixed;bottom:calc(3.25rem + var(--safe-b));left:0;
+  width:100px;height:100px;z-index:0;pointer-events:none;opacity:0.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1.5'%3E%3Cpath d='M0,0 Q60,10 60,60 Q10,60 0,0Z'/%3E%3Cpath d='M0,0 Q40,5 45,45 Q5,40 0,0Z'/%3E%3Cpath d='M0,0 Q20,2 25,25 Q2,20 0,0Z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='35' cy='35' r='5'/%3E%3Ccircle cx='22' cy='22' r='3'/%3E%3Cpath d='M60,60 Q55,30 30,25' stroke-dasharray='3,3'/%3E%3Cpath d='M45,45 Q42,25 20,18' stroke-dasharray='2,2'/%3E%3Cpath d='M0,60 Q15,55 25,40' stroke-dasharray='2,3'/%3E%3Cpath d='M60,0 Q55,15 40,25' stroke-dasharray='2,3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+  transform:scaleY(-1);
+}
+.app::after{
+  content:'';position:fixed;bottom:calc(3.25rem + var(--safe-b));right:0;
+  width:100px;height:100px;z-index:0;pointer-events:none;opacity:0.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1.5'%3E%3Cpath d='M0,0 Q60,10 60,60 Q10,60 0,0Z'/%3E%3Cpath d='M0,0 Q40,5 45,45 Q5,40 0,0Z'/%3E%3Cpath d='M0,0 Q20,2 25,25 Q2,20 0,0Z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='35' cy='35' r='5'/%3E%3Ccircle cx='22' cy='22' r='3'/%3E%3Cpath d='M60,60 Q55,30 30,25' stroke-dasharray='3,3'/%3E%3Cpath d='M45,45 Q42,25 20,18' stroke-dasharray='2,2'/%3E%3Cpath d='M0,60 Q15,55 25,40' stroke-dasharray='2,3'/%3E%3Cpath d='M60,0 Q55,15 40,25' stroke-dasharray='2,3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+  transform:scale(-1,1) scaleY(-1);
 }
 [lang="ar"] body{line-height:1.8}
 [lang="fr"] body,[lang="en"] body{line-height:1.5}
@@ -321,8 +360,8 @@ button{
 .app{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
 main{
   flex:1;overflow-y:auto;
-  padding:0.75rem;padding-bottom:calc(4rem + var(--safe-b));
-  max-width:600px;width:100%;margin:0 auto;
+  padding:var(--sp-lg);padding-bottom:calc(4rem + var(--safe-b));
+  max-width:480px;width:100%;margin:0 auto;
 }
 .view{display:none}
 .view.active{display:block}
@@ -330,72 +369,98 @@ main{
 /* Bottom nav */
 nav.bottom-bar{
   position:fixed;bottom:0;left:0;right:0;
-  background:var(--surface);border-top:1px solid var(--border);
+  background:rgba(8,40,22,0.9);border-top:1px solid rgba(255,255,255,0.08);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   display:flex;justify-content:space-around;align-items:center;
-  padding-bottom:var(--safe-b);height:calc(3.5rem + var(--safe-b));
+  padding-bottom:var(--safe-b);height:calc(3.25rem + var(--safe-b));
   z-index:100;
 }
 nav.bottom-bar button{
   flex:1;display:flex;flex-direction:column;align-items:center;
-  gap:0.15rem;padding:0.5rem 0;min-height:2.75rem;min-width:2.75rem;
-  color:var(--muted);transition:color 0.2s;
-  font-size:0.65rem;
+  gap:var(--sp-xs);padding:var(--sp-sm) 0;min-height:2.75rem;min-width:2.75rem;
+  color:rgba(255,255,255,0.4);transition:color 0.2s;
+  font-size:var(--fs-xs);letter-spacing:0.03em;
 }
-nav.bottom-bar button.active{color:var(--accent)}
-nav.bottom-bar button svg{width:1.5rem;height:1.5rem}
+nav.bottom-bar button.active{color:var(--gold)}
+nav.bottom-bar button svg{width:1.25rem;height:1.25rem}
 nav.bottom-bar button:focus-visible{
-  outline:2px solid var(--accent);outline-offset:-2px;border-radius:0.25rem;
+  outline:2px solid var(--accent);outline-offset:-2px;border-radius:0.15rem;
 }
 
 /* Prayer times view */
-.header-info{text-align:center;margin-bottom:0.5rem}
-.header-info .city-name{font-size:1.1rem;font-weight:600}
-.header-info .date-line{font-size:0.8rem;color:var(--muted);margin-top:0.15rem}
+.header-info{text-align:center;margin-bottom:var(--sp-md)}
+.header-info .city-name{font-size:var(--fs-lg);font-weight:300;color:rgba(255,255,255,0.9);letter-spacing:0.04em}
+.header-info .date-line{font-size:var(--fs-xs);color:rgba(255,255,255,0.45);margin-top:var(--sp-xs);letter-spacing:0.02em}
 
 
+/* Prayer list */
 .prayer-list{
-  list-style:none;background:var(--surface);
-  border-radius:0.75rem;border:1px solid var(--border);
-  overflow:hidden;
+  list-style:none;background:transparent;
+  border:none;overflow:visible;
+  padding:0;margin-top:var(--sp-lg);
 }
 .prayer-list li{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:0.65rem 1rem;border-bottom:1px solid var(--border);
-  transition:background 0.2s;
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:var(--sp-md) 0;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  transition:opacity 0.2s;
 }
 .prayer-list li:last-child{border-bottom:none}
-.prayer-list li.passed{color:var(--passed)}
-.prayer-list li.current{
-  background:var(--accent);color:#fff;font-weight:600;
-  border-radius:0.25rem;
+.prayer-list li.passed{opacity:0.3}
+.prayer-list li.current-prayer{
+  color:var(--gold);font-weight:700;opacity:1;
+  text-shadow:0 1px 8px rgba(0,0,0,0.4);
 }
-.prayer-list li .prayer-name{font-size:0.95rem}
-.prayer-list li .prayer-time{font-size:0.95rem;font-variant-numeric:tabular-nums}
+.prayer-list li.current-prayer .prayer-name{font-size:var(--fs-xl)}
+.prayer-list li.current-prayer .prayer-time{font-size:var(--fs-xl)}
+.prayer-list li.next-prayer{
+  color:#fff;font-weight:600;opacity:1;
+}
+.prayer-list li.next-prayer .prayer-name{font-size:var(--fs-lg)}
+.prayer-list li.next-prayer .prayer-time{font-size:var(--fs-lg)}
+.prayer-list li .prayer-name{font-size:var(--fs-base);font-weight:400}
+.prayer-list li .prayer-time{font-size:var(--fs-base);font-variant-numeric:tabular-nums;font-weight:400}
+@media(prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) .prayer-list li.current-prayer{
+    text-shadow:0 1px 10px rgba(255,255,255,0.5);
+  }
+}
+[data-theme="light"] .prayer-list li.current-prayer{
+  text-shadow:0 1px 10px rgba(255,255,255,0.5);
+}
+.prayer-list li.tomorrow-fajr{
+  border-top:1px solid rgba(201,168,76,0.2);
+  border-bottom:none;
+  opacity:0.5;margin-top:var(--sp-sm);padding-top:var(--sp-md);
+}
+.prayer-list li.tomorrow-fajr .prayer-name{color:var(--gold);font-size:var(--fs-sm);font-weight:400}
+.prayer-list li.tomorrow-fajr .prayer-time{color:var(--gold);font-size:var(--fs-sm)}
 
 /* Qibla view */
-.qibla-container{text-align:center;padding:1rem 0}
-.compass-svg{width:min(280px,80vw);height:min(280px,80vw)}
-.qibla-info{margin-top:1rem}
-.qibla-info .angle{font-size:1.3rem;font-weight:600;color:var(--accent)}
-.qibla-info .distance{font-size:0.9rem;color:var(--muted);margin-top:0.25rem}
+.qibla-container{text-align:center;padding:var(--sp-xl) 0}
+.compass-svg{width:min(240px,70vw);height:min(240px,70vw)}
+.qibla-info{margin-top:var(--sp-xl)}
+.qibla-info .angle{font-size:var(--fs-lg);font-weight:600;color:var(--gold)}
+.qibla-info .distance{font-size:var(--fs-sm);color:rgba(255,255,255,0.5);margin-top:var(--sp-xs)}
 .btn-compass{
-  margin-top:1rem;padding:0.75rem 1.5rem;
-  background:var(--accent);color:#fff;border-radius:0.5rem;
-  font-weight:600;font-size:0.9rem;
+  margin-top:var(--sp-lg);padding:var(--sp-md) var(--sp-xl);
+  background:rgba(255,255,255,0.1);color:#fff;border-radius:var(--sp-sm);
+  font-weight:500;font-size:var(--fs-sm);border:1px solid rgba(255,255,255,0.15);
 }
 .compass-accuracy{
-  margin-top:0.5rem;font-size:0.8rem;color:var(--muted);
-  display:flex;align-items:center;justify-content:center;gap:0.4rem;
+  margin-top:var(--sp-md);font-size:var(--fs-xs);color:rgba(255,255,255,0.5);
+  display:flex;align-items:center;justify-content:center;gap:var(--sp-sm);
 }
 .accuracy-dot{
-  width:8px;height:8px;border-radius:50%;display:inline-block;
+  width:6px;height:6px;border-radius:50%;display:inline-block;
 }
 .accuracy-dot.high{background:#2ecc71}
 .accuracy-dot.medium{background:#f39c12}
 .accuracy-dot.low{background:#e74c3c}
 .calibration-banner{
-  background:#f39c12;color:#000;padding:0.6rem 1rem;border-radius:0.5rem;
-  margin-bottom:0.75rem;font-size:0.85rem;text-align:center;
+  background:rgba(243,156,18,0.15);color:#f39c12;
+  padding:var(--sp-md) var(--sp-lg);border-radius:var(--sp-sm);border:1px solid rgba(243,156,18,0.25);
+  margin-bottom:var(--sp-lg);font-size:var(--fs-sm);text-align:center;
   animation:pulse-cal 2s ease-in-out infinite;display:none;
 }
 .calibration-banner.visible{display:block}
@@ -403,103 +468,106 @@ nav.bottom-bar button:focus-visible{
 
 /* Settings view */
 .settings-section{
-  background:var(--surface);border-radius:0.75rem;
-  border:1px solid var(--border);margin-bottom:1rem;
+  background:rgba(255,255,255,0.05);border-radius:var(--sp-md);
+  border:1px solid rgba(255,255,255,0.08);margin-bottom:var(--sp-lg);
   overflow:hidden;
 }
 .settings-section h3{
-  padding:0.75rem 1rem;font-size:0.9rem;font-weight:600;
-  background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:var(--sp-md) var(--sp-lg);font-size:var(--fs-xs);font-weight:600;
+  background:transparent;border-bottom:1px solid rgba(255,255,255,0.06);
+  text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);
 }
 .setting-row{
   display:flex;justify-content:space-between;align-items:center;
-  padding:0.75rem 1rem;border-bottom:1px solid var(--border);
-  gap:0.5rem;
+  padding:var(--sp-md) var(--sp-lg);border-bottom:1px solid rgba(255,255,255,0.05);
+  gap:var(--sp-md);
 }
 .setting-row:last-child{border-bottom:none}
-.setting-row label{font-size:0.9rem;flex:1}
+.setting-row label{font-size:var(--fs-sm);flex:1;color:rgba(255,255,255,0.8)}
 .setting-row select,.setting-row input[type="range"]{
-  font-size:0.85rem;padding:0.35rem;
-  background:var(--surface2);color:var(--fg);
-  border:1px solid var(--border);border-radius:0.35rem;
+  font-size:var(--fs-sm);padding:var(--sp-sm);
+  background:rgba(255,255,255,0.08);color:#fff;
+  border:1px solid rgba(255,255,255,0.12);border-radius:var(--sp-sm);
 }
-.setting-row select{min-width:8rem}
+.setting-row select{min-width:7rem}
 .setting-row input[type="range"]{width:5rem}
-.adj-val{font-size:0.8rem;min-width:2.5rem;text-align:center;font-variant-numeric:tabular-nums}
+.adj-val{font-size:var(--fs-xs);min-width:2.5rem;text-align:center;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.5)}
 
 .btn-action{
-  display:block;width:100%;padding:0.75rem;
-  text-align:center;font-size:0.9rem;font-weight:600;
-  border-bottom:1px solid var(--border);
-  transition:background 0.15s;
+  display:block;width:100%;padding:var(--sp-md);
+  text-align:center;font-size:var(--fs-sm);font-weight:500;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  transition:background 0.15s;color:rgba(255,255,255,0.7);
 }
 .btn-action:last-child{border-bottom:none}
-.btn-action:hover,.btn-action:focus-visible{background:var(--surface2)}
+.btn-action:hover,.btn-action:focus-visible{background:rgba(255,255,255,0.06)}
 .btn-danger{color:#e74c3c}
 
 /* Toggle switch */
-.toggle{position:relative;width:2.75rem;height:1.5rem;flex-shrink:0}
+.toggle{position:relative;width:2.5rem;height:1.375rem;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0;position:absolute}
 .toggle span{
   position:absolute;inset:0;cursor:pointer;
-  background:var(--border);border-radius:1rem;
+  background:rgba(255,255,255,0.15);border-radius:1rem;
   transition:background 0.3s;
 }
 .toggle span::before{
-  content:'';position:absolute;width:1.1rem;height:1.1rem;
-  left:0.2rem;bottom:0.2rem;background:#fff;border-radius:50%;
+  content:'';position:absolute;width:1rem;height:1rem;
+  left:0.2rem;bottom:0.19rem;background:#fff;border-radius:50%;
   transition:transform 0.3s;
 }
-.toggle input:checked+span{background:var(--accent)}
-.toggle input:checked+span::before{transform:translateX(1.25rem)}
+.toggle input:checked+span{background:var(--gold)}
+.toggle input:checked+span::before{transform:translateX(1.1rem)}
 .toggle input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 
 /* Onboarding */
 .onboarding{
-  position:fixed;inset:0;background:var(--bg);z-index:200;
+  position:fixed;inset:0;background:linear-gradient(180deg,#0d5a2e 0%,#1a8d5f 30%,#14704c 60%,#0b4d2d 100%);z-index:200;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:2rem;text-align:center;
+  padding:var(--sp-2xl);text-align:center;
 }
 .onboarding.hidden{display:none}
-.onboarding h2{font-size:1.5rem;margin-bottom:1.5rem;color:var(--accent)}
-.onboarding .step{display:none;width:100%;max-width:320px;flex-direction:column;align-items:center;gap:1rem}
+.onboarding h2{font-size:var(--fs-xl);font-weight:300;margin-bottom:var(--sp-xl);color:var(--gold);letter-spacing:0.02em}
+.onboarding .step{display:none;width:100%;max-width:300px;flex-direction:column;align-items:center;gap:var(--sp-lg)}
 .onboarding .step.active{display:flex}
-.lang-choices{display:flex;flex-direction:column;gap:0.75rem;width:100%}
+.lang-choices{display:flex;flex-direction:column;gap:var(--sp-md);width:100%}
 .lang-choices button{
-  padding:1rem;background:var(--surface);border:2px solid var(--border);
-  border-radius:0.75rem;font-size:1.1rem;font-weight:600;
-  transition:border-color 0.2s;
+  padding:var(--sp-md) var(--sp-lg);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--sp-sm);font-size:var(--fs-base);font-weight:500;color:rgba(255,255,255,0.85);
+  transition:border-color 0.2s,background 0.2s;
 }
 .lang-choices button:hover,.lang-choices button:focus-visible,.lang-choices button.selected{
-  border-color:var(--accent);
+  border-color:var(--gold);background:rgba(201,168,76,0.08);
 }
 .city-select{
-  width:100%;padding:0.75rem;font-size:1rem;
-  background:var(--surface);color:var(--fg);
-  border:1px solid var(--border);border-radius:0.5rem;
+  width:100%;padding:var(--sp-md);font-size:var(--fs-sm);
+  background:rgba(255,255,255,0.08);color:#fff;
+  border:1px solid rgba(255,255,255,0.12);border-radius:var(--sp-sm);
 }
 .btn-primary{
-  padding:0.75rem 2rem;background:var(--accent);color:#fff;
-  border-radius:0.5rem;font-weight:600;font-size:1rem;
-  min-width:8rem;
+  padding:var(--sp-md) var(--sp-xl);background:var(--gold);color:#1a1a1a;
+  border-radius:var(--sp-sm);font-weight:600;font-size:var(--fs-sm);
+  min-width:7rem;letter-spacing:0.03em;
 }
 .btn-secondary{
-  padding:0.5rem 1.5rem;color:var(--muted);font-size:0.9rem;
+  padding:var(--sp-sm) var(--sp-lg);color:rgba(255,255,255,0.4);font-size:var(--fs-xs);
 }
 
 /* Update banner */
 .update-banner{
   position:fixed;top:0;left:0;right:0;
-  background:var(--accent);color:#fff;
+  background:rgba(8,40,22,0.95);color:#fff;
   display:none;align-items:center;justify-content:center;
-  gap:0.75rem;padding:0.75rem;z-index:150;font-size:0.9rem;
+  gap:var(--sp-md);padding:var(--sp-md);z-index:150;font-size:var(--fs-sm);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
 }
 .update-banner.show{display:flex}
 .update-banner button{
-  padding:0.35rem 0.75rem;border-radius:0.25rem;font-weight:600;font-size:0.8rem;
+  padding:var(--sp-sm) var(--sp-md);border-radius:var(--sp-sm);font-weight:600;font-size:var(--fs-xs);
 }
-.update-banner .btn-update{background:#fff;color:var(--accent)}
-.update-banner .btn-later{color:rgba(255,255,255,0.8)}
+.update-banner .btn-update{background:var(--gold);color:#1a1a1a}
+.update-banner .btn-later{color:rgba(255,255,255,0.4)}
 
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){
@@ -509,38 +577,40 @@ nav.bottom-bar button:focus-visible{
 /* High contrast */
 @media(prefers-contrast:more){
   :root{--border:#888;--muted:#444}
-  .prayer-list li.current{outline:2px solid #fff}
+  .prayer-list li.current-prayer{outline:2px solid #fff}
 }
 
 /* Focus visible */
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:0.15rem}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:var(--sp-xs)}
 
 /* Notification blocked bar */
 .notif-blocked-bar{
   display:none;position:fixed;top:0;left:0;right:0;z-index:200;
-  padding:0.5rem 1rem;background:#e74c3c;color:#fff;font-size:0.8rem;
+  padding:var(--sp-sm) var(--sp-lg);background:rgba(231,76,60,0.9);color:#fff;font-size:var(--fs-xs);
   text-align:center;line-height:1.4;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
 }
 .notif-blocked-bar.show{display:block}
 
 /* Install banner */
 .install-banner{
-  display:none;position:fixed;bottom:calc(60px + var(--safe-b));left:0;right:0;z-index:150;
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:0.75rem 1rem;box-shadow:0 -2px 8px rgba(0,0,0,0.1);
+  display:none;position:fixed;bottom:calc(3.25rem + var(--safe-b));left:0;right:0;z-index:150;
+  background:rgba(8,40,22,0.95);border-top:1px solid rgba(255,255,255,0.06);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  padding:var(--sp-md) var(--sp-lg);
 }
 .install-banner.show{display:block}
-.install-banner-content{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem}
+.install-banner-content{display:flex;align-items:center;gap:var(--sp-md);margin-bottom:var(--sp-sm)}
 .install-icon{flex-shrink:0}
-.install-text{display:flex;flex-direction:column;gap:0.15rem}
-.install-text strong{font-size:0.9rem;color:var(--fg)}
-.install-text span{font-size:0.75rem;color:var(--muted)}
-.install-actions{display:flex;gap:0.5rem;justify-content:flex-end}
+.install-text{display:flex;flex-direction:column;gap:var(--sp-xs)}
+.install-text strong{font-size:var(--fs-sm);color:#fff;font-weight:500}
+.install-text span{font-size:var(--fs-xs);color:rgba(255,255,255,0.4)}
+.install-actions{display:flex;gap:var(--sp-sm);justify-content:flex-end}
 .btn-install{
-  background:var(--accent);color:#fff;border:none;border-radius:0.5rem;
-  padding:0.45rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;
+  background:var(--gold);color:#1a1a1a;border:none;border-radius:var(--sp-sm);
+  padding:var(--sp-sm) var(--sp-lg);font-size:var(--fs-xs);font-weight:600;cursor:pointer;
 }
-.btn-install:hover{background:var(--accent2)}
+.btn-install:hover{background:#d4b35a}
 
 /* AR overlay */
 .ar-overlay{
@@ -555,25 +625,26 @@ nav.bottom-bar button:focus-visible{
   background:rgba(0,0,0,0.5);color:#fff;font-size:1.5rem;
   display:flex;align-items:center;justify-content:center;cursor:pointer;
 }
-.btn-ar{margin-top:0.5rem}
+.btn-ar{margin-top:var(--sp-sm)}
 
-/* GitHub corner (top-left) */
+/* GitHub corner — minimal, hidden on prayer view to reduce clutter */
 .github-corner{
   position:fixed;top:0;left:0;z-index:160;
-  width:80px;height:80px;pointer-events:none;
+  width:56px;height:56px;pointer-events:none;
+  opacity:0.12;transition:opacity 0.3s;
 }
+.github-corner:hover{opacity:0.3}
 [dir="rtl"] .github-corner{left:auto;right:0}
 .github-corner a{
   display:block;width:100%;height:100%;pointer-events:auto;
   text-decoration:none;
 }
 .github-corner svg{
-  fill:var(--accent);color:var(--bg);
-  width:80px;height:80px;
+  fill:#fff;color:rgba(0,0,0,0.3);
+  width:56px;height:56px;
   transform:scaleX(-1);
 }
 [dir="rtl"] .github-corner svg{transform:scaleX(1)}
-.github-corner:hover svg{fill:var(--accent2)}
 .github-corner .octo-arm{transform-origin:115px 100px}
 @media(hover:hover){
   .github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}
@@ -583,63 +654,62 @@ nav.bottom-bar button:focus-visible{
   20%,60%{transform:rotate(-25deg)}
   40%,80%{transform:rotate(10deg)}
 }
-.beta-badge{
-  position:fixed;top:46px;left:4px;z-index:161;
-  background:#e67e22;color:#fff;
-  font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;
-  padding:2px 6px;border-radius:3px;
-  pointer-events:none;
-  transform:rotate(-45deg);
-}
-[dir="rtl"] .beta-badge{left:auto;right:4px;transform:rotate(45deg)}
+.beta-badge{display:none}
 
-/* Share button (top-right) */
+/* Share button — subtle, top-right */
 .share-btn{
-  position:fixed;top:0.75rem;right:0.75rem;z-index:160;
-  width:2.5rem;height:2.5rem;border-radius:50%;
-  background:var(--surface);color:var(--accent);
-  border:1px solid var(--border);
+  position:fixed;top:var(--sp-md);right:var(--sp-md);z-index:160;
+  width:2rem;height:2rem;border-radius:50%;color:#fff;
+  background:transparent;border:none;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 1px 4px rgba(0,0,0,0.1);
-  transition:transform 0.2s,background 0.2s;
+  opacity:0.3;transition:opacity 0.2s;
 }
-[dir="rtl"] .share-btn{right:auto;left:0.75rem}
-.share-btn:hover,.share-btn:focus-visible{transform:scale(1.1);background:var(--surface2)}
-.share-btn svg{width:1.15rem;height:1.15rem}
+[dir="rtl"] .share-btn{right:auto;left:var(--sp-md)}
+.share-btn:hover,.share-btn:focus-visible{opacity:0.7}
+.share-btn svg{width:1rem;height:1rem}
 
-/* Issue / feedback button */
+/* Issue / feedback button — subtle */
 .issue-btn{
-  position:fixed;bottom:calc(4rem + var(--safe-b));right:1rem;z-index:99;
-  width:2.75rem;height:2.75rem;border-radius:50%;
-  background:var(--accent);color:#fff;
+  position:fixed;bottom:calc(3.75rem + var(--safe-b));right:var(--sp-md);z-index:99;
+  width:2rem;height:2rem;border-radius:50%;
+  background:transparent;color:#fff;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 8px rgba(0,0,0,0.25);
-  transition:transform 0.2s,background 0.2s;
+  opacity:0.2;transition:opacity 0.2s;
   text-decoration:none;
 }
-[dir="rtl"] .issue-btn{right:auto;left:1rem}
-.issue-btn:hover,.issue-btn:focus-visible{transform:scale(1.1);background:var(--accent2)}
-.issue-btn svg{width:1.25rem;height:1.25rem}
+[dir="rtl"] .issue-btn{right:auto;left:var(--sp-md)}
+.issue-btn:hover,.issue-btn:focus-visible{opacity:0.5}
+.issue-btn svg{width:1rem;height:1rem}
 
-/* Countdown hero (replaces analog clock) */
+/* Countdown hero — visual focal point */
 .countdown-hero{
   display:flex;flex-direction:column;align-items:center;
-  padding:0.75rem 0;gap:0.15rem;
+  padding:var(--sp-xl) 0 var(--sp-lg);gap:0;
 }
-.countdown-hero .next-label{font-size:0.8rem;color:var(--muted)}
-.countdown-hero .next-name{font-size:1.3rem;font-weight:700;color:var(--accent)}
+.countdown-hero .next-label{
+  font-size:var(--fs-xs);color:rgba(255,255,255,0.4);
+  text-transform:uppercase;letter-spacing:0.1em;font-weight:500;
+}
+.countdown-hero .next-name{
+  font-size:var(--fs-2xl);font-weight:700;color:var(--gold);
+  margin-top:var(--sp-xs);line-height:1.2;
+}
 .countdown-hero .hero-countdown{
-  font-size:2.5rem;font-weight:700;font-variant-numeric:tabular-nums;
-  letter-spacing:0.05em;color:var(--fg);
+  font-size:var(--fs-3xl);font-weight:200;font-variant-numeric:tabular-nums;
+  letter-spacing:0.08em;color:#fff;line-height:1.1;
+  margin-top:var(--sp-sm);
 }
-.countdown-hero .hero-countdown-label{font-size:0.7rem;color:var(--muted);margin-top:-0.25rem}
+.countdown-hero .hero-countdown-label{
+  font-size:var(--fs-xs);color:rgba(255,255,255,0.35);
+  margin-top:var(--sp-xs);text-transform:uppercase;letter-spacing:0.08em;
+}
 
 /* Prayer progress bar */
 .prayer-progress{
-  width:100%;max-width:280px;height:4px;background:var(--surface2);border-radius:2px;
-  overflow:hidden;margin-top:0.25rem;
+  width:100%;max-width:200px;height:2px;background:rgba(255,255,255,0.1);border-radius:1px;
+  overflow:hidden;margin-top:var(--sp-md);
 }
-.prayer-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 1s linear}
+.prayer-progress-fill{height:100%;background:var(--gold);border-radius:1px;transition:width 1s linear}
 </style>
 </head>
 <body>
@@ -929,6 +999,7 @@ notifBlocked:'الإشعارات محظورة — فعّلها من إعدادا
 hardRefresh:'تحديث شامل',hardRefreshConfirm:'سيتم مسح جميع البيانات المخزنة وإعادة تحميل التطبيق. هل تريد المتابعة؟',hardRefreshing:'جارٍ التحديث…',
 heading:'الاتجاه',accuracyHigh:'دقة عالية',accuracyMedium:'دقة متوسطة',accuracyLow:'دقة منخفضة',calibrationNeeded:'يرجى معايرة البوصلة',calibrationHint:'حرّك هاتفك على شكل رقم 8',
 reportIssue:'الإبلاغ عن مشكلة',
+tomorrowFajr:'فجر الغد',
 share:'مشاركة',shareText:'أوقات الصلاة في {city}: الفجر {fajr}، الظهر {dhuhr}، العصر {asr}، المغرب {maghrib}، العشاء {isha}',shareTitle:'وقت الصلاة — أوقات الصلاة',
 },
 fr:{
@@ -954,6 +1025,7 @@ notifBlocked:'Notifications bloquées — activez-les dans les paramètres du na
 hardRefresh:'Actualisation complète',hardRefreshConfirm:'Toutes les données en cache seront supprimées et l\'application sera rechargée. Continuer ?',hardRefreshing:'Actualisation…',
 heading:'Cap',accuracyHigh:'Haute précision',accuracyMedium:'Précision moyenne',accuracyLow:'Faible précision',calibrationNeeded:'Veuillez calibrer la boussole',calibrationHint:'Faites un mouvement en 8',
 reportIssue:'Signaler un problème',
+tomorrowFajr:'Fajr demain',
 share:'Partager',shareText:'Horaires de prière à {city} : Fajr {fajr}, Dhuhr {dhuhr}, Asr {asr}, Maghrib {maghrib}, Isha {isha}',shareTitle:'WaqtSalat — Horaires de prière',
 },
 en:{
@@ -979,6 +1051,7 @@ notifBlocked:'Notifications blocked — enable them in browser settings to recei
 hardRefresh:'Hard Refresh',hardRefreshConfirm:'All cached data will be cleared and the app will reload. Continue?',hardRefreshing:'Refreshing…',
 heading:'Heading',accuracyHigh:'High accuracy',accuracyMedium:'Medium accuracy',accuracyLow:'Low accuracy',calibrationNeeded:'Please calibrate the compass',calibrationHint:'Move your phone in a figure-8 pattern',
 reportIssue:'Report an issue',
+tomorrowFajr:'Tomorrow\'s Fajr',
 share:'Share',shareText:'Prayer times in {city}: Fajr {fajr}, Dhuhr {dhuhr}, Asr {asr}, Maghrib {maghrib}, Isha {isha}',shareTitle:'WaqtSalat — Prayer Times',
 }};
 
@@ -1170,8 +1243,7 @@ function applyTheme(){
     document.documentElement.setAttribute('data-theme',th);
   }
   // Update theme-color meta
-  const isDark=th==='dark'||(th==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches);
-  document.querySelector('meta[name="theme-color"]').content=isDark?'#0a0a0a':'#1a8d5f';
+  document.querySelector('meta[name="theme-color"]').content='#0d5a2e';
 }
 
 function renderNav(){
@@ -1225,13 +1297,28 @@ function renderPrayers(){
     if(mins[i]!==null&&mins[i]>nowMin){nextIdx=i;break}
   }
 
+  // currentIdx = prayer we're in now (the one just before nextIdx)
+  const currentIdx=nextIdx>0?nextIdx-1:(nextIdx===0?-1:displayPrayers.length-1);
+  // Count future prayers after nextIdx for fading
+  const futurePrayers=nextIdx>=0?displayPrayers.length-nextIdx-1:0;
+
   displayPrayers.forEach((key,i)=>{
     const li=document.createElement('li');
     li.setAttribute('role','listitem');
     const passed=mins[i]!==null&&mins[i]<=nowMin;
-    const current=i===nextIdx;
-    if(passed&&!current)li.classList.add('passed');
-    if(current){li.classList.add('current');li.setAttribute('aria-current','true')}
+
+    if(i===currentIdx){
+      li.classList.add('current-prayer');li.setAttribute('aria-current','true');
+    }else if(i===nextIdx){
+      li.classList.add('next-prayer');
+    }else if(passed){
+      li.classList.add('passed');
+    }else if(nextIdx>=0&&i>nextIdx){
+      // Future prayers after next: fade increasingly
+      const stepsAfterNext=i-nextIdx;
+      const opacity=Math.max(0.3,0.85-stepsAfterNext*0.15);
+      li.style.opacity=opacity;
+    }
 
     const nameSpan=document.createElement('span');
     nameSpan.className='prayer-name';nameSpan.textContent=t(key);
@@ -1240,6 +1327,22 @@ function renderPrayers(){
     li.appendChild(nameSpan);li.appendChild(timeSpan);
     list.appendChild(li);
   });
+
+  // Tomorrow's Fajr below Isha
+  const tomorrow=new Date(now);
+  tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowTimes=getPrayerTimesLocal(tomorrow,lat,lng,state.adjustments);
+  if(tomorrowTimes.fajr){
+    const li=document.createElement('li');
+    li.setAttribute('role','listitem');
+    li.classList.add('tomorrow-fajr');
+    const nameSpan=document.createElement('span');
+    nameSpan.className='prayer-name';nameSpan.textContent=t('tomorrowFajr');
+    const timeSpan=document.createElement('span');
+    timeSpan.className='prayer-time';timeSpan.textContent=tomorrowTimes.fajr;
+    li.appendChild(nameSpan);li.appendChild(timeSpan);
+    list.appendChild(li);
+  }
 
   // Countdown hero
   $('next-prayer-label').textContent=t('nextPrayer');
