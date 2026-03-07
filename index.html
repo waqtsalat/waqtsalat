@@ -1240,6 +1240,7 @@ function nowInCasa(){
 // ─── UI Rendering ─────────────────────────────────────────────
 let prayerTimes=null;
 let countdownInterval=null;
+let lastRenderDate=null; // track current day for day-change detection
 
 function renderAll(){
   applyTheme();applyLocale();
@@ -1289,7 +1290,14 @@ function renderPrayers(){
   if(!state.position)return;
   const now=new Date();
   const{lat,lng}=state.position;
+  // Track current date for day-change detection
+  const casaNow=nowInCasa();
+  const todayStr=casaNow.getFullYear()+'-'+(casaNow.getMonth()+1)+'-'+casaNow.getDate();
+  const dayChanged=lastRenderDate!==null&&lastRenderDate!==todayStr;
+  lastRenderDate=todayStr;
   prayerTimes=getPrayerTimesLocal(now,lat,lng,state.adjustments);
+  // Reschedule notifications on day change
+  if(dayChanged)scheduleNotifications();
 
   // City name
   const city=CITIES.find(c=>c.id===state.position.cityId);
@@ -1404,12 +1412,14 @@ function updateCountdown(targetMin,now){
 
 function startCountdown(targetMin){
   if(countdownInterval)clearInterval(countdownInterval);
+  let lastNowMin=-1;
   countdownInterval=setInterval(()=>{
     const now=nowInCasa();
     updateCountdown(targetMin,now);
-    // Check if we crossed a prayer time — re-render
     const nowMin=now.getHours()*60+now.getMinutes();
-    if(now.getSeconds()===0){
+    // Re-render when minute changes (prayer transition or day change)
+    if(nowMin!==lastNowMin){
+      lastNowMin=nowMin;
       renderPrayers();
     }
   },1000);
