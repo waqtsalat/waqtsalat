@@ -1,0 +1,49 @@
+{
+  "name": "وقت الصلاة — WaqtSalat",
+  "short_name": "WaqtSalat",
+  "description": "أوقات الصلاة في المغرب — Prayer times for Morocco",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#1a8d5f",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "icons/icon-maskable.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "أوقات الصلاة",
+      "short_name": "الصلاة",
+      "url": "./#prayers",
+      "icons": [{ "src": "icons/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "القبلة",
+      "short_name": "القبلة",
+      "url": "./#qibla",
+      "icons": [{ "src": "icons/icon.svg", "sizes": "any" }]
+    }
+  ],
+  "categories": ["lifestyle", "utilities"]
+}

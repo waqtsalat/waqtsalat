@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a8d5f">
+<meta name="description" content="وقت الصلاة — أوقات الصلاة في المغرب">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>وقت الصلاة — WaqtSalat</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<style>
+:root{
+  --bg:#fafafa;--fg:#1a1a1a;--accent:#1a8d5f;--accent2:#15724d;
+  --surface:#fff;--surface2:#f0f0f0;--border:#e0e0e0;
+  --muted:#666;--passed:#999;
+  --arc-fajr:#1a237e;--arc-sunrise:#fdd835;--arc-dhuhr:#f9a825;
+  --arc-asr:#ef6c00;--arc-maghrib:#7b1fa2;--arc-isha:#0d1b2a;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a0a0a;--fg:#f0f0f0;--accent:#2ecc71;--accent2:#27ae60;
+    --surface:#1a1a1a;--surface2:#252525;--border:#333;
+    --muted:#999;--passed:#555;
+  }
+}
+[data-theme="dark"]{
+  --bg:#0a0a0a;--fg:#f0f0f0;--accent:#2ecc71;--accent2:#27ae60;
+  --surface:#1a1a1a;--surface2:#252525;--border:#333;
+  --muted:#999;--passed:#555;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{
+  font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--fg);
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+[lang="ar"] body{line-height:1.8}
+[lang="fr"] body,[lang="en"] body{line-height:1.5}
+a{color:var(--accent);text-decoration:none}
+button{
+  font:inherit;cursor:pointer;border:none;background:none;color:inherit;
+  touch-action:manipulation;
+}
+.skip-link{
+  position:absolute;top:-100%;left:0;
+  background:var(--accent);color:#fff;padding:0.5rem 1rem;
+  z-index:1000;border-radius:0 0 0.25rem 0;
+}
+.skip-link:focus{top:0}
+
+/* Layout */
+.app{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+main{
+  flex:1;overflow-y:auto;
+  padding:1rem;padding-bottom:calc(4.5rem + var(--safe-b));
+  max-width:600px;width:100%;margin:0 auto;
+}
+.view{display:none}
+.view.active{display:block}
+
+/* Bottom nav */
+nav.bottom-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;
+  padding-bottom:var(--safe-b);height:calc(3.5rem + var(--safe-b));
+  z-index:100;
+}
+nav.bottom-bar button{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:0.15rem;padding:0.5rem 0;min-height:2.75rem;min-width:2.75rem;
+  color:var(--muted);transition:color 0.2s;
+  font-size:0.65rem;
+}
+nav.bottom-bar button.active{color:var(--accent)}
+nav.bottom-bar button svg{width:1.5rem;height:1.5rem}
+nav.bottom-bar button:focus-visible{
+  outline:2px solid var(--accent);outline-offset:-2px;border-radius:0.25rem;
+}
+
+/* Prayer times view */
+.header-info{text-align:center;margin-bottom:1rem}
+.header-info .city-name{font-size:1.1rem;font-weight:600}
+.header-info .date-line{font-size:0.85rem;color:var(--muted);margin-top:0.25rem}
+
+
+.prayer-list{
+  list-style:none;background:var(--surface);
+  border-radius:0.75rem;border:1px solid var(--border);
+  overflow:hidden;
+}
+.prayer-list li{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0.85rem 1rem;border-bottom:1px solid var(--border);
+  transition:background 0.2s;
+}
+.prayer-list li:last-child{border-bottom:none}
+.prayer-list li.passed{color:var(--passed)}
+.prayer-list li.current{
+  background:var(--accent);color:#fff;font-weight:600;
+  border-radius:0.25rem;
+}
+.prayer-list li .prayer-name{font-size:0.95rem}
+.prayer-list li .prayer-time{font-size:0.95rem;font-variant-numeric:tabular-nums}
+
+/* Qibla view */
+.qibla-container{text-align:center;padding:1rem 0}
+.compass-svg{width:min(280px,80vw);height:min(280px,80vw)}
+.qibla-info{margin-top:1rem}
+.qibla-info .angle{font-size:1.3rem;font-weight:600;color:var(--accent)}
+.qibla-info .distance{font-size:0.9rem;color:var(--muted);margin-top:0.25rem}
+.btn-compass{
+  margin-top:1rem;padding:0.75rem 1.5rem;
+  background:var(--accent);color:#fff;border-radius:0.5rem;
+  font-weight:600;font-size:0.9rem;
+}
+
+/* Settings view */
+.settings-section{
+  background:var(--surface);border-radius:0.75rem;
+  border:1px solid var(--border);margin-bottom:1rem;
+  overflow:hidden;
+}
+.settings-section h3{
+  padding:0.75rem 1rem;font-size:0.9rem;font-weight:600;
+  background:var(--surface2);border-bottom:1px solid var(--border);
+}
+.setting-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0.75rem 1rem;border-bottom:1px solid var(--border);
+  gap:0.5rem;
+}
+.setting-row:last-child{border-bottom:none}
+.setting-row label{font-size:0.9rem;flex:1}
+.setting-row select,.setting-row input[type="range"]{
+  font-size:0.85rem;padding:0.35rem;
+  background:var(--surface2);color:var(--fg);
+  border:1px solid var(--border);border-radius:0.35rem;
+}
+.setting-row select{min-width:8rem}
+.setting-row input[type="range"]{width:5rem}
+.adj-val{font-size:0.8rem;min-width:2.5rem;text-align:center;font-variant-numeric:tabular-nums}
+
+.btn-action{
+  display:block;width:100%;padding:0.75rem;
+  text-align:center;font-size:0.9rem;font-weight:600;
+  border-bottom:1px solid var(--border);
+  transition:background 0.15s;
+}
+.btn-action:last-child{border-bottom:none}
+.btn-action:hover,.btn-action:focus-visible{background:var(--surface2)}
+.btn-danger{color:#e74c3c}
+
+/* Toggle switch */
+.toggle{position:relative;width:2.75rem;height:1.5rem;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle span{
+  position:absolute;inset:0;cursor:pointer;
+  background:var(--border);border-radius:1rem;
+  transition:background 0.3s;
+}
+.toggle span::before{
+  content:'';position:absolute;width:1.1rem;height:1.1rem;
+  left:0.2rem;bottom:0.2rem;background:#fff;border-radius:50%;
+  transition:transform 0.3s;
+}
+.toggle input:checked+span{background:var(--accent)}
+.toggle input:checked+span::before{transform:translateX(1.25rem)}
+.toggle input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Onboarding */
+.onboarding{
+  position:fixed;inset:0;background:var(--bg);z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2rem;text-align:center;
+}
+.onboarding.hidden{display:none}
+.onboarding h2{font-size:1.5rem;margin-bottom:1.5rem;color:var(--accent)}
+.onboarding .step{display:none;width:100%;max-width:320px;flex-direction:column;align-items:center;gap:1rem}
+.onboarding .step.active{display:flex}
+.lang-choices{display:flex;flex-direction:column;gap:0.75rem;width:100%}
+.lang-choices button{
+  padding:1rem;background:var(--surface);border:2px solid var(--border);
+  border-radius:0.75rem;font-size:1.1rem;font-weight:600;
+  transition:border-color 0.2s;
+}
+.lang-choices button:hover,.lang-choices button:focus-visible,.lang-choices button.selected{
+  border-color:var(--accent);
+}
+.city-select{
+  width:100%;padding:0.75rem;font-size:1rem;
+  background:var(--surface);color:var(--fg);
+  border:1px solid var(--border);border-radius:0.5rem;
+}
+.btn-primary{
+  padding:0.75rem 2rem;background:var(--accent);color:#fff;
+  border-radius:0.5rem;font-weight:600;font-size:1rem;
+  min-width:8rem;
+}
+.btn-secondary{
+  padding:0.5rem 1.5rem;color:var(--muted);font-size:0.9rem;
+}
+
+/* Update banner */
+.update-banner{
+  position:fixed;top:0;left:0;right:0;
+  background:var(--accent);color:#fff;
+  display:none;align-items:center;justify-content:center;
+  gap:0.75rem;padding:0.75rem;z-index:150;font-size:0.9rem;
+}
+.update-banner.show{display:flex}
+.update-banner button{
+  padding:0.35rem 0.75rem;border-radius:0.25rem;font-weight:600;font-size:0.8rem;
+}
+.update-banner .btn-update{background:#fff;color:var(--accent)}
+.update-banner .btn-later{color:rgba(255,255,255,0.8)}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:0.01ms!important;animation-duration:0.01ms!important}
+}
+
+/* High contrast */
+@media(prefers-contrast:more){
+  :root{--border:#888;--muted:#444}
+  .prayer-list li.current{outline:2px solid #fff}
+}
+
+/* Focus visible */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:0.15rem}
+
+/* Notification blocked bar */
+.notif-blocked-bar{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:0.5rem 1rem;background:#e74c3c;color:#fff;font-size:0.8rem;
+  text-align:center;line-height:1.4;
+}
+.notif-blocked-bar.show{display:block}
+
+/* Install banner */
+.install-banner{
+  display:none;position:fixed;bottom:calc(60px + var(--safe-b));left:0;right:0;z-index:150;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:0.75rem 1rem;box-shadow:0 -2px 8px rgba(0,0,0,0.1);
+}
+.install-banner.show{display:block}
+.install-banner-content{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem}
+.install-icon{flex-shrink:0}
+.install-text{display:flex;flex-direction:column;gap:0.15rem}
+.install-text strong{font-size:0.9rem;color:var(--fg)}
+.install-text span{font-size:0.75rem;color:var(--muted)}
+.install-actions{display:flex;gap:0.5rem;justify-content:flex-end}
+.btn-install{
+  background:var(--accent);color:#fff;border:none;border-radius:0.5rem;
+  padding:0.45rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;
+}
+.btn-install:hover{background:var(--accent2)}
+
+/* AR overlay */
+.ar-overlay{
+  position:fixed;inset:0;z-index:1000;background:#000;
+}
+.ar-overlay.hidden{display:none}
+#ar-video{width:100%;height:100%;object-fit:cover}
+#ar-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ar-close{
+  position:absolute;top:1rem;right:1rem;z-index:1001;
+  width:2.5rem;height:2.5rem;border-radius:50%;border:none;
+  background:rgba(0,0,0,0.5);color:#fff;font-size:1.5rem;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.btn-ar{margin-top:0.5rem}
+
+/* Countdown hero (replaces analog clock) */
+.countdown-hero{
+  display:flex;flex-direction:column;align-items:center;
+  padding:1.5rem 0;gap:0.25rem;
+}
+.countdown-hero .next-label{font-size:0.85rem;color:var(--muted)}
+.countdown-hero .next-name{font-size:1.5rem;font-weight:700;color:var(--accent)}
+.countdown-hero .hero-countdown{
+  font-size:3rem;font-weight:700;font-variant-numeric:tabular-nums;
+  letter-spacing:0.05em;color:var(--fg);
+}
+.countdown-hero .hero-countdown-label{font-size:0.75rem;color:var(--muted);margin-top:-0.25rem}
+
+/* Prayer progress bar */
+.prayer-progress{
+  width:100%;max-width:280px;height:4px;background:var(--surface2);border-radius:2px;
+  overflow:hidden;margin-top:0.5rem;
+}
+.prayer-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 1s linear}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content" id="skip-link">Skip to content</a>
+
+<div class="notif-blocked-bar" id="notif-blocked-bar" role="alert">
+  <span id="notif-blocked-text"></span>
+</div>
+
+<div class="update-banner" id="update-banner" role="alert">
+  <span id="update-text"></span>
+  <button class="btn-update" id="btn-update-now"></button>
+  <button class="btn-later" id="btn-update-later"></button>
+</div>
+
+<div class="install-banner" id="install-banner" role="alert">
+  <div class="install-banner-content">
+    <svg class="install-icon" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="32" height="32"><path d="M12 5v14M5 12l7 7 7-7"/><line x1="5" y1="19" x2="19" y2="19"/></svg>
+    <div class="install-text">
+      <strong id="install-title"></strong>
+      <span id="install-desc"></span>
+    </div>
+  </div>
+  <div class="install-actions">
+    <button class="btn-install" id="btn-install"></button>
+    <button class="btn-later" id="btn-install-later"></button>
+  </div>
+</div>
+
+<!-- AR Overlay -->
+<div class="ar-overlay hidden" id="ar-overlay">
+  <video id="ar-video" autoplay playsinline muted></video>
+  <canvas id="ar-canvas"></canvas>
+  <button class="ar-close" id="ar-close" aria-label="Close AR">&times;</button>
+</div>
+
+<div class="onboarding" id="onboarding">
+  <div class="step active" id="step-lang" data-step="0">
+    <h2 id="ob-lang-title">اختر اللغة</h2>
+    <div class="lang-choices">
+      <button data-lang="ar" class="selected">العربية</button>
+      <button data-lang="fr">Français</button>
+      <button data-lang="en">English</button>
+    </div>
+    <button class="btn-primary" id="ob-lang-next">التالي</button>
+  </div>
+  <div class="step" id="step-city" data-step="1">
+    <h2 id="ob-city-title">اختر مدينتك</h2>
+    <select class="city-select" id="ob-city-select" aria-label="City"></select>
+    <button class="btn-primary" id="ob-gps-btn">📍 <span id="ob-gps-text">تحديد الموقع</span></button>
+    <button class="btn-primary" id="ob-city-next">التالي</button>
+  </div>
+  <div class="step" id="step-done" data-step="2">
+    <h2 id="ob-done-title">تم الإعداد</h2>
+    <svg width="64" height="64" viewBox="0 0 64 64" role="img" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="none" stroke="var(--accent)" stroke-width="3"/><path d="M18 32l10 10 18-20" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <button class="btn-primary" id="ob-done-btn">تم</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+<main id="main-content" tabindex="-1">
+
+<!-- Prayer Times View -->
+<section class="view active" id="view-prayers" role="region" aria-label="Prayer Times">
+  <div class="header-info">
+    <div class="city-name" id="city-name"></div>
+    <div class="date-line" id="date-line"></div>
+  </div>
+
+  <div class="countdown-hero" role="timer" aria-live="polite" id="countdown-hero">
+    <div class="next-label" id="next-prayer-label"></div>
+    <div class="next-name" id="next-prayer-name"></div>
+    <div class="hero-countdown" id="countdown"></div>
+    <div class="hero-countdown-label" id="countdown-label"></div>
+    <div class="prayer-progress"><div class="prayer-progress-fill" id="prayer-progress-fill"></div></div>
+  </div>
+
+  <ul class="prayer-list" role="list" id="prayer-list"></ul>
+</section>
+
+<!-- Qibla View -->
+<section class="view" id="view-qibla" role="region" aria-label="Qibla">
+  <div class="qibla-container">
+    <svg class="compass-svg" viewBox="0 0 200 200" role="img" id="compass-svg" aria-label="Qibla compass">
+      <circle cx="100" cy="100" r="95" fill="none" stroke="var(--border)" stroke-width="1"/>
+      <!-- Degree ticks -->
+      <g id="compass-ticks"></g>
+      <!-- Cardinal labels -->
+      <text id="lbl-n" x="100" y="18" text-anchor="middle" fill="#e74c3c" font-size="12" font-weight="700">N</text>
+      <text id="lbl-s" x="100" y="192" text-anchor="middle" fill="var(--fg)" font-size="11">S</text>
+      <text id="lbl-e" x="188" y="104" text-anchor="middle" fill="var(--fg)" font-size="11">E</text>
+      <text id="lbl-w" x="12" y="104" text-anchor="middle" fill="var(--fg)" font-size="11">W</text>
+      <!-- North needle -->
+      <g id="compass-rotate">
+        <polygon points="100,15 96,100 104,100" fill="#e74c3c" opacity="0.7"/>
+        <polygon points="100,185 96,100 104,100" fill="var(--muted)" opacity="0.3"/>
+      </g>
+      <!-- Qibla needle -->
+      <g id="qibla-needle">
+        <line x1="100" y1="100" x2="100" y2="22" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="100,18 95,30 105,30" fill="var(--accent)"/>
+      </g>
+      <circle cx="100" cy="100" r="4" fill="var(--accent)"/>
+    </svg>
+    <div class="qibla-info">
+      <div class="angle" id="qibla-angle"></div>
+      <div class="distance" id="qibla-distance"></div>
+    </div>
+    <button class="btn-compass" id="btn-compass"></button>
+    <button class="btn-compass btn-ar" id="btn-ar"></button>
+  </div>
+</section>
+
+<!-- Settings View -->
+<section class="view" id="view-settings" role="region" aria-label="Settings">
+  <div class="settings-section">
+    <h3 id="s-city-title"></h3>
+    <div class="setting-row">
+      <label for="s-city-select" id="s-city-label"></label>
+      <select id="s-city-select"></select>
+    </div>
+  </div>
+  <div class="settings-section">
+    <h3 id="s-lang-title"></h3>
+    <div class="setting-row">
+      <label for="s-lang-select" id="s-lang-label"></label>
+      <select id="s-lang-select">
+        <option value="ar">العربية</option>
+        <option value="fr">Français</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+  </div>
+  <div class="settings-section">
+    <h3 id="s-theme-title"></h3>
+    <div class="setting-row">
+      <label for="s-theme-select" id="s-theme-label"></label>
+      <select id="s-theme-select">
+        <option value="system" id="opt-theme-system"></option>
+        <option value="light" id="opt-theme-light"></option>
+        <option value="dark" id="opt-theme-dark"></option>
+      </select>
+    </div>
+  </div>
+  <div class="settings-section" id="s-notif-section">
+    <h3 id="s-notif-title"></h3>
+    <div class="setting-row">
+      <label id="s-notif-label"></label>
+      <label class="toggle"><input type="checkbox" id="s-notif-toggle"><span></span></label>
+    </div>
+    <div id="s-notif-prayers"></div>
+  </div>
+  <div class="settings-section">
+    <h3 id="s-adj-title"></h3>
+    <div id="s-adj-rows"></div>
+  </div>
+  <div class="settings-section">
+    <button class="btn-action" id="btn-export"></button>
+    <button class="btn-action" id="btn-import"></button>
+    <button class="btn-action btn-danger" id="btn-reset"></button>
+  </div>
+  <input type="file" id="import-file" accept=".json" style="display:none">
+</section>
+
+</main>
+
+<nav class="bottom-bar" role="navigation" aria-label="Main">
+  <button id="nav-prayers" class="active" aria-current="page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+    <span id="nav-prayers-text"></span>
+  </button>
+  <button id="nav-qibla">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="12,2 15,10 12,8 9,10" fill="currentColor"/></svg>
+    <span id="nav-qibla-text"></span>
+  </button>
+  <button id="nav-settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    <span id="nav-settings-text"></span>
+  </button>
+</nav>
+</div>
+
+<script>
+'use strict';
+(function(){
+
+// ─── Constants ────────────────────────────────────────────────
+const DEG=Math.PI/180,RAD=180/Math.PI;
+const FAJR_ANGLE=19,ISHA_ANGLE=17;
+const KAABA_LAT=21.4225,KAABA_LNG=39.8262;
+const PRAYER_KEYS=['fajr','sunrise','dhuhr','asr','maghrib','isha'];
+const TZ='Africa/Casablanca';
+
+// ─── Cities ───────────────────────────────────────────────────
+const CITIES=[
+{id:'tanger',ar:'طنجة',fr:'Tanger',lat:35.7595,lng:-5.834},
+{id:'tetouan',ar:'تطوان',fr:'Tétouan',lat:35.5785,lng:-5.3684},
+{id:'alhoceima',ar:'الحسيمة',fr:'Al Hoceima',lat:35.2517,lng:-3.9372},
+{id:'nador',ar:'الناظور',fr:'Nador',lat:35.1681,lng:-2.933},
+{id:'oujda',ar:'وجدة',fr:'Oujda',lat:34.6814,lng:-1.9086},
+{id:'berkane',ar:'بركان',fr:'Berkane',lat:34.92,lng:-2.32},
+{id:'chefchaouen',ar:'شفشاون',fr:'Chefchaouen',lat:35.1688,lng:-5.2636},
+{id:'larache',ar:'العرائش',fr:'Larache',lat:35.1932,lng:-6.1557},
+{id:'ksar',ar:'القصر الكبير',fr:'Ksar el-Kébir',lat:35,lng:-5.9},
+{id:'fnideq',ar:'الفنيدق',fr:'Fnideq',lat:35.8494,lng:-5.357},
+{id:'rabat',ar:'الرباط',fr:'Rabat',lat:34.0209,lng:-6.8416},
+{id:'sale',ar:'سلا',fr:'Salé',lat:34.0531,lng:-6.7986},
+{id:'kenitra',ar:'القنيطرة',fr:'Kénitra',lat:34.261,lng:-6.5802},
+{id:'casablanca',ar:'الدار البيضاء',fr:'Casablanca',lat:33.5731,lng:-7.5898},
+{id:'mohammedia',ar:'المحمدية',fr:'Mohammedia',lat:33.6861,lng:-7.3829},
+{id:'eljadida',ar:'الجديدة',fr:'El Jadida',lat:33.2549,lng:-8.5007},
+{id:'safi',ar:'آسفي',fr:'Safi',lat:32.2994,lng:-9.2372},
+{id:'essaouira',ar:'الصويرة',fr:'Essaouira',lat:31.5085,lng:-9.7595},
+{id:'fes',ar:'فاس',fr:'Fès',lat:34.0331,lng:-5.0003},
+{id:'meknes',ar:'مكناس',fr:'Meknès',lat:33.8935,lng:-5.5473},
+{id:'khenifra',ar:'خنيفرة',fr:'Khénifra',lat:32.934,lng:-5.664},
+{id:'benimellal',ar:'بني ملال',fr:'Beni Mellal',lat:32.3373,lng:-6.3498},
+{id:'khouribga',ar:'خريبكة',fr:'Khouribga',lat:32.8811,lng:-6.9063},
+{id:'settat',ar:'سطات',fr:'Settat',lat:33.0014,lng:-7.6163},
+{id:'taza',ar:'تازة',fr:'Taza',lat:34.21,lng:-4.01},
+{id:'ifrane',ar:'إفران',fr:'Ifrane',lat:33.5228,lng:-5.11},
+{id:'marrakech',ar:'مراكش',fr:'Marrakech',lat:31.6295,lng:-7.9811},
+{id:'agadir',ar:'أكادير',fr:'Agadir',lat:30.4278,lng:-9.5981},
+{id:'tiznit',ar:'تزنيت',fr:'Tiznit',lat:29.6974,lng:-9.8022},
+{id:'taroudant',ar:'تارودانت',fr:'Taroudant',lat:30.47,lng:-8.88},
+{id:'ouarzazate',ar:'ورزازات',fr:'Ouarzazate',lat:30.92,lng:-6.8936},
+{id:'errachidia',ar:'الراشيدية',fr:'Errachidia',lat:31.9314,lng:-4.4343},
+{id:'laayoune',ar:'العيون',fr:'Laâyoune',lat:27.1536,lng:-13.2033},
+{id:'dakhla',ar:'الداخلة',fr:'Dakhla',lat:23.7148,lng:-15.957},
+{id:'guelmim',ar:'كلميم',fr:'Guelmim',lat:28.9833,lng:-10.05},
+{id:'tantan',ar:'طانطان',fr:'Tan-Tan',lat:28.438,lng:-11.103},
+{id:'smara',ar:'السمارة',fr:'Smara',lat:26.74,lng:-11.67}
+];
+
+// ─── i18n ─────────────────────────────────────────────────────
+const TR={
+ar:{
+appName:'وقت الصلاة',fajr:'الفجر',sunrise:'الشروق',dhuhr:'الظهر',asr:'العصر',
+maghrib:'المغرب',isha:'العشاء',nextPrayer:'الصلاة القادمة',timeRemaining:'الوقت المتبقي',
+hours:'سا',minutes:'د',seconds:'ث',settings:'الإعدادات',qibla:'القبلة',
+prayerTimes:'أوقات الصلاة',city:'المدينة',language:'اللغة',theme:'المظهر',
+themeLight:'فاتح',themeDark:'داكن',themeSystem:'تلقائي',
+notifications:'الإشعارات',enableNotifications:'تفعيل الإشعارات',
+adjustments:'تعديلات',adjustmentsDesc:'تعديل التوقيت (±15 دقيقة)',
+exportConfig:'تصدير الإعدادات',importConfig:'استيراد الإعدادات',
+resetConfig:'إعادة تعيين',resetConfirm:'هل أنت متأكد؟ سيتم حذف جميع الإعدادات.',
+qiblaDirection:'اتجاه القبلة',qiblaAngle:'الزاوية',qiblaDistance:'المسافة إلى الكعبة',
+km:'كم',degrees:'°',enableCompass:'تفعيل البوصلة',today:'اليوم',
+updateAvailable:'تحديث متاح',updateNow:'تحديث الآن',later:'لاحقاً',
+selectCity:'اختر المدينة',gpsLocate:'تحديد الموقع',
+onboardingLang:'اختر اللغة',onboardingCity:'اختر مدينتك',onboardingDone:'تم الإعداد',
+next:'التالي',done:'تم',north:'ش',south:'ج',east:'شر',west:'غ',
+enableAR:'الواقع المعزز',arNotSupported:'جهازك لا يدعم الواقع المعزز',arNeedsCompass:'يجب تفعيل البوصلة أولاً',exitAR:'إغلاق',
+installApp:'تثبيت التطبيق',installDesc:'ثبّت التطبيق للوصول السريع والعمل بدون إنترنت',install:'تثبيت',
+notifBlocked:'الإشعارات محظورة — فعّلها من إعدادات المتصفح لتلقي تنبيهات الصلاة',
+},
+fr:{
+appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
+maghrib:'Maghrib',isha:'Isha',nextPrayer:'Prochaine prière',timeRemaining:'Temps restant',
+hours:'h',minutes:'min',seconds:'s',settings:'Paramètres',qibla:'Qibla',
+prayerTimes:'Horaires',city:'Ville',language:'Langue',theme:'Thème',
+themeLight:'Clair',themeDark:'Sombre',themeSystem:'Auto',
+notifications:'Notifications',enableNotifications:'Activer les notifications',
+adjustments:'Ajustements',adjustmentsDesc:'Ajuster les horaires (±15 min)',
+exportConfig:'Exporter',importConfig:'Importer',
+resetConfig:'Réinitialiser',resetConfirm:'Êtes-vous sûr ? Tous les paramètres seront supprimés.',
+qiblaDirection:'Direction de la Qibla',qiblaAngle:'Angle',qiblaDistance:'Distance à la Kaaba',
+km:'km',degrees:'°',enableCompass:'Activer la boussole',today:"Aujourd'hui",
+updateAvailable:'Mise à jour disponible',updateNow:'Actualiser',later:'Plus tard',
+selectCity:'Choisir la ville',gpsLocate:'Localiser',
+onboardingLang:'Choisissez votre langue',onboardingCity:'Choisissez votre ville',
+onboardingDone:'Configuration terminée',next:'Suivant',done:'Terminé',
+north:'N',south:'S',east:'E',west:'O',
+enableAR:'Réalité augmentée',arNotSupported:'Votre appareil ne prend pas en charge la RA',arNeedsCompass:'Activez d\'abord la boussole',exitAR:'Fermer',
+installApp:'Installer l\'application',installDesc:'Installez l\'app pour un accès rapide et hors ligne',install:'Installer',
+notifBlocked:'Notifications bloquées — activez-les dans les paramètres du navigateur pour les rappels de prière',
+},
+en:{
+appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
+maghrib:'Maghrib',isha:'Isha',nextPrayer:'Next Prayer',timeRemaining:'Time Remaining',
+hours:'h',minutes:'min',seconds:'s',settings:'Settings',qibla:'Qibla',
+prayerTimes:'Prayer Times',city:'City',language:'Language',theme:'Theme',
+themeLight:'Light',themeDark:'Dark',themeSystem:'Auto',
+notifications:'Notifications',enableNotifications:'Enable notifications',
+adjustments:'Adjustments',adjustmentsDesc:'Adjust prayer times (±15 min)',
+exportConfig:'Export',importConfig:'Import',
+resetConfig:'Reset',resetConfirm:'Are you sure? All settings will be deleted.',
+qiblaDirection:'Qibla Direction',qiblaAngle:'Angle',qiblaDistance:'Distance to Kaaba',
+km:'km',degrees:'°',enableCompass:'Enable compass',today:'Today',
+updateAvailable:'Update available',updateNow:'Update',later:'Later',
+selectCity:'Select city',gpsLocate:'Locate',
+onboardingLang:'Choose your language',onboardingCity:'Choose your city',
+onboardingDone:'Setup complete',next:'Next',done:'Done',
+north:'N',south:'S',east:'E',west:'W',
+enableAR:'Augmented Reality',arNotSupported:'Your device does not support AR',arNeedsCompass:'Enable the compass first',exitAR:'Close',
+installApp:'Install App',installDesc:'Install the app for quick access and offline use',install:'Install',
+notifBlocked:'Notifications blocked — enable them in browser settings to receive prayer reminders',
+}};
+
+function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
+
+// ─── State ────────────────────────────────────────────────────
+const state={
+  locale:'ar',theme:'system',
+  position:null,// {lat,lng,cityId,cityName}
+  adjustments:{fajr:0,sunrise:0,dhuhr:0,asr:0,maghrib:0,isha:0},
+  notifications:{enabled:false},
+  onboarded:false,
+  currentView:'prayers',
+};
+
+function loadState(){
+  try{
+    const loc=localStorage.getItem('waqt-locale');
+    if(loc&&TR[loc])state.locale=loc;
+    const th=localStorage.getItem('waqt-theme');
+    if(th)state.theme=th;
+    const pos=localStorage.getItem('waqt-position');
+    if(pos)state.position=JSON.parse(pos);
+    const adj=localStorage.getItem('waqt-adjustments');
+    if(adj)state.adjustments={...state.adjustments,...JSON.parse(adj)};
+    const notif=localStorage.getItem('waqt-notifications');
+    if(notif)state.notifications=JSON.parse(notif);
+    state.onboarded=localStorage.getItem('waqt-onboarded')==='true';
+  }catch(e){}
+}
+
+function saveState(key,val){
+  try{localStorage.setItem(key,typeof val==='string'?val:JSON.stringify(val))}catch(e){}
+}
+
+// ─── Astronomy (Meeus) ──────────────────────────────────────
+function mod360(x){return((x%360)+360)%360}
+function toJD(y,m,d){
+  if(m<=2){y--;m+=12}
+  const A=Math.floor(y/100),B=2-A+Math.floor(A/4);
+  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5;
+}
+function solarPos(jd){
+  const T=(jd-2451545)/36525;
+  const L0=mod360(280.46646+36000.76983*T+3.032e-4*T*T);
+  const M=mod360(357.52911+35999.05029*T-1.537e-4*T*T);
+  const Mr=M*DEG;
+  const C=(1.914602-0.004817*T-1.4e-5*T*T)*Math.sin(Mr)
+    +(0.019993-1.01e-4*T)*Math.sin(2*Mr)+2.89e-4*Math.sin(3*Mr);
+  const sunLon=L0+C;
+  const omega=125.04-1934.136*T;
+  const lambda=sunLon-0.00569-0.00478*Math.sin(omega*DEG);
+  const eps0=23+(26+(21.448-46.815*T)/60)/60;
+  const eps=eps0+0.00256*Math.cos(omega*DEG);
+  const dec=Math.asin(Math.sin(eps*DEG)*Math.sin(lambda*DEG))*RAD;
+  const y2=Math.tan(eps*DEG/2)**2;
+  const L0r=L0*DEG;
+  const ecc=0.016708634-4.2037e-5*T-1.267e-7*T*T;
+  const EqT=4*RAD*(y2*Math.sin(2*L0r)-2*ecc*Math.sin(Mr)
+    +4*ecc*y2*Math.sin(Mr)*Math.cos(2*L0r)
+    -0.5*y2*y2*Math.sin(4*L0r)-1.25*ecc*ecc*Math.sin(2*Mr));
+  return{dec,eqt:EqT};
+}
+
+function calcPrayerTimes(date,lat,lng){
+  const jd=toJD(date.getFullYear(),date.getMonth()+1,date.getDate());
+  const{dec,eqt}=solarPos(jd+0.5);
+  const transit=12+(-lng/15)-(eqt/60);
+  const ha=angle=>{
+    const cosH=(Math.sin(-angle*DEG)-Math.sin(lat*DEG)*Math.sin(dec*DEG))
+      /(Math.cos(lat*DEG)*Math.cos(dec*DEG));
+    if(cosH>1||cosH<-1)return null;
+    return Math.acos(cosH)*RAD/15;
+  };
+  const hSun=ha(0.8333),hFajr=ha(FAJR_ANGLE),hIsha=ha(ISHA_ANGLE);
+  const diff=Math.abs(lat-dec);
+  const asrA=Math.atan(1/(1+Math.tan(diff*DEG)))*RAD;
+  const hAsr=ha(-asrA);
+  return{
+    fajr:hFajr!==null?transit-hFajr:null,
+    sunrise:hSun!==null?transit-hSun:null,
+    dhuhr:transit,
+    asr:hAsr!==null?transit+hAsr:null,
+    maghrib:hSun!==null?transit+hSun:null,
+    isha:hIsha!==null?transit+hIsha:null,
+  };
+}
+
+function getCasaOffset(date){
+  const fmt=new Intl.DateTimeFormat('en-US',{timeZone:TZ,timeZoneName:'shortOffset'});
+  const parts=fmt.formatToParts(date);
+  const tz=parts.find(p=>p.type==='timeZoneName');
+  if(!tz)return 0;
+  const m=tz.value.match(/GMT([+-]?\d+)?(?::(\d+))?/);
+  if(!m)return 0;
+  const h=parseInt(m[1]||'0',10),mn=parseInt(m[2]||'0',10);
+  return h*60+(h<0?-mn:mn);
+}
+
+function getPrayerTimesLocal(date,lat,lng,adj){
+  const utc=calcPrayerTimes(date,lat,lng);
+  const off=getCasaOffset(date);
+  const res={};
+  for(const k of PRAYER_KEYS){
+    if(utc[k]===null){res[k]=null;continue}
+    let tot=utc[k]*60+off+(adj[k]||0);
+    tot=((tot%1440)+1440)%1440;
+    const h=Math.floor(tot/60),m=Math.round(tot%60);
+    res[k]=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+  }
+  return res;
+}
+
+// ─── Qibla ────────────────────────────────────────────────────
+function calcQibla(lat,lng){
+  const p1=lat*DEG,p2=KAABA_LAT*DEG,dL=(KAABA_LNG-lng)*DEG;
+  const x=Math.sin(dL),y=Math.cos(p1)*Math.tan(p2)-Math.sin(p1)*Math.cos(dL);
+  return(Math.atan2(x,y)*RAD+360)%360;
+}
+function distKaaba(lat,lng){
+  const R=6371,dLat=(KAABA_LAT-lat)*DEG,dLng=(KAABA_LNG-lng)*DEG;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat*DEG)*Math.cos(KAABA_LAT*DEG)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// ─── Date formatting ──────────────────────────────────────────
+function formatGregorian(date,locale){
+  return new Intl.DateTimeFormat(locale==='ar'?'ar-MA':locale,{
+    weekday:'long',year:'numeric',month:'long',day:'numeric',
+    timeZone:TZ
+  }).format(date);
+}
+function formatHijri(date,locale){
+  try{
+    return new Intl.DateTimeFormat(locale==='ar'?'ar-MA':locale,{
+      calendar:'islamic-umalqura',day:'numeric',month:'long',year:'numeric',
+      timeZone:TZ
+    }).format(date);
+  }catch(e){return''}
+}
+
+// ─── Now in Casablanca ────────────────────────────────────────
+function nowInCasa(){
+  return new Date(new Date().toLocaleString('en-US',{timeZone:TZ}));
+}
+
+// ─── UI Rendering ─────────────────────────────────────────────
+let prayerTimes=null;
+let countdownInterval=null;
+
+function renderAll(){
+  applyTheme();applyLocale();
+  renderPrayers();renderQibla();renderSettings();
+  renderNav();
+}
+
+function applyLocale(){
+  const l=state.locale;
+  const dir=l==='ar'?'rtl':'ltr';
+  document.documentElement.lang=l;
+  document.documentElement.dir=dir;
+  document.title=t('appName');
+  // Skip link
+  $('skip-link').textContent=l==='ar'?'تخطي إلى المحتوى':l==='fr'?'Aller au contenu':'Skip to content';
+}
+
+function applyTheme(){
+  const th=state.theme;
+  if(th==='system'){
+    document.documentElement.removeAttribute('data-theme');
+  }else{
+    document.documentElement.setAttribute('data-theme',th);
+  }
+  // Update theme-color meta
+  const isDark=th==='dark'||(th==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches);
+  document.querySelector('meta[name="theme-color"]').content=isDark?'#0a0a0a':'#1a8d5f';
+}
+
+function renderNav(){
+  $('nav-prayers-text').textContent=t('prayerTimes');
+  $('nav-qibla-text').textContent=t('qibla');
+  $('nav-settings-text').textContent=t('settings');
+}
+
+function switchView(view){
+  state.currentView=view;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  $('view-'+view).classList.add('active');
+  document.querySelectorAll('nav.bottom-bar button').forEach(b=>{
+    b.classList.remove('active');b.removeAttribute('aria-current');
+  });
+  const btn=$('nav-'+view);
+  btn.classList.add('active');btn.setAttribute('aria-current','page');
+}
+
+function renderPrayers(){
+  if(!state.position)return;
+  const now=new Date();
+  const{lat,lng}=state.position;
+  prayerTimes=getPrayerTimesLocal(now,lat,lng,state.adjustments);
+
+  // City name
+  const city=CITIES.find(c=>c.id===state.position.cityId);
+  $('city-name').textContent=city?(state.locale==='ar'?city.ar:city.fr):(state.position.cityName||'');
+
+  // Date
+  const greg=formatGregorian(now,state.locale);
+  const hijri=formatHijri(now,state.locale);
+  $('date-line').textContent=hijri?greg+' — '+hijri:greg;
+
+  // Prayer list
+  const list=$('prayer-list');
+  list.innerHTML='';
+  const nowCasa=nowInCasa();
+  const nowMin=nowCasa.getHours()*60+nowCasa.getMinutes();
+  let nextIdx=-1;
+
+  const displayPrayers=PRAYER_KEYS;
+  const mins=displayPrayers.map(k=>{
+    if(!prayerTimes[k])return null;
+    const[h,m]=prayerTimes[k].split(':').map(Number);
+    return h*60+m;
+  });
+
+  // Find next prayer
+  for(let i=0;i<mins.length;i++){
+    if(mins[i]!==null&&mins[i]>nowMin){nextIdx=i;break}
+  }
+
+  displayPrayers.forEach((key,i)=>{
+    const li=document.createElement('li');
+    li.setAttribute('role','listitem');
+    const passed=mins[i]!==null&&mins[i]<=nowMin;
+    const current=i===nextIdx;
+    if(passed&&!current)li.classList.add('passed');
+    if(current){li.classList.add('current');li.setAttribute('aria-current','true')}
+
+    const nameSpan=document.createElement('span');
+    nameSpan.className='prayer-name';nameSpan.textContent=t(key);
+    const timeSpan=document.createElement('span');
+    timeSpan.className='prayer-time';timeSpan.textContent=prayerTimes[key]||'--:--';
+    li.appendChild(nameSpan);li.appendChild(timeSpan);
+    list.appendChild(li);
+  });
+
+  // Countdown hero
+  $('next-prayer-label').textContent=t('nextPrayer');
+  $('countdown-label').textContent=t('timeRemaining');
+  if(nextIdx>=0){
+    $('next-prayer-name').textContent=t(displayPrayers[nextIdx]);
+    updateCountdown(mins[nextIdx],nowCasa);
+    // Progress bar: how far through the current prayer interval
+    const prevIdx=nextIdx>0?nextIdx-1:mins.length-1;
+    if(mins[prevIdx]!==null){
+      let elapsed=nowMin-mins[prevIdx];
+      let total=mins[nextIdx]-mins[prevIdx];
+      if(elapsed<0)elapsed+=1440;
+      if(total<=0)total+=1440;
+      $('prayer-progress-fill').style.width=Math.min(100,elapsed/total*100)+'%';
+    }
+  }else{
+    // After isha — next is fajr tomorrow
+    $('next-prayer-name').textContent=t('fajr');
+    updateCountdown(mins[0]+1440,nowCasa);
+    if(mins[5]!==null&&mins[0]!==null){
+      let elapsed=nowMin-mins[5];
+      let total=(mins[0]+1440)-mins[5];
+      if(elapsed<0)elapsed+=1440;
+      $('prayer-progress-fill').style.width=Math.min(100,elapsed/total*100)+'%';
+    }
+  }
+
+  startCountdown(nextIdx>=0?mins[nextIdx]:(mins[0]+1440));
+}
+
+function updateCountdown(targetMin,now){
+  const nowSec=now.getHours()*3600+now.getMinutes()*60+now.getSeconds();
+  let diff=targetMin*60-nowSec;
+  if(diff<0)diff+=86400;
+  const h=Math.floor(diff/3600);
+  const m=Math.floor((diff%3600)/60);
+  const s=diff%60;
+  $('countdown').textContent=
+    String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+function startCountdown(targetMin){
+  if(countdownInterval)clearInterval(countdownInterval);
+  countdownInterval=setInterval(()=>{
+    const now=nowInCasa();
+    updateCountdown(targetMin,now);
+    // Check if we crossed a prayer time — re-render
+    const nowMin=now.getHours()*60+now.getMinutes();
+    if(now.getSeconds()===0){
+      renderPrayers();
+    }
+  },1000);
+}
+
+// ─── AR Camera Mode ───────────────────────────────────────────
+let arStream=null;
+let arAnimFrame=null;
+let arHeading=null;
+
+function startAR(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    alert(t('arNotSupported'));return;
+  }
+  const overlay=$('ar-overlay');
+  const video=$('ar-video');
+  const canvas=$('ar-canvas');
+  const ctx=canvas.getContext('2d');
+
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
+    arStream=stream;
+    video.srcObject=stream;
+    overlay.classList.remove('hidden');
+
+    // Start orientation tracking for AR
+    const orientHandler=e=>{
+      if(e.webkitCompassHeading!==undefined){
+        arHeading=e.webkitCompassHeading;
+      }else if(e.alpha!==null){
+        arHeading=(360-e.alpha)%360;
+      }
+    };
+    if(typeof DeviceOrientationEvent.requestPermission==='function'){
+      DeviceOrientationEvent.requestPermission().then(r=>{
+        if(r==='granted')window.addEventListener('deviceorientation',orientHandler,true);
+      });
+    }else{
+      window.addEventListener('deviceorientation',orientHandler,true);
+    }
+
+    function drawAR(){
+      canvas.width=canvas.clientWidth;
+      canvas.height=canvas.clientHeight;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      if(state.position&&arHeading!==null){
+        const qAngle=calcQibla(state.position.lat,state.position.lng);
+        let diff=qAngle-arHeading;
+        diff=((diff+180)%360+360)%360-180;
+
+        // Map diff to screen X position (±45° = full screen width)
+        const screenX=canvas.width/2+(diff/45)*(canvas.width/2);
+
+        // Draw qibla indicator
+        const cy=canvas.height*0.4;
+        ctx.save();
+        ctx.strokeStyle='#2ecc71';ctx.fillStyle='rgba(46,204,113,0.15)';
+        ctx.lineWidth=3;
+
+        // Arrow
+        ctx.beginPath();
+        ctx.moveTo(screenX,cy-50);
+        ctx.lineTo(screenX-18,cy+10);
+        ctx.lineTo(screenX+18,cy+10);
+        ctx.closePath();
+        ctx.fill();ctx.stroke();
+
+        // Label
+        ctx.fillStyle='#fff';ctx.font='bold 16px system-ui';ctx.textAlign='center';
+        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=4;
+        ctx.fillText(t('qiblaDirection'),screenX,cy+40);
+        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+60);
+        ctx.restore();
+
+        // Crosshair center
+        ctx.save();
+        ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;
+        ctx.beginPath();
+        ctx.moveTo(canvas.width/2-20,canvas.height/2);
+        ctx.lineTo(canvas.width/2+20,canvas.height/2);
+        ctx.moveTo(canvas.width/2,canvas.height/2-20);
+        ctx.lineTo(canvas.width/2,canvas.height/2+20);
+        ctx.stroke();
+        ctx.restore();
+      }else{
+        // No heading data — show message
+        ctx.fillStyle='#fff';ctx.font='16px system-ui';ctx.textAlign='center';
+        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=4;
+        ctx.fillText(t('arNeedsCompass'),canvas.width/2,canvas.height/2);
+      }
+      arAnimFrame=requestAnimationFrame(drawAR);
+    }
+    drawAR();
+  }).catch(()=>{alert(t('arNotSupported'))});
+}
+
+function stopAR(){
+  $('ar-overlay').classList.add('hidden');
+  if(arStream){arStream.getTracks().forEach(t=>t.stop());arStream=null}
+  if(arAnimFrame){cancelAnimationFrame(arAnimFrame);arAnimFrame=null}
+  arHeading=null;
+}
+
+// ─── Qibla ────────────────────────────────────────────────────
+let compassWatchId=null;
+
+function renderQibla(){
+  if(!state.position)return;
+  const{lat,lng}=state.position;
+  const angle=calcQibla(lat,lng);
+  const dist=distKaaba(lat,lng);
+
+  // Rotate qibla needle
+  $('qibla-needle').setAttribute('transform',`rotate(${angle},100,100)`);
+
+  // Labels
+  $('lbl-n').textContent=t('north');
+  $('lbl-s').textContent=t('south');
+  $('lbl-e').textContent=t('east');
+  $('lbl-w').textContent=t('west');
+
+  $('qibla-angle').textContent=t('qiblaAngle')+': '+angle.toFixed(1)+t('degrees');
+  $('qibla-distance').textContent=t('qiblaDistance')+': '+Math.round(dist)+' '+t('km');
+  $('btn-compass').textContent=t('enableCompass');
+  $('btn-ar').textContent=t('enableAR');
+
+  // Compass aria
+  $('compass-svg').setAttribute('aria-label',
+    t('qiblaDirection')+' '+angle.toFixed(1)+t('degrees'));
+
+  // Compass ticks
+  const ticks=$('compass-ticks');
+  ticks.innerHTML='';
+  for(let d=0;d<360;d+=15){
+    const a=(d-90)*DEG;
+    const r1=d%90===0?82:86;
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',100+Math.cos(a)*r1);line.setAttribute('y1',100+Math.sin(a)*r1);
+    line.setAttribute('x2',100+Math.cos(a)*90);line.setAttribute('y2',100+Math.sin(a)*90);
+    line.setAttribute('stroke','var(--muted)');line.setAttribute('stroke-width',d%90===0?'2':'1');
+    ticks.appendChild(line);
+  }
+}
+
+function startCompass(){
+  if(!window.DeviceOrientationEvent)return;
+  const handler=e=>{
+    let heading=null;
+    if(e.webkitCompassHeading!==undefined){
+      heading=e.webkitCompassHeading;
+    }else if(e.alpha!==null){
+      heading=(360-e.alpha)%360;
+    }
+    if(heading!==null){
+      $('compass-rotate').setAttribute('transform',`rotate(${-heading},100,100)`);
+      const qAngle=calcQibla(state.position.lat,state.position.lng);
+      $('qibla-needle').setAttribute('transform',`rotate(${qAngle-heading},100,100)`);
+    }
+  };
+
+  if(typeof DeviceOrientationEvent.requestPermission==='function'){
+    DeviceOrientationEvent.requestPermission().then(r=>{
+      if(r==='granted')window.addEventListener('deviceorientation',handler,true);
+    });
+  }else{
+    window.addEventListener('deviceorientation',handler,true);
+  }
+}
+
+// ─── Settings ─────────────────────────────────────────────────
+function renderSettings(){
+  // City
+  $('s-city-title').textContent=t('city');
+  $('s-city-label').textContent=t('selectCity');
+  populateCitySelect($('s-city-select'));
+  if(state.position)$('s-city-select').value=state.position.cityId||'';
+
+  // Language
+  $('s-lang-title').textContent=t('language');
+  $('s-lang-label').textContent=t('language');
+  $('s-lang-select').value=state.locale;
+
+  // Theme
+  $('s-theme-title').textContent=t('theme');
+  $('s-theme-label').textContent=t('theme');
+  $('opt-theme-system').textContent=t('themeSystem');
+  $('opt-theme-light').textContent=t('themeLight');
+  $('opt-theme-dark').textContent=t('themeDark');
+  $('s-theme-select').value=state.theme;
+
+  // Notifications
+  $('s-notif-title').textContent=t('notifications');
+  $('s-notif-label').textContent=t('enableNotifications');
+  $('s-notif-toggle').checked=state.notifications.enabled;
+
+  // Adjustments
+  $('s-adj-title').textContent=t('adjustments');
+  const adjRows=$('s-adj-rows');
+  adjRows.innerHTML='';
+  ['fajr','dhuhr','asr','maghrib','isha'].forEach(k=>{
+    const row=document.createElement('div');
+    row.className='setting-row';
+    const label=document.createElement('label');
+    label.textContent=t(k);label.setAttribute('for','adj-'+k);
+    const val=document.createElement('span');
+    val.className='adj-val';val.id='adj-val-'+k;
+    val.textContent=(state.adjustments[k]>=0?'+':'')+state.adjustments[k];
+    const input=document.createElement('input');
+    input.type='range';input.id='adj-'+k;input.min='-15';input.max='15';input.step='1';
+    input.value=state.adjustments[k];
+    input.setAttribute('aria-label',t(k)+' '+t('adjustments'));
+    input.addEventListener('input',()=>{
+      const v=parseInt(input.value,10);
+      state.adjustments[k]=v;
+      val.textContent=(v>=0?'+':'')+v;
+      saveState('waqt-adjustments',state.adjustments);
+      renderPrayers();
+    });
+    row.appendChild(label);row.appendChild(val);row.appendChild(input);
+    adjRows.appendChild(row);
+  });
+
+  // Buttons
+  $('btn-export').textContent=t('exportConfig');
+  $('btn-import').textContent=t('importConfig');
+  $('btn-reset').textContent=t('resetConfig');
+}
+
+function populateCitySelect(sel){
+  sel.innerHTML='';
+  const groups={};
+  CITIES.forEach(c=>{
+    const name=state.locale==='ar'?c.ar:c.fr;
+    const opt=document.createElement('option');
+    opt.value=c.id;opt.textContent=name;
+    sel.appendChild(opt);
+  });
+}
+
+// ─── Events ───────────────────────────────────────────────────
+function setupEvents(){
+  // Navigation
+  $('nav-prayers').addEventListener('click',()=>switchView('prayers'));
+  $('nav-qibla').addEventListener('click',()=>switchView('qibla'));
+  $('nav-settings').addEventListener('click',()=>switchView('settings'));
+
+  // Settings: city change
+  $('s-city-select').addEventListener('change',e=>{
+    const city=CITIES.find(c=>c.id===e.target.value);
+    if(city){
+      state.position={lat:city.lat,lng:city.lng,cityId:city.id,cityName:city.fr};
+      saveState('waqt-position',state.position);
+      renderPrayers();renderQibla();renderSettings();
+    }
+  });
+
+  // Settings: language
+  $('s-lang-select').addEventListener('change',e=>{
+    state.locale=e.target.value;
+    saveState('waqt-locale',state.locale);
+    renderAll();
+  });
+
+  // Settings: theme
+  $('s-theme-select').addEventListener('change',e=>{
+    state.theme=e.target.value;
+    saveState('waqt-theme',state.theme);
+    applyTheme();
+  });
+
+  // Settings: notifications
+  $('s-notif-toggle').addEventListener('change',e=>{
+    state.notifications.enabled=e.target.checked;
+    saveState('waqt-notifications',state.notifications);
+    if(e.target.checked)requestNotifPermission();
+    checkNotifBlocked();
+  });
+
+  // Compass
+  $('btn-compass').addEventListener('click',startCompass);
+
+  // AR
+  $('btn-ar').addEventListener('click',startAR);
+  $('ar-close').addEventListener('click',stopAR);
+
+  // Export
+  $('btn-export').addEventListener('click',()=>{
+    const data={};
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k.startsWith('waqt-'))data[k]=localStorage.getItem(k);
+    }
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    const d=new Date().toISOString().slice(0,10);
+    a.download='waqtsalat-config-'+d+'.json';
+    a.click();URL.revokeObjectURL(a.href);
+  });
+
+  // Import
+  $('btn-import').addEventListener('click',()=>$('import-file').click());
+  $('import-file').addEventListener('change',e=>{
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        for(const[k,v]of Object.entries(data)){
+          if(k.startsWith('waqt-'))localStorage.setItem(k,v);
+        }
+        loadState();renderAll();
+      }catch(err){}
+    };
+    reader.readAsText(file);
+    e.target.value='';
+  });
+
+  // Reset
+  $('btn-reset').addEventListener('click',()=>{
+    if(!confirm(t('resetConfirm')))return;
+    const keys=[];
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k.startsWith('waqt-'))keys.push(k);
+    }
+    keys.forEach(k=>localStorage.removeItem(k));
+    location.reload();
+  });
+
+  // Visibility change: recalculate
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden&&state.position)renderPrayers();
+  });
+
+  // System theme change
+  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{
+    if(state.theme==='system')applyTheme();
+  });
+}
+
+// ─── Onboarding ───────────────────────────────────────────────
+function setupOnboarding(){
+  if(state.onboarded&&state.position){
+    $('onboarding').classList.add('hidden');
+    return;
+  }
+
+  const ob=$('onboarding');
+  let step=0;
+
+  // Populate city select
+  populateCitySelect($('ob-city-select'));
+
+  // Language choice
+  ob.querySelectorAll('.lang-choices button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      ob.querySelectorAll('.lang-choices button').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      state.locale=btn.dataset.lang;
+      saveState('waqt-locale',state.locale);
+      applyLocale();
+      // Re-populate city select with new locale
+      const prevCity=$('ob-city-select').value;
+      populateCitySelect($('ob-city-select'));
+      if(prevCity)$('ob-city-select').value=prevCity;
+      // Update onboarding text
+      $('ob-lang-title').textContent=t('onboardingLang');
+      $('ob-lang-next').textContent=t('next');
+      $('ob-city-title').textContent=t('onboardingCity');
+      $('ob-gps-text').textContent=t('gpsLocate');
+      $('ob-city-next').textContent=t('next');
+      $('ob-done-title').textContent=t('onboardingDone');
+      $('ob-done-btn').textContent=t('done');
+    });
+  });
+
+  function showStep(n){
+    ob.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+    ob.querySelector(`[data-step="${n}"]`).classList.add('active');
+  }
+
+  $('ob-lang-next').addEventListener('click',()=>{step=1;showStep(1)});
+
+  $('ob-gps-btn').addEventListener('click',()=>{
+    if(!navigator.geolocation)return;
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const{latitude,longitude}=pos.coords;
+      // Find nearest city
+      let nearest=CITIES[0],minDist=Infinity;
+      CITIES.forEach(c=>{
+        const d=Math.hypot(c.lat-latitude,c.lng-longitude);
+        if(d<minDist){minDist=d;nearest=c}
+      });
+      $('ob-city-select').value=nearest.id;
+    },()=>{},{enableHighAccuracy:true,timeout:10000});
+  });
+
+  $('ob-city-next').addEventListener('click',()=>{
+    const cityId=$('ob-city-select').value;
+    const city=CITIES.find(c=>c.id===cityId);
+    if(city){
+      state.position={lat:city.lat,lng:city.lng,cityId:city.id,cityName:city.fr};
+      saveState('waqt-position',state.position);
+    }
+    step=2;showStep(2);
+  });
+
+  $('ob-done-btn').addEventListener('click',()=>{
+    state.onboarded=true;
+    saveState('waqt-onboarded','true');
+    ob.classList.add('hidden');
+    renderAll();
+  });
+}
+
+// ─── Notifications ────────────────────────────────────────────
+function requestNotifPermission(){
+  if(!('Notification' in window))return;
+  if(Notification.permission==='granted')return scheduleNotifications();
+  if(Notification.permission!=='denied'){
+    Notification.requestPermission().then(p=>{
+      if(p==='granted')scheduleNotifications();
+    });
+  }
+}
+
+let notifTimeouts=[];
+function scheduleNotifications(){
+  notifTimeouts.forEach(clearTimeout);
+  notifTimeouts=[];
+  if(!state.notifications.enabled||!state.position||!prayerTimes)return;
+
+  const now=nowInCasa();
+  const nowMs=now.getTime();
+
+  ['fajr','dhuhr','asr','maghrib','isha'].forEach(k=>{
+    if(!prayerTimes[k])return;
+    const[h,m]=prayerTimes[k].split(':').map(Number);
+    const target=new Date(now);
+    target.setHours(h,m,0,0);
+    const diff=target.getTime()-nowMs;
+    if(diff>0&&diff<86400000){
+      const tid=setTimeout(()=>{
+        if(Notification.permission==='granted'){
+          new Notification(t(k),{body:t('prayerTimes')+' — '+prayerTimes[k],icon:'icons/icon.svg'});
+        }
+      },diff);
+      notifTimeouts.push(tid);
+    }
+  });
+}
+
+// ─── PWA Install Prompt ──────────────────────────────────────
+let deferredInstallPrompt=null;
+
+function setupInstallPrompt(){
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();
+    deferredInstallPrompt=e;
+    showInstallBanner();
+  });
+  // Hide banner if app is already installed
+  window.addEventListener('appinstalled',()=>{
+    $('install-banner').classList.remove('show');
+    deferredInstallPrompt=null;
+  });
+}
+
+function showInstallBanner(){
+  const banner=$('install-banner');
+  $('install-title').textContent=t('installApp');
+  $('install-desc').textContent=t('installDesc');
+  $('btn-install').textContent=t('install');
+  $('btn-install-later').textContent=t('later');
+  banner.classList.add('show');
+
+  $('btn-install').onclick=()=>{
+    if(deferredInstallPrompt){
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(()=>{
+        deferredInstallPrompt=null;
+        banner.classList.remove('show');
+      });
+    }
+  };
+  $('btn-install-later').onclick=()=>{
+    banner.classList.remove('show');
+    // Show again next session
+  };
+}
+
+// ─── Notification Blocked Check ──────────────────────────────
+function checkNotifBlocked(){
+  if(!('Notification' in window))return;
+  const bar=$('notif-blocked-bar');
+  if(Notification.permission==='denied'&&state.notifications.enabled){
+    $('notif-blocked-text').textContent=t('notifBlocked');
+    bar.classList.add('show');
+  }else{
+    bar.classList.remove('show');
+  }
+}
+
+// ─── Service Worker ───────────────────────────────────────────
+function registerSW(){
+  if(!('serviceWorker' in navigator))return;
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    // Check for updates
+    reg.addEventListener('updatefound',()=>{
+      const newSW=reg.installing;
+      newSW.addEventListener('statechange',()=>{
+        if(newSW.state==='installed'&&navigator.serviceWorker.controller){
+          showUpdateBanner(reg);
+        }
+      });
+    });
+    // Check if SW is already waiting
+    if(reg.waiting&&navigator.serviceWorker.controller){
+      showUpdateBanner(reg);
+    }
+  });
+  navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());
+}
+
+function showUpdateBanner(reg){
+  const banner=$('update-banner');
+  $('update-text').textContent=t('updateAvailable');
+  $('btn-update-now').textContent=t('updateNow');
+  $('btn-update-later').textContent=t('later');
+  banner.classList.add('show');
+
+  $('btn-update-now').onclick=()=>{
+    reg.waiting.postMessage({type:'SKIP_WAITING'});
+    banner.classList.remove('show');
+  };
+  $('btn-update-later').onclick=()=>banner.classList.remove('show');
+}
+
+// ─── Helpers ──────────────────────────────────────────────────
+function $(id){return document.getElementById(id)}
+
+// ─── Boot ─────────────────────────────────────────────────────
+loadState();
+// Detect locale from browser if not saved
+if(!localStorage.getItem('waqt-locale')){
+  const lang=navigator.language?.slice(0,2);
+  if(TR[lang])state.locale=lang;
+}
+applyLocale();applyTheme();
+setupOnboarding();
+setupEvents();
+if(state.onboarded&&state.position)renderAll();
+registerSW();
+setupInstallPrompt();
+checkNotifBlocked();
+
+})();
+</script>
+</body>
+</html>
