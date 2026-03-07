@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1a8d5f">
+<meta name="theme-color" content="#0d5a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>WaqtSalat — وقت الصلاة | Prayer Times for Morocco</title>
@@ -275,33 +275,57 @@
 <style>
 :root{
   --bg:#fafafa;--fg:#1a1a1a;--accent:#1a8d5f;--accent2:#15724d;
-  --surface:#fff;--surface2:#f0f0f0;--border:#e0e0e0;
-  --muted:#666;--passed:#999;
+  --surface:rgba(255,255,255,0.15);--surface2:rgba(255,255,255,0.1);--border:rgba(255,255,255,0.25);
+  --muted:rgba(255,255,255,0.7);--passed:rgba(255,255,255,0.4);
   --arc-fajr:#1a237e;--arc-sunrise:#fdd835;--arc-dhuhr:#f9a825;
   --arc-asr:#ef6c00;--arc-maghrib:#7b1fa2;--arc-isha:#0d1b2a;
   --safe-b:env(safe-area-inset-bottom,0px);
+  --gold:#c9a84c;--gold-light:rgba(201,168,76,0.15);
 }
 @media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0a0a0a;--fg:#f0f0f0;--accent:#2ecc71;--accent2:#27ae60;
-    --surface:#1a1a1a;--surface2:#252525;--border:#333;
-    --muted:#999;--passed:#555;
+    --surface:rgba(0,0,0,0.2);--surface2:rgba(0,0,0,0.15);--border:rgba(255,255,255,0.15);
+    --muted:rgba(255,255,255,0.6);--passed:rgba(255,255,255,0.3);
   }
 }
 [data-theme="dark"]{
-  --bg:#0a0a0a;--fg:#f0f0f0;--accent:#2ecc71;--accent2:#27ae60;
-  --surface:#1a1a1a;--surface2:#252525;--border:#333;
-  --muted:#999;--passed:#555;
+  --surface:rgba(0,0,0,0.2);--surface2:rgba(0,0,0,0.15);--border:rgba(255,255,255,0.15);
+  --muted:rgba(255,255,255,0.6);--passed:rgba(255,255,255,0.3);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-text-size-adjust:100%}
 body{
   font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  background:var(--bg);color:var(--fg);
+  background:linear-gradient(180deg,#0d5a2e 0%,#1a8d5f 30%,#14704c 60%,#0b4d2d 100%);
+  color:#fff;
   min-height:100vh;min-height:100dvh;
   display:flex;flex-direction:column;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+/* Golden arabesque corner decorations */
+body::before,body::after,.app::before,.app::after{
+  content:'';position:fixed;width:120px;height:120px;z-index:0;pointer-events:none;
+  opacity:0.18;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1.5'%3E%3Cpath d='M0,0 Q60,10 60,60 Q10,60 0,0Z'/%3E%3Cpath d='M0,0 Q40,5 45,45 Q5,40 0,0Z'/%3E%3Cpath d='M0,0 Q20,2 25,25 Q2,20 0,0Z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='35' cy='35' r='5'/%3E%3Ccircle cx='22' cy='22' r='3'/%3E%3Cpath d='M60,60 Q55,30 30,25' stroke-dasharray='3,3'/%3E%3Cpath d='M45,45 Q42,25 20,18' stroke-dasharray='2,2'/%3E%3Cpath d='M0,60 Q15,55 25,40' stroke-dasharray='2,3'/%3E%3Cpath d='M60,0 Q55,15 40,25' stroke-dasharray='2,3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+}
+body::before{top:0;left:0;transform:rotate(0deg)}
+body::after{top:0;right:0;transform:scaleX(-1)}
+.app::before{
+  content:'';position:fixed;bottom:calc(3.5rem + var(--safe-b));left:0;
+  width:120px;height:120px;z-index:0;pointer-events:none;opacity:0.18;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1.5'%3E%3Cpath d='M0,0 Q60,10 60,60 Q10,60 0,0Z'/%3E%3Cpath d='M0,0 Q40,5 45,45 Q5,40 0,0Z'/%3E%3Cpath d='M0,0 Q20,2 25,25 Q2,20 0,0Z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='35' cy='35' r='5'/%3E%3Ccircle cx='22' cy='22' r='3'/%3E%3Cpath d='M60,60 Q55,30 30,25' stroke-dasharray='3,3'/%3E%3Cpath d='M45,45 Q42,25 20,18' stroke-dasharray='2,2'/%3E%3Cpath d='M0,60 Q15,55 25,40' stroke-dasharray='2,3'/%3E%3Cpath d='M60,0 Q55,15 40,25' stroke-dasharray='2,3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+  transform:scaleY(-1);
+}
+.app::after{
+  content:'';position:fixed;bottom:calc(3.5rem + var(--safe-b));right:0;
+  width:120px;height:120px;z-index:0;pointer-events:none;opacity:0.18;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1.5'%3E%3Cpath d='M0,0 Q60,10 60,60 Q10,60 0,0Z'/%3E%3Cpath d='M0,0 Q40,5 45,45 Q5,40 0,0Z'/%3E%3Cpath d='M0,0 Q20,2 25,25 Q2,20 0,0Z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='35' cy='35' r='5'/%3E%3Ccircle cx='22' cy='22' r='3'/%3E%3Cpath d='M60,60 Q55,30 30,25' stroke-dasharray='3,3'/%3E%3Cpath d='M45,45 Q42,25 20,18' stroke-dasharray='2,2'/%3E%3Cpath d='M0,60 Q15,55 25,40' stroke-dasharray='2,3'/%3E%3Cpath d='M60,0 Q55,15 40,25' stroke-dasharray='2,3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+  transform:scale(-1,1) scaleY(-1);
 }
 [lang="ar"] body{line-height:1.8}
 [lang="fr"] body,[lang="en"] body{line-height:1.5}
@@ -330,7 +354,8 @@ main{
 /* Bottom nav */
 nav.bottom-bar{
   position:fixed;bottom:0;left:0;right:0;
-  background:var(--surface);border-top:1px solid var(--border);
+  background:rgba(8,40,22,0.85);border-top:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   display:flex;justify-content:space-around;align-items:center;
   padding-bottom:var(--safe-b);height:calc(3.5rem + var(--safe-b));
   z-index:100;
@@ -338,10 +363,10 @@ nav.bottom-bar{
 nav.bottom-bar button{
   flex:1;display:flex;flex-direction:column;align-items:center;
   gap:0.15rem;padding:0.5rem 0;min-height:2.75rem;min-width:2.75rem;
-  color:var(--muted);transition:color 0.2s;
+  color:rgba(255,255,255,0.5);transition:color 0.2s;
   font-size:0.65rem;
 }
-nav.bottom-bar button.active{color:var(--accent)}
+nav.bottom-bar button.active{color:var(--gold)}
 nav.bottom-bar button svg{width:1.5rem;height:1.5rem}
 nav.bottom-bar button:focus-visible{
   outline:2px solid var(--accent);outline-offset:-2px;border-radius:0.25rem;
@@ -349,28 +374,36 @@ nav.bottom-bar button:focus-visible{
 
 /* Prayer times view */
 .header-info{text-align:center;margin-bottom:0.5rem}
-.header-info .city-name{font-size:1.1rem;font-weight:600}
-.header-info .date-line{font-size:0.8rem;color:var(--muted);margin-top:0.15rem}
+.header-info .city-name{font-size:1.1rem;font-weight:600;color:#fff}
+.header-info .date-line{font-size:0.8rem;color:rgba(255,255,255,0.65);margin-top:0.15rem}
 
 
 .prayer-list{
-  list-style:none;background:var(--surface);
-  border-radius:0.75rem;border:1px solid var(--border);
-  overflow:hidden;
+  list-style:none;background:transparent;
+  border-radius:0;border:none;
+  overflow:visible;padding:0 0.5rem;
 }
 .prayer-list li{
   display:flex;justify-content:space-between;align-items:center;
-  padding:0.65rem 1rem;border-bottom:1px solid var(--border);
-  transition:background 0.2s;
+  padding:0.75rem 0.75rem;
+  border-bottom:1px solid rgba(255,255,255,0.15);
+  transition:opacity 0.2s;
 }
 .prayer-list li:last-child{border-bottom:none}
-.prayer-list li.passed{color:var(--passed)}
+.prayer-list li.passed{opacity:0.45}
 .prayer-list li.current{
-  background:var(--accent);color:#fff;font-weight:600;
-  border-radius:0.25rem;
+  background:transparent;color:#fff;font-weight:700;
+  border-radius:0;font-size:1.05rem;opacity:1;
 }
 .prayer-list li .prayer-name{font-size:0.95rem}
 .prayer-list li .prayer-time{font-size:0.95rem;font-variant-numeric:tabular-nums}
+.prayer-list li.tomorrow-fajr{
+  border-top:1px dashed var(--gold);
+  border-bottom:none;
+  opacity:0.7;font-style:italic;
+}
+.prayer-list li.tomorrow-fajr .prayer-name{color:var(--gold);font-size:0.85rem}
+.prayer-list li.tomorrow-fajr .prayer-time{color:var(--gold);font-size:0.85rem}
 
 /* Qibla view */
 .qibla-container{text-align:center;padding:1rem 0}
@@ -403,25 +436,25 @@ nav.bottom-bar button:focus-visible{
 
 /* Settings view */
 .settings-section{
-  background:var(--surface);border-radius:0.75rem;
-  border:1px solid var(--border);margin-bottom:1rem;
+  background:rgba(255,255,255,0.08);border-radius:0.75rem;
+  border:1px solid rgba(255,255,255,0.12);margin-bottom:1rem;
   overflow:hidden;
 }
 .settings-section h3{
   padding:0.75rem 1rem;font-size:0.9rem;font-weight:600;
-  background:var(--surface2);border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.1);
 }
 .setting-row{
   display:flex;justify-content:space-between;align-items:center;
-  padding:0.75rem 1rem;border-bottom:1px solid var(--border);
+  padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.08);
   gap:0.5rem;
 }
 .setting-row:last-child{border-bottom:none}
 .setting-row label{font-size:0.9rem;flex:1}
 .setting-row select,.setting-row input[type="range"]{
   font-size:0.85rem;padding:0.35rem;
-  background:var(--surface2);color:var(--fg);
-  border:1px solid var(--border);border-radius:0.35rem;
+  background:rgba(255,255,255,0.1);color:#fff;
+  border:1px solid rgba(255,255,255,0.2);border-radius:0.35rem;
 }
 .setting-row select{min-width:8rem}
 .setting-row input[type="range"]{width:5rem}
@@ -430,11 +463,11 @@ nav.bottom-bar button:focus-visible{
 .btn-action{
   display:block;width:100%;padding:0.75rem;
   text-align:center;font-size:0.9rem;font-weight:600;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid rgba(255,255,255,0.08);
   transition:background 0.15s;
 }
 .btn-action:last-child{border-bottom:none}
-.btn-action:hover,.btn-action:focus-visible{background:var(--surface2)}
+.btn-action:hover,.btn-action:focus-visible{background:rgba(255,255,255,0.08)}
 .btn-danger{color:#e74c3c}
 
 /* Toggle switch */
@@ -442,7 +475,7 @@ nav.bottom-bar button:focus-visible{
 .toggle input{opacity:0;width:0;height:0;position:absolute}
 .toggle span{
   position:absolute;inset:0;cursor:pointer;
-  background:var(--border);border-radius:1rem;
+  background:rgba(255,255,255,0.2);border-radius:1rem;
   transition:background 0.3s;
 }
 .toggle span::before{
@@ -450,36 +483,36 @@ nav.bottom-bar button:focus-visible{
   left:0.2rem;bottom:0.2rem;background:#fff;border-radius:50%;
   transition:transform 0.3s;
 }
-.toggle input:checked+span{background:var(--accent)}
+.toggle input:checked+span{background:var(--gold)}
 .toggle input:checked+span::before{transform:translateX(1.25rem)}
 .toggle input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 
 /* Onboarding */
 .onboarding{
-  position:fixed;inset:0;background:var(--bg);z-index:200;
+  position:fixed;inset:0;background:linear-gradient(180deg,#0d5a2e 0%,#1a8d5f 30%,#14704c 60%,#0b4d2d 100%);z-index:200;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:2rem;text-align:center;
 }
 .onboarding.hidden{display:none}
-.onboarding h2{font-size:1.5rem;margin-bottom:1.5rem;color:var(--accent)}
+.onboarding h2{font-size:1.5rem;margin-bottom:1.5rem;color:var(--gold)}
 .onboarding .step{display:none;width:100%;max-width:320px;flex-direction:column;align-items:center;gap:1rem}
 .onboarding .step.active{display:flex}
 .lang-choices{display:flex;flex-direction:column;gap:0.75rem;width:100%}
 .lang-choices button{
-  padding:1rem;background:var(--surface);border:2px solid var(--border);
-  border-radius:0.75rem;font-size:1.1rem;font-weight:600;
+  padding:1rem;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);
+  border-radius:0.75rem;font-size:1.1rem;font-weight:600;color:#fff;
   transition:border-color 0.2s;
 }
 .lang-choices button:hover,.lang-choices button:focus-visible,.lang-choices button.selected{
-  border-color:var(--accent);
+  border-color:var(--gold);
 }
 .city-select{
   width:100%;padding:0.75rem;font-size:1rem;
-  background:var(--surface);color:var(--fg);
-  border:1px solid var(--border);border-radius:0.5rem;
+  background:rgba(255,255,255,0.1);color:#fff;
+  border:1px solid rgba(255,255,255,0.2);border-radius:0.5rem;
 }
 .btn-primary{
-  padding:0.75rem 2rem;background:var(--accent);color:#fff;
+  padding:0.75rem 2rem;background:var(--gold);color:#1a1a1a;
   border-radius:0.5rem;font-weight:600;font-size:1rem;
   min-width:8rem;
 }
@@ -526,21 +559,22 @@ nav.bottom-bar button:focus-visible{
 /* Install banner */
 .install-banner{
   display:none;position:fixed;bottom:calc(60px + var(--safe-b));left:0;right:0;z-index:150;
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:0.75rem 1rem;box-shadow:0 -2px 8px rgba(0,0,0,0.1);
+  background:rgba(8,40,22,0.9);border-top:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:0.75rem 1rem;box-shadow:0 -2px 8px rgba(0,0,0,0.2);
 }
 .install-banner.show{display:block}
 .install-banner-content{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem}
 .install-icon{flex-shrink:0}
 .install-text{display:flex;flex-direction:column;gap:0.15rem}
-.install-text strong{font-size:0.9rem;color:var(--fg)}
-.install-text span{font-size:0.75rem;color:var(--muted)}
+.install-text strong{font-size:0.9rem;color:#fff}
+.install-text span{font-size:0.75rem;color:rgba(255,255,255,0.6)}
 .install-actions{display:flex;gap:0.5rem;justify-content:flex-end}
 .btn-install{
-  background:var(--accent);color:#fff;border:none;border-radius:0.5rem;
+  background:var(--gold);color:#1a1a1a;border:none;border-radius:0.5rem;
   padding:0.45rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;
 }
-.btn-install:hover{background:var(--accent2)}
+.btn-install:hover{background:#d4b35a}
 
 /* AR overlay */
 .ar-overlay{
@@ -568,12 +602,12 @@ nav.bottom-bar button:focus-visible{
   text-decoration:none;
 }
 .github-corner svg{
-  fill:var(--accent);color:var(--bg);
+  fill:rgba(255,255,255,0.15);color:#fff;
   width:80px;height:80px;
   transform:scaleX(-1);
 }
 [dir="rtl"] .github-corner svg{transform:scaleX(1)}
-.github-corner:hover svg{fill:var(--accent2)}
+.github-corner:hover svg{fill:rgba(255,255,255,0.25)}
 .github-corner .octo-arm{transform-origin:115px 100px}
 @media(hover:hover){
   .github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}
@@ -596,29 +630,29 @@ nav.bottom-bar button:focus-visible{
 /* Share button (top-right) */
 .share-btn{
   position:fixed;top:0.75rem;right:0.75rem;z-index:160;
-  width:2.5rem;height:2.5rem;border-radius:50%;
-  background:var(--surface);color:var(--accent);
-  border:1px solid var(--border);
+  width:2.5rem;height:2.5rem;border-radius:50%;color:#fff;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 1px 4px rgba(0,0,0,0.1);
+  box-shadow:0 1px 4px rgba(0,0,0,0.15);
   transition:transform 0.2s,background 0.2s;
 }
 [dir="rtl"] .share-btn{right:auto;left:0.75rem}
-.share-btn:hover,.share-btn:focus-visible{transform:scale(1.1);background:var(--surface2)}
+.share-btn:hover,.share-btn:focus-visible{transform:scale(1.1);background:rgba(255,255,255,0.2)}
 .share-btn svg{width:1.15rem;height:1.15rem}
 
 /* Issue / feedback button */
 .issue-btn{
   position:fixed;bottom:calc(4rem + var(--safe-b));right:1rem;z-index:99;
   width:2.75rem;height:2.75rem;border-radius:50%;
-  background:var(--accent);color:#fff;
+  background:rgba(255,255,255,0.15);color:#fff;
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 2px 8px rgba(0,0,0,0.25);
   transition:transform 0.2s,background 0.2s;
   text-decoration:none;
 }
 [dir="rtl"] .issue-btn{right:auto;left:1rem}
-.issue-btn:hover,.issue-btn:focus-visible{transform:scale(1.1);background:var(--accent2)}
+.issue-btn:hover,.issue-btn:focus-visible{transform:scale(1.1);background:rgba(255,255,255,0.25)}
 .issue-btn svg{width:1.25rem;height:1.25rem}
 
 /* Countdown hero (replaces analog clock) */
@@ -626,20 +660,20 @@ nav.bottom-bar button:focus-visible{
   display:flex;flex-direction:column;align-items:center;
   padding:0.75rem 0;gap:0.15rem;
 }
-.countdown-hero .next-label{font-size:0.8rem;color:var(--muted)}
-.countdown-hero .next-name{font-size:1.3rem;font-weight:700;color:var(--accent)}
+.countdown-hero .next-label{font-size:0.8rem;color:rgba(255,255,255,0.65)}
+.countdown-hero .next-name{font-size:1.3rem;font-weight:700;color:var(--gold)}
 .countdown-hero .hero-countdown{
   font-size:2.5rem;font-weight:700;font-variant-numeric:tabular-nums;
-  letter-spacing:0.05em;color:var(--fg);
+  letter-spacing:0.05em;color:#fff;
 }
-.countdown-hero .hero-countdown-label{font-size:0.7rem;color:var(--muted);margin-top:-0.25rem}
+.countdown-hero .hero-countdown-label{font-size:0.7rem;color:rgba(255,255,255,0.55);margin-top:-0.25rem}
 
 /* Prayer progress bar */
 .prayer-progress{
-  width:100%;max-width:280px;height:4px;background:var(--surface2);border-radius:2px;
+  width:100%;max-width:280px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;
   overflow:hidden;margin-top:0.25rem;
 }
-.prayer-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 1s linear}
+.prayer-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 1s linear}
 </style>
 </head>
 <body>
@@ -929,6 +963,7 @@ notifBlocked:'الإشعارات محظورة — فعّلها من إعدادا
 hardRefresh:'تحديث شامل',hardRefreshConfirm:'سيتم مسح جميع البيانات المخزنة وإعادة تحميل التطبيق. هل تريد المتابعة؟',hardRefreshing:'جارٍ التحديث…',
 heading:'الاتجاه',accuracyHigh:'دقة عالية',accuracyMedium:'دقة متوسطة',accuracyLow:'دقة منخفضة',calibrationNeeded:'يرجى معايرة البوصلة',calibrationHint:'حرّك هاتفك على شكل رقم 8',
 reportIssue:'الإبلاغ عن مشكلة',
+tomorrowFajr:'فجر الغد',
 share:'مشاركة',shareText:'أوقات الصلاة في {city}: الفجر {fajr}، الظهر {dhuhr}، العصر {asr}، المغرب {maghrib}، العشاء {isha}',shareTitle:'وقت الصلاة — أوقات الصلاة',
 },
 fr:{
@@ -954,6 +989,7 @@ notifBlocked:'Notifications bloquées — activez-les dans les paramètres du na
 hardRefresh:'Actualisation complète',hardRefreshConfirm:'Toutes les données en cache seront supprimées et l\'application sera rechargée. Continuer ?',hardRefreshing:'Actualisation…',
 heading:'Cap',accuracyHigh:'Haute précision',accuracyMedium:'Précision moyenne',accuracyLow:'Faible précision',calibrationNeeded:'Veuillez calibrer la boussole',calibrationHint:'Faites un mouvement en 8',
 reportIssue:'Signaler un problème',
+tomorrowFajr:'Fajr demain',
 share:'Partager',shareText:'Horaires de prière à {city} : Fajr {fajr}, Dhuhr {dhuhr}, Asr {asr}, Maghrib {maghrib}, Isha {isha}',shareTitle:'WaqtSalat — Horaires de prière',
 },
 en:{
@@ -979,6 +1015,7 @@ notifBlocked:'Notifications blocked — enable them in browser settings to recei
 hardRefresh:'Hard Refresh',hardRefreshConfirm:'All cached data will be cleared and the app will reload. Continue?',hardRefreshing:'Refreshing…',
 heading:'Heading',accuracyHigh:'High accuracy',accuracyMedium:'Medium accuracy',accuracyLow:'Low accuracy',calibrationNeeded:'Please calibrate the compass',calibrationHint:'Move your phone in a figure-8 pattern',
 reportIssue:'Report an issue',
+tomorrowFajr:'Tomorrow\'s Fajr',
 share:'Share',shareText:'Prayer times in {city}: Fajr {fajr}, Dhuhr {dhuhr}, Asr {asr}, Maghrib {maghrib}, Isha {isha}',shareTitle:'WaqtSalat — Prayer Times',
 }};
 
@@ -1170,8 +1207,7 @@ function applyTheme(){
     document.documentElement.setAttribute('data-theme',th);
   }
   // Update theme-color meta
-  const isDark=th==='dark'||(th==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches);
-  document.querySelector('meta[name="theme-color"]').content=isDark?'#0a0a0a':'#1a8d5f';
+  document.querySelector('meta[name="theme-color"]').content='#0d5a2e';
 }
 
 function renderNav(){
@@ -1240,6 +1276,22 @@ function renderPrayers(){
     li.appendChild(nameSpan);li.appendChild(timeSpan);
     list.appendChild(li);
   });
+
+  // Tomorrow's Fajr below Isha
+  const tomorrow=new Date(now);
+  tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowTimes=getPrayerTimesLocal(tomorrow,lat,lng,state.adjustments);
+  if(tomorrowTimes.fajr){
+    const li=document.createElement('li');
+    li.setAttribute('role','listitem');
+    li.classList.add('tomorrow-fajr');
+    const nameSpan=document.createElement('span');
+    nameSpan.className='prayer-name';nameSpan.textContent=t('tomorrowFajr');
+    const timeSpan=document.createElement('span');
+    timeSpan.className='prayer-time';timeSpan.textContent=tomorrowTimes.fajr;
+    li.appendChild(nameSpan);li.appendChild(timeSpan);
+    list.appendChild(li);
+  }
 
   // Countdown hero
   $('next-prayer-label').textContent=t('nextPrayer');
