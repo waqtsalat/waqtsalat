@@ -80,6 +80,9 @@ export const TRANSLATIONS = {
     accuracyMedium: 'دقة متوسطة',
     accuracyLow: 'دقة منخفضة',
     calibrationHint: 'حرّك هاتفك على شكل رقم 8 لمعايرة البوصلة',
+    helpShare: 'مشاركة',
+    helpShareDesc: 'شارك وقت الصلاة مع الأهل والأصدقاء',
+    shareCopied: 'تم نسخ الرابط',
   },
   fr: {
     appName: 'WaqtSalat',
@@ -157,6 +160,9 @@ export const TRANSLATIONS = {
     accuracyMedium: 'Précision moyenne',
     accuracyLow: 'Faible précision',
     calibrationHint: 'Faites un mouvement en 8 avec votre téléphone pour calibrer',
+    helpShare: 'Partager',
+    helpShareDesc: 'Partagez WaqtSalat avec vos proches',
+    shareCopied: 'Lien copié',
   },
   en: {
     appName: 'WaqtSalat',
@@ -234,6 +240,9 @@ export const TRANSLATIONS = {
     accuracyMedium: 'Medium accuracy',
     accuracyLow: 'Low accuracy',
     calibrationHint: 'Move your phone in a figure-8 pattern to calibrate',
+    helpShare: 'Share',
+    helpShareDesc: 'Share WaqtSalat with friends & family',
+    shareCopied: 'Link copied',
   },
 };
 

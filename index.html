@@ -23,9 +23,10 @@
 <meta property="og:url" content="https://yellowsnow.github.io/waqtsalat/">
 <meta property="og:title" content="WaqtSalat — وقت الصلاة | Prayer Times for Morocco">
 <meta property="og:description" content="Accurate prayer times for Morocco. Offline PWA using the official Habous method (Malikite rite). 35+ cities, Qibla compass, trilingual (AR/FR/EN). Zero tracking.">
-<meta property="og:image" content="https://yellowsnow.github.io/waqtsalat/icons/icon-512.png">
-<meta property="og:image:width" content="512">
-<meta property="og:image:height" content="512">
+<meta property="og:image" content="https://yellowsnow.github.io/waqtsalat/icons/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="WaqtSalat — Prayer times app for Morocco">
 <meta property="og:locale" content="ar_MA">
 <meta property="og:locale:alternate" content="fr_MA">
@@ -33,11 +34,11 @@
 <meta property="og:site_name" content="WaqtSalat">
 
 <!-- Twitter Card -->
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://yellowsnow.github.io/waqtsalat/">
 <meta name="twitter:title" content="WaqtSalat — وقت الصلاة | Prayer Times for Morocco">
 <meta name="twitter:description" content="Accurate prayer times for Morocco. Offline PWA using the official Habous method (Malikite rite). 35+ cities, Qibla compass, trilingual. Zero tracking.">
-<meta name="twitter:image" content="https://yellowsnow.github.io/waqtsalat/icons/icon-512.png">
+<meta name="twitter:image" content="https://yellowsnow.github.io/waqtsalat/icons/og-image.png">
 <meta name="twitter:image:alt" content="WaqtSalat — Prayer times app for Morocco">
 
 <!-- PWA & App Meta -->
@@ -87,7 +88,7 @@
     "Zero cookies, zero analytics, zero tracking",
     "Single HTML file under 100 KB gzipped"
   ],
-  "screenshot": "https://yellowsnow.github.io/waqtsalat/icons/icon-512.png",
+  "screenshot": "https://yellowsnow.github.io/waqtsalat/icons/og-image.png",
   "softwareVersion": "1.0.0",
   "inLanguage": ["ar", "fr", "en"],
   "isAccessibleForFree": true,
@@ -730,6 +731,24 @@ nav.bottom-bar button:focus-visible{
 .help-popup-actions a .action-text{display:flex;flex-direction:column;gap:1px}
 .help-popup-actions a .action-label{font-weight:500}
 .help-popup-actions a .action-desc{font-size:var(--fs-xs);color:rgba(255,255,255,0.5)}
+.share-toast{
+  position:fixed;bottom:calc(4.5rem + var(--safe-b));left:50%;transform:translateX(-50%) translateY(1rem);
+  background:rgba(8,40,22,0.95);color:#fff;padding:var(--sp-sm) var(--sp-lg);
+  border-radius:2rem;font-size:var(--fs-sm);
+  border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.3s;z-index:250;
+  white-space:nowrap;
+}
+.share-toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.help-share-btn{
+  display:flex;align-items:center;gap:var(--sp-md);
+  padding:var(--sp-md);border-radius:var(--sp-sm);
+  width:100%;text-align:start;cursor:pointer;
+  color:#fff;text-decoration:none;font-size:var(--fs-sm);
+  transition:background 0.15s;background:transparent;
+}
+.help-share-btn:hover,.help-share-btn:focus-visible{background:rgba(255,255,255,0.1)}
+.help-share-btn svg{width:1.25rem;height:1.25rem;flex-shrink:0;color:var(--gold)}
 .help-popup-close{
   display:block;width:100%;padding:var(--sp-md);
   text-align:center;font-size:var(--fs-sm);
@@ -789,10 +808,19 @@ nav.bottom-bar button:focus-visible{
           <span class="action-desc" id="help-desc-report">Report issues or request features</span>
         </span>
       </a>
+      <button type="button" id="help-link-share" class="help-share-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span class="action-text">
+          <span class="action-label" id="help-label-share">Share</span>
+          <span class="action-desc" id="help-desc-share">Share WaqtSalat with friends & family</span>
+        </span>
+      </button>
     </div>
     <button class="help-popup-close" id="help-popup-close">Close</button>
   </div>
 </div>
+
+<div class="share-toast" id="share-toast" role="status" aria-live="polite"></div>
 
 <div class="notif-blocked-bar" id="notif-blocked-bar" role="alert">
   <span id="notif-blocked-text"></span>
@@ -1072,6 +1100,7 @@ tomorrowFajr:'فجر الغد',
 helpInfo:'المساعدة',betaWarning:'نسخة تجريبية — قد تختلف أوقات الصلاة قليلاً عن الجداول الرسمية. تحقق دائماً من مسجدك المحلي.',
 helpContribute:'المساهمة',helpContributeDesc:'عرض الكود المصدري والمساهمة',
 helpReport:'الإبلاغ عن خطأ',helpReportDesc:'الإبلاغ عن مشاكل أو طلب ميزات',helpClose:'إغلاق',
+helpShare:'مشاركة',helpShareDesc:'شارك وقت الصلاة مع الأهل والأصدقاء',shareCopied:'تم نسخ الرابط',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -1099,6 +1128,7 @@ tomorrowFajr:'Fajr demain',
 helpInfo:'Aide',betaWarning:'Bêta — Les horaires de prière peuvent légèrement différer des horaires officiels. Vérifiez toujours auprès de votre mosquée locale.',
 helpContribute:'Contribuer',helpContributeDesc:'Voir le code source et contribuer',
 helpReport:'Signaler un bug',helpReportDesc:'Signaler un problème ou demander une fonctionnalité',helpClose:'Fermer',
+helpShare:'Partager',helpShareDesc:'Partagez WaqtSalat avec vos proches',shareCopied:'Lien copié',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -1126,6 +1156,7 @@ tomorrowFajr:'Tomorrow\'s Fajr',
 helpInfo:'Help & Info',betaWarning:'Beta — Prayer times may differ slightly from official schedules. Always verify with your local mosque.',
 helpContribute:'Contribute',helpContributeDesc:'View source code & contribute',
 helpReport:'Report a bug',helpReportDesc:'Report issues or request features',helpClose:'Close',
+helpShare:'Share',helpShareDesc:'Share WaqtSalat with friends & family',shareCopied:'Link copied',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -2118,6 +2149,8 @@ function renderSettings(){
   $('help-desc-report').textContent=t('helpReportDesc');
   $('help-popup-close').textContent=t('helpClose');
   $('help-popup-title').textContent=t('appName');
+  $('help-label-share').textContent=t('helpShare');
+  $('help-desc-share').textContent=t('helpShareDesc');
 }
 
 function populateCitySelect(sel){
@@ -2180,6 +2213,29 @@ function setupEvents(){
   });
   $('help-popup-overlay').addEventListener('click',(e)=>{
     if(e.target===$('help-popup-overlay'))$('help-popup-overlay').classList.remove('show');
+  });
+
+  // Share
+  $('help-link-share').addEventListener('click',async()=>{
+    const url='https://yellowsnow.github.io/waqtsalat/';
+    const title='WaqtSalat — '+t('appName');
+    const text=document.querySelector('meta[name="description"]').content;
+    if(navigator.share){
+      try{await navigator.share({title,text,url})}catch(e){}
+    }else{
+      try{
+        await navigator.clipboard.writeText(url);
+        showShareToast(t('shareCopied'));
+      }catch(e){
+        // Final fallback: select + copy
+        const inp=document.createElement('input');
+        inp.value=url;document.body.appendChild(inp);
+        inp.select();document.execCommand('copy');
+        document.body.removeChild(inp);
+        showShareToast(t('shareCopied'));
+      }
+    }
+    $('help-popup-overlay').classList.remove('show');
   });
 
   // Compass
@@ -2491,6 +2547,13 @@ function showUpdateBanner(reg){
 
 // ─── Helpers ──────────────────────────────────────────────────
 function $(id){return document.getElementById(id)}
+
+function showShareToast(msg){
+  const el=$('share-toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(el._tid);
+  el._tid=setTimeout(()=>el.classList.remove('show'),2500);
+}
 
 // ─── Boot ─────────────────────────────────────────────────────
 loadState();
