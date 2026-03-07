@@ -75,6 +75,11 @@ export const TRANSLATIONS = {
     hardRefresh: 'تحديث شامل',
     hardRefreshConfirm: 'سيتم مسح جميع البيانات المخزنة وإعادة تحميل التطبيق. هل تريد المتابعة؟',
     hardRefreshing: 'جارٍ التحديث…',
+    heading: 'الاتجاه',
+    accuracyHigh: 'دقة عالية',
+    accuracyMedium: 'دقة متوسطة',
+    accuracyLow: 'دقة منخفضة',
+    calibrationHint: 'حرّك هاتفك على شكل رقم 8 لمعايرة البوصلة',
   },
   fr: {
     appName: 'WaqtSalat',
@@ -147,6 +152,11 @@ export const TRANSLATIONS = {
     hardRefresh: 'Actualisation complète',
     hardRefreshConfirm: 'Toutes les données en cache seront supprimées et l\'application sera rechargée. Continuer ?',
     hardRefreshing: 'Actualisation…',
+    heading: 'Cap',
+    accuracyHigh: 'Haute précision',
+    accuracyMedium: 'Précision moyenne',
+    accuracyLow: 'Faible précision',
+    calibrationHint: 'Faites un mouvement en 8 avec votre téléphone pour calibrer',
   },
   en: {
     appName: 'WaqtSalat',
@@ -219,6 +229,11 @@ export const TRANSLATIONS = {
     hardRefresh: 'Hard Refresh',
     hardRefreshConfirm: 'All cached data will be cleared and the app will reload. Continue?',
     hardRefreshing: 'Refreshing…',
+    heading: 'Heading',
+    accuracyHigh: 'High accuracy',
+    accuracyMedium: 'Medium accuracy',
+    accuracyLow: 'Low accuracy',
+    calibrationHint: 'Move your phone in a figure-8 pattern to calibrate',
   },
 };
 
