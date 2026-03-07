@@ -1020,32 +1020,58 @@ function startAR(){
         // Map diff to screen X position (±45° = full screen width)
         const screenX=canvas.width/2+(diff/45)*(canvas.width/2);
 
-        // Draw qibla indicator
+        // Draw qibla indicator — horizontal arrow (parallel to ground)
         const cy=canvas.height*0.4;
+        const arrowLen=130; // twice bigger than before
+        const arrowH=44;   // arrow thickness (half-height)
+        const headLen=50;   // arrowhead length
         ctx.save();
 
-        // Thick yellow guide line under arrow
-        ctx.strokeStyle='#fdd835';ctx.lineWidth=6;
-        ctx.beginPath();
-        ctx.moveTo(screenX-40,cy+30);
-        ctx.lineTo(screenX+40,cy+30);
-        ctx.stroke();
+        // Full-color horizontal arrow pointing right, rotated into Qibla direction
+        // The arrow is drawn horizontally then placed at screenX, cy
+        ctx.translate(screenX,cy);
 
-        // Arrow — bigger and thicker
-        ctx.strokeStyle='#2ecc71';ctx.fillStyle='rgba(46,204,113,0.25)';
-        ctx.lineWidth=5;
+        // Arrow body: shaft + triangular head, fully filled green
+        ctx.fillStyle='#2ecc71';ctx.strokeStyle='#1a9c58';ctx.lineWidth=3;
         ctx.beginPath();
-        ctx.moveTo(screenX,cy-90);
-        ctx.lineTo(screenX-32,cy+20);
-        ctx.lineTo(screenX+32,cy+20);
+        // Shaft (rectangle part)
+        ctx.moveTo(-arrowLen/2, -arrowH/3);
+        ctx.lineTo(arrowLen/2 - headLen, -arrowH/3);
+        // Arrowhead
+        ctx.lineTo(arrowLen/2 - headLen, -arrowH);
+        ctx.lineTo(arrowLen/2, 0);
+        ctx.lineTo(arrowLen/2 - headLen, arrowH);
+        ctx.lineTo(arrowLen/2 - headLen, arrowH/3);
+        // Back along bottom of shaft
+        ctx.lineTo(-arrowLen/2, arrowH/3);
         ctx.closePath();
         ctx.fill();ctx.stroke();
 
-        // Label
+        // Yellow direction line — 60px below arrow, same direction, half arrow width
+        const lineLen=arrowLen/2;
+        const lineY=60;
+        ctx.strokeStyle='#fdd835';ctx.lineWidth=8;
+        ctx.beginPath();
+        ctx.moveTo(-lineLen/2, lineY);
+        ctx.lineTo(lineLen/2, lineY);
+        ctx.stroke();
+        // Small tick marks at ends
+        ctx.lineWidth=4;
+        ctx.beginPath();
+        ctx.moveTo(-lineLen/2, lineY-8);
+        ctx.lineTo(-lineLen/2, lineY+8);
+        ctx.moveTo(lineLen/2, lineY-8);
+        ctx.lineTo(lineLen/2, lineY+8);
+        ctx.stroke();
+
+        ctx.restore();
+
+        // Label below direction line
+        ctx.save();
         ctx.fillStyle='#fff';ctx.font='bold 20px system-ui';ctx.textAlign='center';
         ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=6;
-        ctx.fillText(t('qiblaDirection'),screenX,cy+58);
-        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+82);
+        ctx.fillText(t('qiblaDirection'),screenX,cy+98);
+        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+122);
         ctx.restore();
 
         // Crosshair center
