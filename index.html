@@ -899,6 +899,46 @@ function startCountdown(targetMin){
   },1000);
 }
 
+// ─── Compass heading helper ───────────────────────────────────
+function extractHeading(e){
+  // iOS: webkitCompassHeading is a true compass heading
+  if(e.webkitCompassHeading!==undefined&&e.webkitCompassHeading!==null){
+    return e.webkitCompassHeading;
+  }
+  // Android absolute orientation or absolute:true events
+  if(e.absolute&&e.alpha!==null){
+    return(360-e.alpha)%360;
+  }
+  return null;
+}
+
+function addOrientationListener(handler){
+  // iOS: must request permission, uses deviceorientation + webkitCompassHeading
+  if(typeof DeviceOrientationEvent.requestPermission==='function'){
+    DeviceOrientationEvent.requestPermission().then(r=>{
+      if(r==='granted')window.addEventListener('deviceorientation',handler,true);
+    });
+    return;
+  }
+  // Android: prefer deviceorientationabsolute for true compass heading
+  let gotAbsolute=false;
+  const absHandler=e=>{
+    gotAbsolute=true;
+    handler(e);
+  };
+  if('ondeviceorientationabsolute' in window){
+    window.addEventListener('deviceorientationabsolute',absHandler,true);
+    // Fallback: if absolute event never fires, use regular event (with absolute flag check)
+    setTimeout(()=>{
+      if(!gotAbsolute){
+        window.addEventListener('deviceorientation',handler,true);
+      }
+    },1000);
+  }else{
+    window.addEventListener('deviceorientation',handler,true);
+  }
+}
+
 // ─── AR Camera Mode ───────────────────────────────────────────
 let arStream=null;
 let arAnimFrame=null;
@@ -920,19 +960,10 @@ function startAR(){
 
     // Start orientation tracking for AR
     const orientHandler=e=>{
-      if(e.webkitCompassHeading!==undefined){
-        arHeading=e.webkitCompassHeading;
-      }else if(e.alpha!==null){
-        arHeading=(360-e.alpha)%360;
-      }
+      const h=extractHeading(e);
+      if(h!==null)arHeading=h;
     };
-    if(typeof DeviceOrientationEvent.requestPermission==='function'){
-      DeviceOrientationEvent.requestPermission().then(r=>{
-        if(r==='granted')window.addEventListener('deviceorientation',orientHandler,true);
-      });
-    }else{
-      window.addEventListener('deviceorientation',orientHandler,true);
-    }
+    addOrientationListener(orientHandler);
 
     function drawAR(){
       canvas.width=canvas.clientWidth;
@@ -950,22 +981,29 @@ function startAR(){
         // Draw qibla indicator
         const cy=canvas.height*0.4;
         ctx.save();
-        ctx.strokeStyle='#2ecc71';ctx.fillStyle='rgba(46,204,113,0.15)';
-        ctx.lineWidth=3;
 
-        // Arrow
+        // Thick yellow guide line under arrow
+        ctx.strokeStyle='#fdd835';ctx.lineWidth=6;
         ctx.beginPath();
-        ctx.moveTo(screenX,cy-50);
-        ctx.lineTo(screenX-18,cy+10);
-        ctx.lineTo(screenX+18,cy+10);
+        ctx.moveTo(screenX-40,cy+30);
+        ctx.lineTo(screenX+40,cy+30);
+        ctx.stroke();
+
+        // Arrow — bigger and thicker
+        ctx.strokeStyle='#2ecc71';ctx.fillStyle='rgba(46,204,113,0.25)';
+        ctx.lineWidth=5;
+        ctx.beginPath();
+        ctx.moveTo(screenX,cy-90);
+        ctx.lineTo(screenX-32,cy+20);
+        ctx.lineTo(screenX+32,cy+20);
         ctx.closePath();
         ctx.fill();ctx.stroke();
 
         // Label
-        ctx.fillStyle='#fff';ctx.font='bold 16px system-ui';ctx.textAlign='center';
-        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=4;
-        ctx.fillText(t('qiblaDirection'),screenX,cy+40);
-        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+60);
+        ctx.fillStyle='#fff';ctx.font='bold 20px system-ui';ctx.textAlign='center';
+        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=6;
+        ctx.fillText(t('qiblaDirection'),screenX,cy+58);
+        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+82);
         ctx.restore();
 
         // Crosshair center
@@ -1041,26 +1079,14 @@ function renderQibla(){
 function startCompass(){
   if(!window.DeviceOrientationEvent)return;
   const handler=e=>{
-    let heading=null;
-    if(e.webkitCompassHeading!==undefined){
-      heading=e.webkitCompassHeading;
-    }else if(e.alpha!==null){
-      heading=(360-e.alpha)%360;
-    }
+    const heading=extractHeading(e);
     if(heading!==null){
       $('compass-rotate').setAttribute('transform',`rotate(${-heading},100,100)`);
       const qAngle=calcQibla(state.position.lat,state.position.lng);
       $('qibla-needle').setAttribute('transform',`rotate(${qAngle-heading},100,100)`);
     }
   };
-
-  if(typeof DeviceOrientationEvent.requestPermission==='function'){
-    DeviceOrientationEvent.requestPermission().then(r=>{
-      if(r==='granted')window.addEventListener('deviceorientation',handler,true);
-    });
-  }else{
-    window.addEventListener('deviceorientation',handler,true);
-  }
+  addOrientationListener(handler);
 }
 
 // ─── Settings ─────────────────────────────────────────────────
