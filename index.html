@@ -91,19 +91,6 @@ nav.bottom-bar button:focus-visible{
 .header-info .city-name{font-size:1.1rem;font-weight:600}
 .header-info .date-line{font-size:0.85rem;color:var(--muted);margin-top:0.25rem}
 
-.clock-container{
-  display:flex;justify-content:center;margin:1rem 0;
-}
-.clock-svg{width:min(280px,80vw);height:min(280px,80vw)}
-
-.next-prayer-box{
-  text-align:center;padding:1rem;margin:1rem 0;
-  background:var(--surface);border-radius:0.75rem;
-  border:1px solid var(--border);
-}
-.next-prayer-label{font-size:0.85rem;color:var(--muted)}
-.next-prayer-name{font-size:1.5rem;font-weight:700;color:var(--accent);margin:0.25rem 0}
-.countdown{font-size:1.8rem;font-weight:700;font-variant-numeric:tabular-nums}
 
 .prayer-list{
   list-style:none;background:var(--surface);
@@ -249,15 +236,102 @@ nav.bottom-bar button:focus-visible{
 
 /* Focus visible */
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:0.15rem}
+
+/* Notification blocked bar */
+.notif-blocked-bar{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:0.5rem 1rem;background:#e74c3c;color:#fff;font-size:0.8rem;
+  text-align:center;line-height:1.4;
+}
+.notif-blocked-bar.show{display:block}
+
+/* Install banner */
+.install-banner{
+  display:none;position:fixed;bottom:calc(60px + var(--safe-b));left:0;right:0;z-index:150;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:0.75rem 1rem;box-shadow:0 -2px 8px rgba(0,0,0,0.1);
+}
+.install-banner.show{display:block}
+.install-banner-content{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem}
+.install-icon{flex-shrink:0}
+.install-text{display:flex;flex-direction:column;gap:0.15rem}
+.install-text strong{font-size:0.9rem;color:var(--fg)}
+.install-text span{font-size:0.75rem;color:var(--muted)}
+.install-actions{display:flex;gap:0.5rem;justify-content:flex-end}
+.btn-install{
+  background:var(--accent);color:#fff;border:none;border-radius:0.5rem;
+  padding:0.45rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;
+}
+.btn-install:hover{background:var(--accent2)}
+
+/* AR overlay */
+.ar-overlay{
+  position:fixed;inset:0;z-index:1000;background:#000;
+}
+.ar-overlay.hidden{display:none}
+#ar-video{width:100%;height:100%;object-fit:cover}
+#ar-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ar-close{
+  position:absolute;top:1rem;right:1rem;z-index:1001;
+  width:2.5rem;height:2.5rem;border-radius:50%;border:none;
+  background:rgba(0,0,0,0.5);color:#fff;font-size:1.5rem;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.btn-ar{margin-top:0.5rem}
+
+/* Countdown hero (replaces analog clock) */
+.countdown-hero{
+  display:flex;flex-direction:column;align-items:center;
+  padding:1.5rem 0;gap:0.25rem;
+}
+.countdown-hero .next-label{font-size:0.85rem;color:var(--muted)}
+.countdown-hero .next-name{font-size:1.5rem;font-weight:700;color:var(--accent)}
+.countdown-hero .hero-countdown{
+  font-size:3rem;font-weight:700;font-variant-numeric:tabular-nums;
+  letter-spacing:0.05em;color:var(--fg);
+}
+.countdown-hero .hero-countdown-label{font-size:0.75rem;color:var(--muted);margin-top:-0.25rem}
+
+/* Prayer progress bar */
+.prayer-progress{
+  width:100%;max-width:280px;height:4px;background:var(--surface2);border-radius:2px;
+  overflow:hidden;margin-top:0.5rem;
+}
+.prayer-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 1s linear}
 </style>
 </head>
 <body>
 <a class="skip-link" href="#main-content" id="skip-link">Skip to content</a>
 
+<div class="notif-blocked-bar" id="notif-blocked-bar" role="alert">
+  <span id="notif-blocked-text"></span>
+</div>
+
 <div class="update-banner" id="update-banner" role="alert">
   <span id="update-text"></span>
   <button class="btn-update" id="btn-update-now"></button>
   <button class="btn-later" id="btn-update-later"></button>
+</div>
+
+<div class="install-banner" id="install-banner" role="alert">
+  <div class="install-banner-content">
+    <svg class="install-icon" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="32" height="32"><path d="M12 5v14M5 12l7 7 7-7"/><line x1="5" y1="19" x2="19" y2="19"/></svg>
+    <div class="install-text">
+      <strong id="install-title"></strong>
+      <span id="install-desc"></span>
+    </div>
+  </div>
+  <div class="install-actions">
+    <button class="btn-install" id="btn-install"></button>
+    <button class="btn-later" id="btn-install-later"></button>
+  </div>
+</div>
+
+<!-- AR Overlay -->
+<div class="ar-overlay hidden" id="ar-overlay">
+  <video id="ar-video" autoplay playsinline muted></video>
+  <canvas id="ar-canvas"></canvas>
+  <button class="ar-close" id="ar-close" aria-label="Close AR">&times;</button>
 </div>
 
 <div class="onboarding" id="onboarding">
@@ -293,27 +367,12 @@ nav.bottom-bar button:focus-visible{
     <div class="date-line" id="date-line"></div>
   </div>
 
-  <div class="clock-container">
-    <svg class="clock-svg" viewBox="0 0 200 200" role="img" id="analog-clock" aria-label="Prayer times clock">
-      <defs>
-        <clipPath id="clock-clip"><circle cx="100" cy="100" r="90"/></clipPath>
-      </defs>
-      <circle cx="100" cy="100" r="95" fill="none" stroke="var(--border)" stroke-width="1"/>
-      <!-- Arcs drawn by JS -->
-      <g id="clock-arcs" clip-path="url(#clock-clip)"></g>
-      <!-- Hour markers -->
-      <g id="clock-markers"></g>
-      <!-- Clock hands -->
-      <line id="hand-hour" x1="100" y1="100" x2="100" y2="50" stroke="var(--fg)" stroke-width="3" stroke-linecap="round"/>
-      <line id="hand-minute" x1="100" y1="100" x2="100" y2="35" stroke="var(--fg)" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="100" cy="100" r="3" fill="var(--accent)"/>
-    </svg>
-  </div>
-
-  <div class="next-prayer-box" role="timer" aria-live="polite" id="next-prayer-box">
-    <div class="next-prayer-label" id="next-prayer-label"></div>
-    <div class="next-prayer-name" id="next-prayer-name"></div>
-    <div class="countdown" id="countdown"></div>
+  <div class="countdown-hero" role="timer" aria-live="polite" id="countdown-hero">
+    <div class="next-label" id="next-prayer-label"></div>
+    <div class="next-name" id="next-prayer-name"></div>
+    <div class="hero-countdown" id="countdown"></div>
+    <div class="hero-countdown-label" id="countdown-label"></div>
+    <div class="prayer-progress"><div class="prayer-progress-fill" id="prayer-progress-fill"></div></div>
   </div>
 
   <ul class="prayer-list" role="list" id="prayer-list"></ul>
@@ -348,6 +407,7 @@ nav.bottom-bar button:focus-visible{
       <div class="distance" id="qibla-distance"></div>
     </div>
     <button class="btn-compass" id="btn-compass"></button>
+    <button class="btn-compass btn-ar" id="btn-ar"></button>
   </div>
 </section>
 
@@ -490,6 +550,9 @@ updateAvailable:'تحديث متاح',updateNow:'تحديث الآن',later:'ل�
 selectCity:'اختر المدينة',gpsLocate:'تحديد الموقع',
 onboardingLang:'اختر اللغة',onboardingCity:'اختر مدينتك',onboardingDone:'تم الإعداد',
 next:'التالي',done:'تم',north:'ش',south:'ج',east:'شر',west:'غ',
+enableAR:'الواقع المعزز',arNotSupported:'جهازك لا يدعم الواقع المعزز',arNeedsCompass:'يجب تفعيل البوصلة أولاً',exitAR:'إغلاق',
+installApp:'تثبيت التطبيق',installDesc:'ثبّت التطبيق للوصول السريع والعمل بدون إنترنت',install:'تثبيت',
+notifBlocked:'الإشعارات محظورة — فعّلها من إعدادات المتصفح لتلقي تنبيهات الصلاة',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -508,6 +571,9 @@ selectCity:'Choisir la ville',gpsLocate:'Localiser',
 onboardingLang:'Choisissez votre langue',onboardingCity:'Choisissez votre ville',
 onboardingDone:'Configuration terminée',next:'Suivant',done:'Terminé',
 north:'N',south:'S',east:'E',west:'O',
+enableAR:'Réalité augmentée',arNotSupported:'Votre appareil ne prend pas en charge la RA',arNeedsCompass:'Activez d\'abord la boussole',exitAR:'Fermer',
+installApp:'Installer l\'application',installDesc:'Installez l\'app pour un accès rapide et hors ligne',install:'Installer',
+notifBlocked:'Notifications bloquées — activez-les dans les paramètres du navigateur pour les rappels de prière',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -526,6 +592,9 @@ selectCity:'Select city',gpsLocate:'Locate',
 onboardingLang:'Choose your language',onboardingCity:'Choose your city',
 onboardingDone:'Setup complete',next:'Next',done:'Done',
 north:'N',south:'S',east:'E',west:'W',
+enableAR:'Augmented Reality',arNotSupported:'Your device does not support AR',arNeedsCompass:'Enable the compass first',exitAR:'Close',
+installApp:'Install App',installDesc:'Install the app for quick access and offline use',install:'Install',
+notifBlocked:'Notifications blocked — enable them in browser settings to receive prayer reminders',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -770,18 +839,33 @@ function renderPrayers(){
     list.appendChild(li);
   });
 
-  // Next prayer box
+  // Countdown hero
   $('next-prayer-label').textContent=t('nextPrayer');
+  $('countdown-label').textContent=t('timeRemaining');
   if(nextIdx>=0){
     $('next-prayer-name').textContent=t(displayPrayers[nextIdx]);
     updateCountdown(mins[nextIdx],nowCasa);
+    // Progress bar: how far through the current prayer interval
+    const prevIdx=nextIdx>0?nextIdx-1:mins.length-1;
+    if(mins[prevIdx]!==null){
+      let elapsed=nowMin-mins[prevIdx];
+      let total=mins[nextIdx]-mins[prevIdx];
+      if(elapsed<0)elapsed+=1440;
+      if(total<=0)total+=1440;
+      $('prayer-progress-fill').style.width=Math.min(100,elapsed/total*100)+'%';
+    }
   }else{
     // After isha — next is fajr tomorrow
     $('next-prayer-name').textContent=t('fajr');
     updateCountdown(mins[0]+1440,nowCasa);
+    if(mins[5]!==null&&mins[0]!==null){
+      let elapsed=nowMin-mins[5];
+      let total=(mins[0]+1440)-mins[5];
+      if(elapsed<0)elapsed+=1440;
+      $('prayer-progress-fill').style.width=Math.min(100,elapsed/total*100)+'%';
+    }
   }
 
-  renderClock(nowCasa,mins);
   startCountdown(nextIdx>=0?mins[nextIdx]:(mins[0]+1440));
 }
 
@@ -809,72 +893,102 @@ function startCountdown(targetMin){
   },1000);
 }
 
-// ─── Analog Clock ─────────────────────────────────────────────
-function renderClock(now,mins){
-  const h=now.getHours(),m=now.getMinutes();
+// ─── AR Camera Mode ───────────────────────────────────────────
+let arStream=null;
+let arAnimFrame=null;
+let arHeading=null;
 
-  // Hour hand (12h format)
-  const hAngle=((h%12)+m/60)*30-90;
-  const hRad=hAngle*DEG;
-  $('hand-hour').setAttribute('x2',100+Math.cos(hRad)*35);
-  $('hand-hour').setAttribute('y2',100+Math.sin(hRad)*35);
-
-  // Minute hand
-  const mAngle=m*6-90;
-  const mRad=mAngle*DEG;
-  $('hand-minute').setAttribute('x2',100+Math.cos(mRad)*50);
-  $('hand-minute').setAttribute('y2',100+Math.sin(mRad)*50);
-
-  // Hour markers
-  const markers=$('clock-markers');
-  markers.innerHTML='';
-  for(let i=0;i<12;i++){
-    const a=(i*30-90)*DEG;
-    const x1=100+Math.cos(a)*85,y1=100+Math.sin(a)*85;
-    const x2=100+Math.cos(a)*90,y2=100+Math.sin(a)*90;
-    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',x1);line.setAttribute('y1',y1);
-    line.setAttribute('x2',x2);line.setAttribute('y2',y2);
-    line.setAttribute('stroke','var(--fg)');line.setAttribute('stroke-width',i%3===0?'2':'1');
-    markers.appendChild(line);
+function startAR(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    alert(t('arNotSupported'));return;
   }
+  const overlay=$('ar-overlay');
+  const video=$('ar-video');
+  const canvas=$('ar-canvas');
+  const ctx=canvas.getContext('2d');
 
-  // Prayer arcs
-  const arcs=$('clock-arcs');
-  arcs.innerHTML='';
-  const arcColors=[
-    'var(--arc-fajr)','var(--arc-sunrise)','var(--arc-dhuhr)',
-    'var(--arc-asr)','var(--arc-maghrib)','var(--arc-isha)'
-  ];
-  for(let i=0;i<mins.length;i++){
-    if(mins[i]===null)continue;
-    const nextI=(i+1)%mins.length;
-    if(mins[nextI]===null)continue;
-    let startMin=mins[i],endMin=mins[nextI];
-    if(endMin<startMin)endMin+=1440;
-    // Convert minutes to clock angle (12h, so 720min = 360deg)
-    const startA=(startMin/720*360-90);
-    const endA=(endMin/720*360-90);
-    const path=describeArc(100,100,92,startA,endA);
-    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
-    p.setAttribute('d',path);
-    p.setAttribute('fill','none');
-    p.setAttribute('stroke',arcColors[i]);
-    // Highlight current arc
-    const nowMin=h*60+m;
-    const isCurrent=(nowMin>=mins[i]&&(nextI>i?nowMin<mins[nextI]:true));
-    p.setAttribute('stroke-width',isCurrent?'8':'5');
-    p.setAttribute('opacity',isCurrent?'0.9':'0.4');
-    arcs.appendChild(p);
-  }
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
+    arStream=stream;
+    video.srcObject=stream;
+    overlay.classList.remove('hidden');
+
+    // Start orientation tracking for AR
+    const orientHandler=e=>{
+      if(e.webkitCompassHeading!==undefined){
+        arHeading=e.webkitCompassHeading;
+      }else if(e.alpha!==null){
+        arHeading=(360-e.alpha)%360;
+      }
+    };
+    if(typeof DeviceOrientationEvent.requestPermission==='function'){
+      DeviceOrientationEvent.requestPermission().then(r=>{
+        if(r==='granted')window.addEventListener('deviceorientation',orientHandler,true);
+      });
+    }else{
+      window.addEventListener('deviceorientation',orientHandler,true);
+    }
+
+    function drawAR(){
+      canvas.width=canvas.clientWidth;
+      canvas.height=canvas.clientHeight;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      if(state.position&&arHeading!==null){
+        const qAngle=calcQibla(state.position.lat,state.position.lng);
+        let diff=qAngle-arHeading;
+        diff=((diff+180)%360+360)%360-180;
+
+        // Map diff to screen X position (±45° = full screen width)
+        const screenX=canvas.width/2+(diff/45)*(canvas.width/2);
+
+        // Draw qibla indicator
+        const cy=canvas.height*0.4;
+        ctx.save();
+        ctx.strokeStyle='#2ecc71';ctx.fillStyle='rgba(46,204,113,0.15)';
+        ctx.lineWidth=3;
+
+        // Arrow
+        ctx.beginPath();
+        ctx.moveTo(screenX,cy-50);
+        ctx.lineTo(screenX-18,cy+10);
+        ctx.lineTo(screenX+18,cy+10);
+        ctx.closePath();
+        ctx.fill();ctx.stroke();
+
+        // Label
+        ctx.fillStyle='#fff';ctx.font='bold 16px system-ui';ctx.textAlign='center';
+        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=4;
+        ctx.fillText(t('qiblaDirection'),screenX,cy+40);
+        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+60);
+        ctx.restore();
+
+        // Crosshair center
+        ctx.save();
+        ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;
+        ctx.beginPath();
+        ctx.moveTo(canvas.width/2-20,canvas.height/2);
+        ctx.lineTo(canvas.width/2+20,canvas.height/2);
+        ctx.moveTo(canvas.width/2,canvas.height/2-20);
+        ctx.lineTo(canvas.width/2,canvas.height/2+20);
+        ctx.stroke();
+        ctx.restore();
+      }else{
+        // No heading data — show message
+        ctx.fillStyle='#fff';ctx.font='16px system-ui';ctx.textAlign='center';
+        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=4;
+        ctx.fillText(t('arNeedsCompass'),canvas.width/2,canvas.height/2);
+      }
+      arAnimFrame=requestAnimationFrame(drawAR);
+    }
+    drawAR();
+  }).catch(()=>{alert(t('arNotSupported'))});
 }
 
-function describeArc(cx,cy,r,startAngle,endAngle){
-  const sr=startAngle*DEG,er=endAngle*DEG;
-  const x1=cx+r*Math.cos(sr),y1=cy+r*Math.sin(sr);
-  const x2=cx+r*Math.cos(er),y2=cy+r*Math.sin(er);
-  const large=(endAngle-startAngle)>180?1:0;
-  return`M${x1},${y1}A${r},${r},0,${large},1,${x2},${y2}`;
+function stopAR(){
+  $('ar-overlay').classList.add('hidden');
+  if(arStream){arStream.getTracks().forEach(t=>t.stop());arStream=null}
+  if(arAnimFrame){cancelAnimationFrame(arAnimFrame);arAnimFrame=null}
+  arHeading=null;
 }
 
 // ─── Qibla ────────────────────────────────────────────────────
@@ -898,6 +1012,7 @@ function renderQibla(){
   $('qibla-angle').textContent=t('qiblaAngle')+': '+angle.toFixed(1)+t('degrees');
   $('qibla-distance').textContent=t('qiblaDistance')+': '+Math.round(dist)+' '+t('km');
   $('btn-compass').textContent=t('enableCompass');
+  $('btn-ar').textContent=t('enableAR');
 
   // Compass aria
   $('compass-svg').setAttribute('aria-label',
@@ -1048,10 +1163,15 @@ function setupEvents(){
     state.notifications.enabled=e.target.checked;
     saveState('waqt-notifications',state.notifications);
     if(e.target.checked)requestNotifPermission();
+    checkNotifBlocked();
   });
 
   // Compass
   $('btn-compass').addEventListener('click',startCompass);
+
+  // AR
+  $('btn-ar').addEventListener('click',startAR);
+  $('ar-close').addEventListener('click',stopAR);
 
   // Export
   $('btn-export').addEventListener('click',()=>{
@@ -1130,6 +1250,10 @@ function setupOnboarding(){
       state.locale=btn.dataset.lang;
       saveState('waqt-locale',state.locale);
       applyLocale();
+      // Re-populate city select with new locale
+      const prevCity=$('ob-city-select').value;
+      populateCitySelect($('ob-city-select'));
+      if(prevCity)$('ob-city-select').value=prevCity;
       // Update onboarding text
       $('ob-lang-title').textContent=t('onboardingLang');
       $('ob-lang-next').textContent=t('next');
@@ -1217,6 +1341,57 @@ function scheduleNotifications(){
   });
 }
 
+// ─── PWA Install Prompt ──────────────────────────────────────
+let deferredInstallPrompt=null;
+
+function setupInstallPrompt(){
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();
+    deferredInstallPrompt=e;
+    showInstallBanner();
+  });
+  // Hide banner if app is already installed
+  window.addEventListener('appinstalled',()=>{
+    $('install-banner').classList.remove('show');
+    deferredInstallPrompt=null;
+  });
+}
+
+function showInstallBanner(){
+  const banner=$('install-banner');
+  $('install-title').textContent=t('installApp');
+  $('install-desc').textContent=t('installDesc');
+  $('btn-install').textContent=t('install');
+  $('btn-install-later').textContent=t('later');
+  banner.classList.add('show');
+
+  $('btn-install').onclick=()=>{
+    if(deferredInstallPrompt){
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(()=>{
+        deferredInstallPrompt=null;
+        banner.classList.remove('show');
+      });
+    }
+  };
+  $('btn-install-later').onclick=()=>{
+    banner.classList.remove('show');
+    // Show again next session
+  };
+}
+
+// ─── Notification Blocked Check ──────────────────────────────
+function checkNotifBlocked(){
+  if(!('Notification' in window))return;
+  const bar=$('notif-blocked-bar');
+  if(Notification.permission==='denied'&&state.notifications.enabled){
+    $('notif-blocked-text').textContent=t('notifBlocked');
+    bar.classList.add('show');
+  }else{
+    bar.classList.remove('show');
+  }
+}
+
 // ─── Service Worker ───────────────────────────────────────────
 function registerSW(){
   if(!('serviceWorker' in navigator))return;
@@ -1267,6 +1442,8 @@ setupOnboarding();
 setupEvents();
 if(state.onboarded&&state.position)renderAll();
 registerSW();
+setupInstallPrompt();
+checkNotifBlocked();
 
 })();
 </script>
