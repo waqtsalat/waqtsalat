@@ -1851,24 +1851,24 @@ function createQiblaObjects(){
   kaabaGrp.userData.isKaaba=true;
 
   // Main body
-  const bodyGeom=new THREE.BoxGeometry(3,3.5,3);
+  const bodyGeom=new THREE.BoxGeometry(9,10.5,9);
   const bodyMat=new THREE.MeshBasicMaterial({color:0x1a1a1a});
   kaabaGrp.add(new THREE.Mesh(bodyGeom,bodyMat));
 
   // Kiswa gold bands
-  const bandGeom=new THREE.BoxGeometry(3.06,0.22,3.06);
+  const bandGeom=new THREE.BoxGeometry(9.18,0.66,9.18);
   const bandMat=new THREE.MeshBasicMaterial({color:0xc9a84c});
   const band1=new THREE.Mesh(bandGeom,bandMat);
-  band1.position.y=0.5;
+  band1.position.y=1.5;
   kaabaGrp.add(band1);
   const band2=new THREE.Mesh(bandGeom.clone(),bandMat.clone());
-  band2.position.y=-0.15;
+  band2.position.y=-0.45;
   kaabaGrp.add(band2);
   const topTrim=new THREE.Mesh(
-    new THREE.BoxGeometry(3.06,0.12,3.06),
+    new THREE.BoxGeometry(9.18,0.36,9.18),
     new THREE.MeshBasicMaterial({color:0xc9a84c})
   );
-  topTrim.position.y=1.75;
+  topTrim.position.y=5.25;
   kaabaGrp.add(topTrim);
 
   // Gold wireframe edges
