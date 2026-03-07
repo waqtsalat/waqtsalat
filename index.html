@@ -122,6 +122,23 @@ nav.bottom-bar button:focus-visible{
   background:var(--accent);color:#fff;border-radius:0.5rem;
   font-weight:600;font-size:0.9rem;
 }
+.compass-accuracy{
+  margin-top:0.5rem;font-size:0.8rem;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;gap:0.4rem;
+}
+.accuracy-dot{
+  width:8px;height:8px;border-radius:50%;display:inline-block;
+}
+.accuracy-dot.high{background:#2ecc71}
+.accuracy-dot.medium{background:#f39c12}
+.accuracy-dot.low{background:#e74c3c}
+.calibration-banner{
+  background:#f39c12;color:#000;padding:0.6rem 1rem;border-radius:0.5rem;
+  margin-bottom:0.75rem;font-size:0.85rem;text-align:center;
+  animation:pulse-cal 2s ease-in-out infinite;display:none;
+}
+.calibration-banner.visible{display:block}
+@keyframes pulse-cal{0%,100%{opacity:1}50%{opacity:0.7}}
 
 /* Settings view */
 .settings-section{
@@ -381,6 +398,7 @@ nav.bottom-bar button:focus-visible{
 <!-- Qibla View -->
 <section class="view" id="view-qibla" role="region" aria-label="Qibla">
   <div class="qibla-container">
+    <div class="calibration-banner" id="calibration-banner"></div>
     <svg class="compass-svg" viewBox="0 0 200 200" role="img" id="compass-svg" aria-label="Qibla compass">
       <circle cx="100" cy="100" r="95" fill="none" stroke="var(--border)" stroke-width="1"/>
       <!-- Degree ticks -->
@@ -405,6 +423,10 @@ nav.bottom-bar button:focus-visible{
     <div class="qibla-info">
       <div class="angle" id="qibla-angle"></div>
       <div class="distance" id="qibla-distance"></div>
+    </div>
+    <div class="compass-accuracy" id="compass-accuracy" style="display:none">
+      <span class="accuracy-dot" id="accuracy-dot"></span>
+      <span id="accuracy-text"></span>
     </div>
     <button class="btn-compass" id="btn-compass"></button>
     <button class="btn-compass btn-ar" id="btn-ar"></button>
@@ -557,6 +579,7 @@ enableAR:'الواقع المعزز',arNotSupported:'جهازك لا يدعم ا
 installApp:'تثبيت التطبيق',installDesc:'ثبّت التطبيق للوصول السريع والعمل بدون إنترنت',install:'تثبيت',
 notifBlocked:'الإشعارات محظورة — فعّلها من إعدادات المتصفح لتلقي تنبيهات الصلاة',
 hardRefresh:'تحديث شامل',hardRefreshConfirm:'سيتم مسح جميع البيانات المخزنة وإعادة تحميل التطبيق. هل تريد المتابعة؟',hardRefreshing:'جارٍ التحديث…',
+heading:'الاتجاه',accuracyHigh:'دقة عالية',accuracyMedium:'دقة متوسطة',accuracyLow:'دقة منخفضة',calibrationNeeded:'يرجى معايرة البوصلة',calibrationHint:'حرّك هاتفك على شكل رقم 8',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -579,6 +602,7 @@ enableAR:'Réalité augmentée',arNotSupported:'Votre appareil ne prend pas en c
 installApp:'Installer l\'application',installDesc:'Installez l\'app pour un accès rapide et hors ligne',install:'Installer',
 notifBlocked:'Notifications bloquées — activez-les dans les paramètres du navigateur pour les rappels de prière',
 hardRefresh:'Actualisation complète',hardRefreshConfirm:'Toutes les données en cache seront supprimées et l\'application sera rechargée. Continuer ?',hardRefreshing:'Actualisation…',
+heading:'Cap',accuracyHigh:'Haute précision',accuracyMedium:'Précision moyenne',accuracyLow:'Faible précision',calibrationNeeded:'Veuillez calibrer la boussole',calibrationHint:'Faites un mouvement en 8',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -601,6 +625,7 @@ enableAR:'Augmented Reality',arNotSupported:'Your device does not support AR',ar
 installApp:'Install App',installDesc:'Install the app for quick access and offline use',install:'Install',
 notifBlocked:'Notifications blocked — enable them in browser settings to receive prayer reminders',
 hardRefresh:'Hard Refresh',hardRefreshConfirm:'All cached data will be cleared and the app will reload. Continue?',hardRefreshing:'Refreshing…',
+heading:'Heading',accuracyHigh:'High accuracy',accuracyMedium:'Medium accuracy',accuracyLow:'Low accuracy',calibrationNeeded:'Please calibrate the compass',calibrationHint:'Move your phone in a figure-8 pattern',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -899,43 +924,187 @@ function startCountdown(targetMin){
   },1000);
 }
 
-// ─── Compass heading helper ───────────────────────────────────
+// ─── Compass heading engine (precision-optimized) ────────────
+// Low-pass filter with circular (angular) averaging to smooth heading jitter
+const HEADING_FILTER_ALPHA=0.15; // Lower = smoother but slower response
+let _filteredHeading=null;
+let _lastHeadingTime=0;
+let _headingAccuracy=null; // degrees of accuracy (null=unknown)
+let _compassSource='none'; // 'sensor-api','absolute','relative','webkit'
+let _headingSamples=[]; // for variance/stability detection
+const MAX_HEADING_SAMPLES=20;
+
+function smoothHeading(raw){
+  if(_filteredHeading===null){_filteredHeading=raw;return raw}
+  // Circular interpolation: find shortest angular path
+  let diff=raw-_filteredHeading;
+  // Normalize to ±180
+  diff=((diff+540)%360)-180;
+  _filteredHeading=(_filteredHeading+HEADING_FILTER_ALPHA*diff+360)%360;
+  return _filteredHeading;
+}
+
+function updateHeadingStability(heading){
+  _headingSamples.push(heading);
+  if(_headingSamples.length>MAX_HEADING_SAMPLES)_headingSamples.shift();
+}
+
+function getHeadingVariance(){
+  if(_headingSamples.length<5)return 999;
+  // Circular variance
+  let sinSum=0,cosSum=0;
+  for(const h of _headingSamples){
+    sinSum+=Math.sin(h*DEG);
+    cosSum+=Math.cos(h*DEG);
+  }
+  const n=_headingSamples.length;
+  const R=Math.sqrt((sinSum/n)**2+(cosSum/n)**2);
+  return(1-R)*360; // 0=perfectly stable, 360=random
+}
+
+// Tilt-compensated heading from raw alpha/beta/gamma
+function tiltCompensatedHeading(alpha,beta,gamma){
+  // Convert to radians
+  const a=alpha*DEG,b=beta*DEG,g=gamma*DEG;
+  // When device is tilted, raw alpha doesn't give true compass heading
+  // Apply tilt compensation using rotation matrix decomposition
+  const cosB=Math.cos(b),sinB=Math.sin(b);
+  const cosG=Math.cos(g),sinG=Math.sin(g);
+
+  // Compute compass heading corrected for tilt
+  // Based on W3C deviceorientation spec rotation matrix
+  const x=cosG*Math.sin(a)-sinB*sinG*Math.cos(a);
+  const y=cosB*Math.cos(a);
+  let heading=Math.atan2(x,y)*RAD;
+  return(heading+360)%360;
+}
+
 function extractHeading(e){
-  // iOS: webkitCompassHeading is a true compass heading
+  // iOS: webkitCompassHeading is hardware-fused true compass heading (best source)
   if(e.webkitCompassHeading!==undefined&&e.webkitCompassHeading!==null){
+    _compassSource='webkit';
+    if(e.webkitCompassAccuracy!==undefined){
+      _headingAccuracy=e.webkitCompassAccuracy; // degrees of error
+    }
     return e.webkitCompassHeading;
   }
-  // Android absolute orientation or absolute:true events
+  // Android absolute orientation events
   if(e.absolute&&e.alpha!==null){
+    _compassSource='absolute';
+    // Use tilt compensation if beta/gamma available
+    if(e.beta!==null&&e.gamma!==null){
+      return tiltCompensatedHeading(e.alpha,e.beta,e.gamma);
+    }
     return(360-e.alpha)%360;
   }
   return null;
 }
 
+// Process raw heading: smooth + track stability
+function processHeading(raw){
+  const smoothed=smoothHeading(raw);
+  updateHeadingStability(smoothed);
+  _lastHeadingTime=Date.now();
+  return smoothed;
+}
+
+// Update accuracy UI
+function updateAccuracyUI(){
+  const el=$('compass-accuracy');
+  const dot=$('accuracy-dot');
+  const txt=$('accuracy-text');
+  if(!el)return;
+
+  const variance=getHeadingVariance();
+  let level,label;
+
+  if(_headingAccuracy!==null){
+    // iOS gives direct accuracy in degrees
+    if(_headingAccuracy<15){level='high';label='±'+Math.round(_headingAccuracy)+'°'}
+    else if(_headingAccuracy<30){level='medium';label='±'+Math.round(_headingAccuracy)+'°'}
+    else{level='low';label='±'+Math.round(_headingAccuracy)+'°'}
+  }else{
+    // Estimate from heading variance
+    if(variance<5){level='high';label=t('accuracyHigh')}
+    else if(variance<20){level='medium';label=t('accuracyMedium')}
+    else{level='low';label=t('accuracyLow')}
+  }
+
+  el.style.display='flex';
+  dot.className='accuracy-dot '+level;
+  txt.textContent=label;
+
+  // Show calibration banner if accuracy is bad
+  const banner=$('calibration-banner');
+  if(level==='low'){
+    banner.textContent=t('calibrationNeeded')+' — '+t('calibrationHint');
+    banner.classList.add('visible');
+  }else{
+    banner.classList.remove('visible');
+  }
+}
+
+// Try to use AbsoluteOrientationSensor (Generic Sensor API) — best precision
+function tryAbsoluteOrientationSensor(callback){
+  if(!('AbsoluteOrientationSensor' in window))return false;
+  try{
+    const sensor=new AbsoluteOrientationSensor({frequency:30,referenceFrame:'device'});
+    sensor.addEventListener('reading',()=>{
+      // Quaternion → heading
+      const[x,y,z,w]=sensor.quaternion;
+      // Convert quaternion to Euler heading (yaw)
+      const heading=Math.atan2(2*(w*z+x*y),1-2*(y*y+z*z))*RAD;
+      const compassHeading=(heading+360)%360;
+      _compassSource='sensor-api';
+      callback(processHeading(compassHeading));
+      updateAccuracyUI();
+    });
+    sensor.addEventListener('error',()=>{/* fall through to other methods */});
+    sensor.start();
+    return true;
+  }catch(e){return false}
+}
+
 function addOrientationListener(handler){
-  // iOS: must request permission, uses deviceorientation + webkitCompassHeading
+  // 1. Try AbsoluteOrientationSensor first (most precise, hardware sensor fusion)
+  const wrappedHandler=heading=>{
+    handler({_processedHeading:heading});
+  };
+  if(tryAbsoluteOrientationSensor(wrappedHandler))return;
+
+  // Wrap handler to add smoothing + accuracy tracking
+  const smoothedHandler=e=>{
+    const raw=extractHeading(e);
+    if(raw!==null){
+      const smoothed=processHeading(raw);
+      updateAccuracyUI();
+      handler({...e,_processedHeading:smoothed});
+    }
+  };
+
+  // 2. iOS: must request permission, uses deviceorientation + webkitCompassHeading
   if(typeof DeviceOrientationEvent.requestPermission==='function'){
     DeviceOrientationEvent.requestPermission().then(r=>{
-      if(r==='granted')window.addEventListener('deviceorientation',handler,true);
+      if(r==='granted')window.addEventListener('deviceorientation',smoothedHandler,true);
     });
     return;
   }
-  // Android: prefer deviceorientationabsolute for true compass heading
+  // 3. Android: prefer deviceorientationabsolute for true compass heading
   let gotAbsolute=false;
   const absHandler=e=>{
     gotAbsolute=true;
-    handler(e);
+    smoothedHandler(e);
   };
   if('ondeviceorientationabsolute' in window){
     window.addEventListener('deviceorientationabsolute',absHandler,true);
-    // Fallback: if absolute event never fires, use regular event (with absolute flag check)
+    // Fallback: if absolute event never fires, use regular event
     setTimeout(()=>{
       if(!gotAbsolute){
-        window.addEventListener('deviceorientation',handler,true);
+        window.addEventListener('deviceorientation',smoothedHandler,true);
       }
     },1000);
   }else{
-    window.addEventListener('deviceorientation',handler,true);
+    window.addEventListener('deviceorientation',smoothedHandler,true);
   }
 }
 
@@ -958,10 +1127,14 @@ function startAR(){
     video.srcObject=stream;
     overlay.classList.remove('hidden');
 
-    // Start orientation tracking for AR
+    // Start orientation tracking for AR (uses smoothed heading)
     const orientHandler=e=>{
-      const h=extractHeading(e);
-      if(h!==null)arHeading=h;
+      if(e._processedHeading!==undefined){
+        arHeading=e._processedHeading;
+      }else{
+        const raw=extractHeading(e);
+        if(raw!==null)arHeading=processHeading(raw);
+      }
     };
     addOrientationListener(orientHandler);
 
@@ -1077,13 +1250,16 @@ function renderQibla(){
 }
 
 function startCompass(){
-  if(!window.DeviceOrientationEvent)return;
+  if(!window.DeviceOrientationEvent&&!('AbsoluteOrientationSensor' in window))return;
   const handler=e=>{
-    const heading=extractHeading(e);
+    const heading=e._processedHeading!==undefined?e._processedHeading:extractHeading(e);
     if(heading!==null){
-      $('compass-rotate').setAttribute('transform',`rotate(${-heading},100,100)`);
+      const h=e._processedHeading!==undefined?heading:processHeading(heading);
+      $('compass-rotate').setAttribute('transform',`rotate(${-h},100,100)`);
       const qAngle=calcQibla(state.position.lat,state.position.lng);
-      $('qibla-needle').setAttribute('transform',`rotate(${qAngle-heading},100,100)`);
+      $('qibla-needle').setAttribute('transform',`rotate(${qAngle-h},100,100)`);
+      // Update displayed heading value
+      $('qibla-angle').textContent=t('qiblaAngle')+': '+qAngle.toFixed(1)+t('degrees')+' ('+t('heading')+': '+Math.round(h)+'°)';
     }
   };
   addOrientationListener(handler);
