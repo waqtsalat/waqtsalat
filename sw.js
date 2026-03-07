@@ -1,4 +1,4 @@
-const SW_VERSION = '1.0.0';
+const SW_VERSION = '1.1.0';
 const CACHE_NAME = 'waqtsalat-v' + SW_VERSION;
 const ASSETS = [
   './',
@@ -39,4 +39,43 @@ self.addEventListener('message', event => {
         .then(() => self.skipWaiting())
     );
   }
+});
+
+// Notification click — open the app
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+
+  if (event.action === 'snooze') {
+    // Snooze: re-show notification after 5 minutes
+    const data = event.notification.data || {};
+    const title = event.notification.title;
+    const options = {
+      body: event.notification.body,
+      icon: event.notification.icon,
+      badge: event.notification.badge,
+      tag: (event.notification.tag || 'waqtsalat') + '-snoozed',
+      renotify: true,
+      requireInteraction: true,
+      vibrate: [200, 100, 200, 100, 300, 100, 200],
+      silent: false,
+      data: { ...data, snoozed: true }
+    };
+    event.waitUntil(
+      new Promise(resolve => setTimeout(resolve, 5 * 60 * 1000))
+        .then(() => self.registration.showNotification(title, options))
+    );
+    return;
+  }
+
+  // Default: focus or open the app
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+      for (const client of clients) {
+        if (client.url.includes('waqtsalat') && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      return self.clients.openWindow('./');
+    })
+  );
 });
