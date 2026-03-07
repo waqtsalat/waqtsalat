@@ -279,6 +279,35 @@ nav.bottom-bar button:focus-visible{
 }
 .btn-ar{margin-top:0.5rem}
 
+/* Beta ribbon */
+.beta-ribbon{
+  position:fixed;top:0;right:0;z-index:160;
+  overflow:hidden;width:120px;height:120px;pointer-events:none;
+}
+[dir="rtl"] .beta-ribbon{right:auto;left:0}
+.beta-ribbon span{
+  display:block;width:200px;padding:4px 0;
+  background:#e67e22;color:#fff;font-size:0.7rem;font-weight:700;
+  text-align:center;text-transform:uppercase;letter-spacing:0.05em;
+  transform:rotate(45deg);position:absolute;top:28px;right:-50px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);pointer-events:auto;
+}
+[dir="rtl"] .beta-ribbon span{transform:rotate(-45deg);right:auto;left:-50px}
+
+/* Issue / feedback button */
+.issue-btn{
+  position:fixed;bottom:calc(4rem + var(--safe-b));right:1rem;z-index:99;
+  width:2.75rem;height:2.75rem;border-radius:50%;
+  background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.25);
+  transition:transform 0.2s,background 0.2s;
+  text-decoration:none;
+}
+[dir="rtl"] .issue-btn{right:auto;left:1rem}
+.issue-btn:hover,.issue-btn:focus-visible{transform:scale(1.1);background:var(--accent2)}
+.issue-btn svg{width:1.25rem;height:1.25rem}
+
 /* Countdown hero (replaces analog clock) */
 .countdown-hero{
   display:flex;flex-direction:column;align-items:center;
@@ -302,6 +331,14 @@ nav.bottom-bar button:focus-visible{
 </head>
 <body>
 <a class="skip-link" href="#main-content" id="skip-link">Skip to content</a>
+
+<!-- Beta ribbon -->
+<div class="beta-ribbon" aria-hidden="true"><span>Beta</span></div>
+
+<!-- Report issue button -->
+<a class="issue-btn" id="issue-btn" href="https://github.com/yellowsnow/waqtsalat/issues/new" target="_blank" rel="noopener" aria-label="Report an issue">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+</a>
 
 <div class="notif-blocked-bar" id="notif-blocked-bar" role="alert">
   <span id="notif-blocked-text"></span>
@@ -558,6 +595,7 @@ enableAR:'الواقع المعزز',arNotSupported:'جهازك لا يدعم ا
 installApp:'تثبيت التطبيق',installDesc:'ثبّت التطبيق للوصول السريع والعمل بدون إنترنت',install:'تثبيت',
 notifBlocked:'الإشعارات محظورة — فعّلها من إعدادات المتصفح لتلقي تنبيهات الصلاة',
 hardRefresh:'تحديث شامل',hardRefreshConfirm:'سيتم مسح جميع البيانات المخزنة وإعادة تحميل التطبيق. هل تريد المتابعة؟',hardRefreshing:'جارٍ التحديث…',
+reportIssue:'الإبلاغ عن مشكلة',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -580,6 +618,7 @@ enableAR:'Réalité augmentée',arNotSupported:'Votre appareil ne prend pas en c
 installApp:'Installer l\'application',installDesc:'Installez l\'app pour un accès rapide et hors ligne',install:'Installer',
 notifBlocked:'Notifications bloquées — activez-les dans les paramètres du navigateur pour les rappels de prière',
 hardRefresh:'Actualisation complète',hardRefreshConfirm:'Toutes les données en cache seront supprimées et l\'application sera rechargée. Continuer ?',hardRefreshing:'Actualisation…',
+reportIssue:'Signaler un problème',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -602,6 +641,7 @@ enableAR:'Augmented Reality',arNotSupported:'Your device does not support AR',ar
 installApp:'Install App',installDesc:'Install the app for quick access and offline use',install:'Install',
 notifBlocked:'Notifications blocked — enable them in browser settings to receive prayer reminders',
 hardRefresh:'Hard Refresh',hardRefreshConfirm:'All cached data will be cleared and the app will reload. Continue?',hardRefreshing:'Refreshing…',
+reportIssue:'Report an issue',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -1123,6 +1163,8 @@ function renderSettings(){
   $('btn-import').textContent=t('importConfig');
   $('btn-reset').textContent=t('resetConfig');
   $('btn-hard-refresh').textContent=t('hardRefresh');
+  $('issue-btn').setAttribute('aria-label',t('reportIssue'));
+  $('issue-btn').title=t('reportIssue');
 }
 
 function populateCitySelect(sel){
