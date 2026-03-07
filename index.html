@@ -1335,19 +1335,32 @@ function getHeadingVariance(){
 
 // Tilt-compensated heading from raw alpha/beta/gamma
 function tiltCompensatedHeading(alpha,beta,gamma){
-  // Convert to radians
+  // W3C spec: R = Rz(α)·Rx(β)·Ry(γ) maps device frame → Earth frame (ENU)
+  // alpha is *opposite* sense to compass heading (spec: "compass = 360 - alpha")
   const a=alpha*DEG,b=beta*DEG,g=gamma*DEG;
-  // When device is tilted, raw alpha doesn't give true compass heading
-  // Apply tilt compensation using rotation matrix decomposition
-  const cosB=Math.cos(b),sinB=Math.sin(b);
-  const cosG=Math.cos(g),sinG=Math.sin(g);
+  const sA=Math.sin(a),cA=Math.cos(a);
+  const sB=Math.sin(b),cB=Math.cos(b);
+  const sG=Math.sin(g),cG=Math.cos(g);
 
-  // Compute compass heading corrected for tilt
-  // Based on W3C deviceorientation spec rotation matrix
-  const x=cosG*Math.sin(a)-sinB*sinG*Math.cos(a);
-  const y=cosB*Math.cos(a);
-  let heading=Math.atan2(x,y)*RAD;
-  return(heading+360)%360;
+  // Project device-top [0,1,0] onto horizontal plane via rotation matrix column 1:
+  //   East  = -sinA·cosB
+  //   North =  cosA·cosB
+  // This heading is independent of gamma (roll doesn't change where top points)
+  // and equals (360 - alpha) when cosB > 0
+  if(cB*cB>0.0625){ // cosB² > 0.25 → device not too vertical
+    return(Math.atan2(-sA*cB,cA*cB)*RAD+360)%360;
+  }
+  // Device nearly vertical: project screen-normal [0,0,-1] onto horizontal plane
+  // via negated rotation matrix column 2:
+  //   East  = -(cosA·sinG + sinA·sinB·cosG)
+  //   North = -(sinA·sinG - cosA·sinB·cosG)
+  const fE=-(cA*sG+sA*sB*cG);
+  const fN=-(sA*sG-cA*sB*cG);
+  if(fE*fE+fN*fN>0.0625){
+    return(Math.atan2(fE,fN)*RAD+360)%360;
+  }
+  // Gimbal-lock fallback
+  return(360-alpha)%360;
 }
 
 function extractHeading(e){
@@ -1421,10 +1434,24 @@ function tryAbsoluteOrientationSensor(callback){
   try{
     const sensor=new AbsoluteOrientationSensor({frequency:30,referenceFrame:'device'});
     sensor.addEventListener('reading',()=>{
-      // Quaternion → heading
-      const[x,y,z,w]=sensor.quaternion;
-      // Convert quaternion to Euler heading (yaw)
-      const heading=Math.atan2(2*(w*z+x*y),1-2*(y*y+z*z))*RAD;
+      // Quaternion → compass heading via rotation matrix
+      // sensor.quaternion is [x,y,z,w], rotation from device→Earth (ENU)
+      const[qx,qy,qz,qw]=sensor.quaternion;
+      // Project device-top [0,1,0] onto horizontal plane using rotation matrix column 1:
+      //   East  = 2(qx·qy - qw·qz)
+      //   North = 1 - 2(qx² + qz²)
+      const east=2*(qx*qy-qw*qz);
+      const north=1-2*(qx*qx+qz*qz);
+      let heading=Math.atan2(east,north)*RAD;
+      // If device is nearly vertical, device-top has no horizontal component;
+      // fall back to screen-normal direction using rotation matrix column 2 negated
+      if(east*east+north*north<0.0625){
+        // Third column of R: [2(qx·qz+qw·qy), 2(qy·qz-qw·qx), 1-2(qx²+qy²)]
+        // Screen-normal = -column2: negate
+        const fE=-(2*(qx*qz+qw*qy));
+        const fN=-(2*(qy*qz-qw*qx));
+        if(fE*fE+fN*fN>0.01) heading=Math.atan2(fE,fN)*RAD;
+      }
       const compassHeading=(heading+360)%360;
       _compassSource='sensor-api';
       callback(processHeading(compassHeading));
