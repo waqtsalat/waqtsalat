@@ -72,6 +72,9 @@ export const TRANSLATIONS = {
     south: 'ج',
     east: 'شر',
     west: 'غ',
+    hardRefresh: 'تحديث شامل',
+    hardRefreshConfirm: 'سيتم مسح جميع البيانات المخزنة وإعادة تحميل التطبيق. هل تريد المتابعة؟',
+    hardRefreshing: 'جارٍ التحديث…',
   },
   fr: {
     appName: 'WaqtSalat',
@@ -141,6 +144,9 @@ export const TRANSLATIONS = {
     south: 'S',
     east: 'E',
     west: 'O',
+    hardRefresh: 'Actualisation complète',
+    hardRefreshConfirm: 'Toutes les données en cache seront supprimées et l\'application sera rechargée. Continuer ?',
+    hardRefreshing: 'Actualisation…',
   },
   en: {
     appName: 'WaqtSalat',
@@ -210,6 +216,9 @@ export const TRANSLATIONS = {
     south: 'S',
     east: 'E',
     west: 'W',
+    hardRefresh: 'Hard Refresh',
+    hardRefreshConfirm: 'All cached data will be cleared and the app will reload. Continue?',
+    hardRefreshing: 'Refreshing…',
   },
 };
 
