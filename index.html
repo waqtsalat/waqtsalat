@@ -1033,6 +1033,8 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
   <span id="notif-bar-text"></span>
   <button class="notif-bar-btn" id="notif-bar-action"></button>
   <button class="notif-bar-dismiss" id="notif-bar-dismiss" aria-label="Dismiss">&times;</button>
+</div>
+
 <!-- Reload assets FAB (top-right) -->
 <button class="reload-fab" id="reload-fab" aria-label="Reload assets" title="Reload assets">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
@@ -1095,10 +1097,6 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
 </div>
 
 <div class="share-toast" id="share-toast" role="status" aria-live="polite"></div>
-
-<div class="notif-blocked-bar" id="notif-blocked-bar" role="alert">
-  <span id="notif-blocked-text"></span>
-</div>
 
 <!-- Notification tester popup -->
 <div class="notif-test-overlay" id="notif-test-overlay">
@@ -3040,7 +3038,7 @@ function setupEvents(){
       notifTimeouts=[];
       clearAppBadge();
     }
-    checkNotifBlocked();
+    checkNotifBar();
     // Update permission badge
     const permBadge=$('s-notif-perm-badge');
     if('Notification' in window){
@@ -3921,7 +3919,6 @@ if(state.onboarded&&state.position)renderAll();
 registerSW();
 setupInstallPrompt();
 checkNotifBar();
-checkNotifBlocked();
 // Pre-cache sounds and clear badge on app focus
 if(state.notifications.enabled)preCacheSounds();
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)clearAppBadge()});
