@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-WaqtSalat is a Moroccan prayer times PWA. Single-file HTML architecture, offline-first, zero dependencies, zero tracking. Morocco only, Malikite rite, Habous method.
+WaqtSalat is a Moroccan prayer times PWA. Single-file HTML architecture, offline-first, zero dependencies, zero tracking. Morocco only, Habous method.
 
 ## Architecture
 
@@ -11,7 +11,7 @@ WaqtSalat is a Moroccan prayer times PWA. Single-file HTML architecture, offline
 - **`manifest.webmanifest`** — PWA manifest (separate file, spec constraint)
 - **`icons/`** — SVG icons for PWA installation
 - **`src/`** — Source modules (used during development/testing, inlined into index.html at build)
-  - `prayer.mjs` — Prayer time calculation (Habous method: Fajr 19°, Isha 17°, Asr Malikite)
+  - `prayer.mjs` — Prayer time calculation (Habous method: Fajr 19°, Isha 17°)
   - `cities.mjs` — Moroccan cities database (lat/lng/names)
   - `i18n.mjs` — Trilingual dictionaries (AR/FR/EN)
 - **`scripts/`** — Build and data tooling
@@ -23,7 +23,7 @@ WaqtSalat is a Moroccan prayer times PWA. Single-file HTML architecture, offline
 ## Key Technical Decisions
 
 - **Timezone**: Always `Africa/Casablanca`. Use `Intl.DateTimeFormat` — never hardcode offsets. Morocco has special DST (GMT+1 summer, GMT winter, GMT during Ramadan by decree)
-- **Prayer calculation**: Based on Jean Meeus "Astronomical Algorithms". Fajr 19°, Isha 17°, Asr = shadow 1x length + zenith shadow (Malikite)
+- **Prayer calculation**: Based on Jean Meeus "Astronomical Algorithms". Fajr 19°, Isha 17°, Asr = shadow 1x length + zenith shadow
 - **i18n**: AR (RTL) / FR (LTR) / EN (LTR). CSS logical properties throughout. `dir` and `lang` on `<html>` updated dynamically
 - **Storage**: localStorage only, prefix `waqt-`. Zero cookies, zero analytics
 - **Notifications**: Local only via Service Worker `setTimeout`. No push server, no VAPID keys
