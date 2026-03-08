@@ -3036,6 +3036,8 @@ function setupEvents(){
       $('s-notif-detail').classList.remove('show');
       notifTimeouts.forEach(clearTimeout);
       notifTimeouts=[];
+      if(notifCheckInterval)clearInterval(notifCheckInterval);
+      notifCheckInterval=null;
       clearAppBadge();
     }
     checkNotifBar();
@@ -3485,14 +3487,39 @@ function requestNotifPermission(){
 }
 
 let notifTimeouts=[];
+let notifCheckInterval=null;
+let firedNotifs=new Set(); // tracks 'fajr-atime','dhuhr-advance' etc. to prevent duplicates
+let firedNotifsDate=''; // reset tracking on day change
+const NOTIF_GRACE_MS=5*60*1000; // 5 min grace period for catch-up notifications
+
 function scheduleNotifications(){
   notifTimeouts.forEach(clearTimeout);
   notifTimeouts=[];
+  if(notifCheckInterval)clearInterval(notifCheckInterval);
+  notifCheckInterval=null;
   if(!state.notifications.enabled||!state.position||!prayerTimes)return;
+  if(Notification.permission!=='granted')return;
+
+  // Run check immediately (catches missed prayers on app return)
+  checkAndFireNotifications();
+  // Poll every 15s as safety net (setTimeout is unreliable when backgrounded)
+  notifCheckInterval=setInterval(checkAndFireNotifications,15000);
+}
+
+function checkAndFireNotifications(){
+  if(!state.notifications.enabled||!prayerTimes)return;
   if(Notification.permission!=='granted')return;
 
   const now=nowInCasa();
   const nowMs=now.getTime();
+  const todayStr=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+
+  // Reset tracking on day change
+  if(firedNotifsDate!==todayStr){
+    firedNotifs.clear();
+    firedNotifsDate=todayStr;
+  }
+
   const advanceMin=state.notifications.advance||0;
   const prayers=state.notifications.prayers||{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true};
 
@@ -3503,18 +3530,22 @@ function scheduleNotifications(){
     target.setHours(h,m,0,0);
     const prayerMs=target.getTime();
 
-    // Schedule advance notification
+    // Check advance notification
     if(advanceMin>0){
-      const advDiff=prayerMs-advanceMin*60000-nowMs;
-      if(advDiff>0&&advDiff<86400000){
-        notifTimeouts.push(setTimeout(()=>fireNotification(k,true),advDiff));
+      const advDiff=(prayerMs-advanceMin*60000)-nowMs;
+      const advKey=k+'-advance';
+      if(advDiff<=0&&advDiff>-NOTIF_GRACE_MS&&!firedNotifs.has(advKey)){
+        firedNotifs.add(advKey);
+        fireNotification(k,true);
       }
     }
 
-    // Schedule at-time notification
+    // Check at-time notification
     const diff=prayerMs-nowMs;
-    if(diff>0&&diff<86400000){
-      notifTimeouts.push(setTimeout(()=>fireNotification(k,false),diff));
+    const atKey=k+'-atime';
+    if(diff<=0&&diff>-NOTIF_GRACE_MS&&!firedNotifs.has(atKey)){
+      firedNotifs.add(atKey);
+      fireNotification(k,false);
     }
   });
 }
