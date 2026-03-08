@@ -1,4 +1,7 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import {
   toJulianDate,
   solarPosition,
@@ -8,6 +11,8 @@ import {
   calculateQibla,
   distanceToKaaba,
 } from '../src/prayer.mjs';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 describe('Julian Date', () => {
   it('computes JD for J2000.0 epoch (2000-01-01 12:00 TT)', () => {
@@ -160,4 +165,32 @@ describe('Qibla', () => {
     expect(dist).toBeGreaterThan(5000);
     expect(dist).toBeLessThan(7000);
   });
+});
+
+describe('Rabat reference dataset (Al-Adhan method=21, Morocco)', () => {
+  const dataset = JSON.parse(
+    readFileSync(resolve(__dirname, 'data', 'rabat-reference.json'), 'utf8')
+  );
+  const { lat, lng, data: entries } = dataset;
+
+  const parseHHMM = (s) => {
+    const [h, m] = s.split(':').map(Number);
+    return h * 60 + m;
+  };
+
+  for (const entry of entries) {
+    const [y, m, d] = entry.date.split('-').map(Number);
+
+    it(`matches reference for ${entry.date}`, () => {
+      const date = new Date(y, m - 1, d);
+      const result = getPrayerTimesForDate(date, lat, lng);
+
+      for (const prayer of ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha']) {
+        const calc = parseHHMM(result[prayer]);
+        const ref = parseHHMM(entry[prayer]);
+        const diff = Math.abs(calc - ref);
+        expect(diff, `${prayer} on ${entry.date}: calc=${result[prayer]}, ref=${entry[prayer]}`).toBeLessThanOrEqual(1);
+      }
+    });
+  }
 });

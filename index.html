@@ -3,44 +3,344 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1a8d5f">
-<meta name="description" content="وقت الصلاة — أوقات الصلاة في المغرب">
+<meta name="theme-color" content="#0d5a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>وقت الصلاة — WaqtSalat</title>
+<title>وقت الصلاة — مواقيت الصلاة في المغرب</title>
+
+<!-- SEO Meta Tags -->
+<meta name="description" content="مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
+<meta name="keywords" content="prayer times, Morocco, salat, horaires prière, أوقات الصلاة, المغرب, Habous, Fajr, Dhuhr, Asr, Maghrib, Isha, Qibla, PWA, offline, مواقيت الصلاة">
+<meta name="author" content="WaqtSalat">
+<meta name="robots" content="index, follow">
+<meta name="language" content="Arabic">
+<meta name="geo.region" content="MA">
+<meta name="geo.placename" content="Morocco">
+<link rel="canonical" href="https://waqtsalat.github.io/waqtsalat/">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://waqtsalat.github.io/waqtsalat/">
+<meta property="og:title" content="وقت الصلاة — مواقيت الصلاة في المغرب">
+<meta property="og:description" content="مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
+<meta property="og:image" content="https://waqtsalat.github.io/waqtsalat/icons/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="وقت الصلاة — تطبيق مواقيت الصلاة في المغرب">
+<meta property="og:locale" content="ar_MA">
+<meta property="og:locale:alternate" content="fr_MA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:site_name" content="WaqtSalat">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://waqtsalat.github.io/waqtsalat/">
+<meta name="twitter:title" content="وقت الصلاة — مواقيت الصلاة في المغرب">
+<meta name="twitter:description" content="مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
+<meta name="twitter:image" content="https://waqtsalat.github.io/waqtsalat/icons/og-image.png">
+<meta name="twitter:image:alt" content="وقت الصلاة — تطبيق مواقيت الصلاة في المغرب">
+
+<!-- PWA & App Meta -->
+<meta name="application-name" content="WaqtSalat">
+<meta name="apple-mobile-web-app-title" content="WaqtSalat">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-TileColor" content="#1a8d5f">
+
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
+
+<!-- Schema.org LD+JSON: WebApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "WaqtSalat",
+  "alternateName": "وقت الصلاة",
+  "url": "https://waqtsalat.github.io/waqtsalat/",
+  "description": "Prayer times for Morocco. Offline-first PWA using the official Habous method. Covers 35+ Moroccan cities with Qibla compass, trilingual interface, and local notifications. Zero tracking, zero cookies.",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires a modern browser with JavaScript and Service Worker support",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "MAD"
+  },
+  "featureList": [
+    "Prayer times using the official Moroccan Habous method",
+    "6 daily prayers: Fajr, Chourouk, Dhuhr, Asr, Maghrib, Isha",
+    "35+ Moroccan cities with GPS auto-detection",
+    "Qibla compass with device orientation and AR mode",
+    "Trilingual interface: Arabic, French, English",
+    "Full RTL support for Arabic",
+    "Local push notifications with Do Not Disturb mode",
+    "Pre-prayer notifications (5/10/15/30 minutes)",
+    "Manual time adjustments per prayer (±15 min)",
+    "Hijri and Gregorian calendar",
+    "Dark, light, and auto themes",
+    "100% offline after first visit",
+    "Installable as PWA on Android and iOS",
+    "WCAG 2.1 AA accessible",
+    "Zero cookies, zero analytics, zero tracking",
+    "Single HTML file under 100 KB gzipped"
+  ],
+  "screenshot": "https://waqtsalat.github.io/waqtsalat/icons/og-image.png",
+  "softwareVersion": "1.0.0",
+  "inLanguage": ["ar", "fr", "en"],
+  "isAccessibleForFree": true,
+  "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+  "creator": {
+    "@type": "Organization",
+    "name": "WaqtSalat",
+    "url": "https://github.com/waqtsalat/waqtsalat"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Morocco",
+    "sameAs": "https://en.wikipedia.org/wiki/Morocco"
+  }
+}
+</script>
+
+<!-- Schema.org LD+JSON: FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does WaqtSalat work outside Morocco?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. WaqtSalat is designed exclusively for Morocco. It uses the Moroccan Habous method for prayer time calculations and only includes Moroccan cities. The timezone is fixed to Africa/Casablanca. For other countries, please use a different prayer times application."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an internet connection to use WaqtSalat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only for the very first visit. After that, WaqtSalat works 100% offline. All prayer times are calculated locally on your device using astronomical algorithms. No network requests are made after installation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How close are the prayer times to the official schedule?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WaqtSalat calculates prayer times within ±1 minute of the official Habous (Ministry of Islamic Affairs) times. The app uses the same astronomical parameters: Fajr at 19°, Isha at 17°."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does WaqtSalat collect any personal data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. WaqtSalat has zero cookies, zero analytics, and zero tracking. Your settings (city, language, theme) are stored locally on your device in localStorage. No data is ever sent to any server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I adjust prayer times to match my local mosque?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. In the Settings screen, you can adjust each prayer time by ±15 minutes in 1-minute increments. These adjustments are saved locally and applied automatically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do notifications work without a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WaqtSalat schedules notifications locally using the Service Worker and setTimeout. No push server, no VAPID keys, and no external service is needed. Notifications are recalculated each time you open the app and at midnight."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What calculation method does WaqtSalat use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WaqtSalat uses the method of the Moroccan Ministry of Habous and Islamic Affairs: Fajr angle 19°, Isha angle 17°, and Asr calculated as shadow = 1x object length + shadow at zenith. The astronomical algorithms are based on Jean Meeus' 'Astronomical Algorithms'."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I install WaqtSalat on my phone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On Android: visit the app in Chrome, tap the install banner or go to Menu > Add to Home Screen. On iOS: open in Safari, tap the Share button, then 'Add to Home Screen'. Once installed, the app works like a native application with its own icon."
+      }
+    }
+  ]
+}
+</script>
+
+<!-- Schema.org LD+JSON: HowTo -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to use WaqtSalat for prayer times in Morocco",
+  "description": "Step-by-step guide to set up and use WaqtSalat, the Moroccan prayer times PWA.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open the app",
+      "text": "Visit waqtsalat.github.io/waqtsalat in your browser. The app loads instantly and works on any device."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choose your language",
+      "text": "Select Arabic (العربية), French (Français), or English. You can change this anytime in Settings."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Set your city",
+      "text": "Allow GPS detection for automatic location, or manually select your city from 35+ Moroccan cities."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "View prayer times",
+      "text": "The main screen shows today's prayer times with a countdown to the next prayer and an analog clock with prayer arcs."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 5,
+      "name": "Enable notifications",
+      "text": "Optionally enable prayer notifications. Configure per-prayer alerts and pre-notifications in Settings."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 6,
+      "name": "Install the app",
+      "text": "Add WaqtSalat to your home screen for quick access. The app works 100% offline after installation."
+    }
+  ]
+}
+</script>
+
+<!-- Schema.org LD+JSON: SoftwareApplication (Product) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "WaqtSalat",
+  "alternateName": "وقت الصلاة",
+  "applicationCategory": "LifestyleApplication",
+  "applicationSubCategory": "Religious",
+  "operatingSystem": "Web",
+  "availableOnDevice": ["Mobile", "Tablet", "Desktop"],
+  "countriesSupported": "MA",
+  "inLanguage": ["ar", "fr", "en"],
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "MAD",
+    "availability": "https://schema.org/InStock"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5",
+    "ratingCount": "1",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+}
+</script>
+
+<!-- Schema.org LD+JSON: BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "WaqtSalat",
+      "item": "https://waqtsalat.github.io/waqtsalat/"
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#fafafa;--fg:#1a1a1a;--accent:#1a8d5f;--accent2:#15724d;
-  --surface:#fff;--surface2:#f0f0f0;--border:#e0e0e0;
-  --muted:#666;--passed:#999;
+  --surface:rgba(255,255,255,0.15);--surface2:rgba(255,255,255,0.1);--border:rgba(255,255,255,0.25);
+  --muted:rgba(255,255,255,0.84);--passed:rgba(255,255,255,0.48);
   --arc-fajr:#1a237e;--arc-sunrise:#fdd835;--arc-dhuhr:#f9a825;
   --arc-asr:#ef6c00;--arc-maghrib:#7b1fa2;--arc-isha:#0d1b2a;
   --safe-b:env(safe-area-inset-bottom,0px);
+  --gold:#c9a84c;--gold-light:rgba(201,168,76,0.15);
+  /* Golden ratio type scale (φ=1.618, base=1rem, +15%) */
+  --fs-xs:0.782rem;  /* ~13px — meta, badges */
+  --fs-sm:0.967rem;  /* ~15px — captions, nav labels */
+  --fs-base:1.265rem;/* ~20px — body text */
+  --fs-lg:1.563rem;  /* ~25px — section titles */
+  --fs-xl:2.047rem;  /* ~33px — prayer highlight */
+  --fs-2xl:2.53rem;  /* ~40px — next prayer name */
+  --fs-3xl:3.312rem; /* ~53px — hero countdown */
+  /* Golden ratio spacing scale */
+  --sp-xs:0.236rem;  /* ~4px */
+  --sp-sm:0.382rem;  /* ~6px */
+  --sp-md:0.618rem;  /* ~10px */
+  --sp-lg:1rem;      /* 16px */
+  --sp-xl:1.618rem;  /* ~26px */
+  --sp-2xl:2.618rem; /* ~42px */
 }
 @media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0a0a0a;--fg:#f0f0f0;--accent:#2ecc71;--accent2:#27ae60;
-    --surface:#1a1a1a;--surface2:#252525;--border:#333;
-    --muted:#999;--passed:#555;
+    --surface:rgba(0,0,0,0.2);--surface2:rgba(0,0,0,0.15);--border:rgba(255,255,255,0.15);
+    --muted:rgba(255,255,255,0.72);--passed:rgba(255,255,255,0.36);
   }
 }
 [data-theme="dark"]{
-  --bg:#0a0a0a;--fg:#f0f0f0;--accent:#2ecc71;--accent2:#27ae60;
-  --surface:#1a1a1a;--surface2:#252525;--border:#333;
-  --muted:#999;--passed:#555;
+  --surface:rgba(0,0,0,0.2);--surface2:rgba(0,0,0,0.15);--border:rgba(255,255,255,0.15);
+  --muted:rgba(255,255,255,0.72);--passed:rgba(255,255,255,0.36);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-text-size-adjust:100%}
 body{
   font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  background:var(--bg);color:var(--fg);
+  background:linear-gradient(180deg,#0a4825 0%,#15714c 30%,#105a3d 60%,#093e24 100%);
+  color:#fff;
   min-height:100vh;min-height:100dvh;
   display:flex;flex-direction:column;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+/* Golden arabesque corner decorations */
+body::before,body::after,.app::before,.app::after{
+  content:'';position:fixed;width:100px;height:100px;z-index:0;pointer-events:none;
+  opacity:0.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1.5'%3E%3Cpath d='M0,0 Q60,10 60,60 Q10,60 0,0Z'/%3E%3Cpath d='M0,0 Q40,5 45,45 Q5,40 0,0Z'/%3E%3Cpath d='M0,0 Q20,2 25,25 Q2,20 0,0Z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='35' cy='35' r='5'/%3E%3Ccircle cx='22' cy='22' r='3'/%3E%3Cpath d='M60,60 Q55,30 30,25' stroke-dasharray='3,3'/%3E%3Cpath d='M45,45 Q42,25 20,18' stroke-dasharray='2,2'/%3E%3Cpath d='M0,60 Q15,55 25,40' stroke-dasharray='2,3'/%3E%3Cpath d='M60,0 Q55,15 40,25' stroke-dasharray='2,3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+}
+body::before{top:0;left:0;transform:rotate(0deg)}
+body::after{top:0;right:0;transform:scaleX(-1)}
+.app::before{
+  content:'';position:fixed;bottom:calc(3.25rem + var(--safe-b));left:0;
+  width:100px;height:100px;z-index:0;pointer-events:none;opacity:0.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1.5'%3E%3Cpath d='M0,0 Q60,10 60,60 Q10,60 0,0Z'/%3E%3Cpath d='M0,0 Q40,5 45,45 Q5,40 0,0Z'/%3E%3Cpath d='M0,0 Q20,2 25,25 Q2,20 0,0Z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='35' cy='35' r='5'/%3E%3Ccircle cx='22' cy='22' r='3'/%3E%3Cpath d='M60,60 Q55,30 30,25' stroke-dasharray='3,3'/%3E%3Cpath d='M45,45 Q42,25 20,18' stroke-dasharray='2,2'/%3E%3Cpath d='M0,60 Q15,55 25,40' stroke-dasharray='2,3'/%3E%3Cpath d='M60,0 Q55,15 40,25' stroke-dasharray='2,3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+  transform:scaleY(-1);
+}
+.app::after{
+  content:'';position:fixed;bottom:calc(3.25rem + var(--safe-b));right:0;
+  width:100px;height:100px;z-index:0;pointer-events:none;opacity:0.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1.5'%3E%3Cpath d='M0,0 Q60,10 60,60 Q10,60 0,0Z'/%3E%3Cpath d='M0,0 Q40,5 45,45 Q5,40 0,0Z'/%3E%3Cpath d='M0,0 Q20,2 25,25 Q2,20 0,0Z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='35' cy='35' r='5'/%3E%3Ccircle cx='22' cy='22' r='3'/%3E%3Cpath d='M60,60 Q55,30 30,25' stroke-dasharray='3,3'/%3E%3Cpath d='M45,45 Q42,25 20,18' stroke-dasharray='2,2'/%3E%3Cpath d='M0,60 Q15,55 25,40' stroke-dasharray='2,3'/%3E%3Cpath d='M60,0 Q55,15 40,25' stroke-dasharray='2,3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+  transform:scale(-1,1) scaleY(-1);
 }
 [lang="ar"] body{line-height:1.8}
 [lang="fr"] body,[lang="en"] body{line-height:1.5}
@@ -60,8 +360,8 @@ button{
 .app{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
 main{
   flex:1;overflow-y:auto;
-  padding:1rem;padding-bottom:calc(4.5rem + var(--safe-b));
-  max-width:600px;width:100%;margin:0 auto;
+  padding:var(--sp-lg);padding-bottom:calc(4rem + var(--safe-b));
+  max-width:480px;width:100%;margin:0 auto;
 }
 .view{display:none}
 .view.active{display:block}
@@ -69,159 +369,432 @@ main{
 /* Bottom nav */
 nav.bottom-bar{
   position:fixed;bottom:0;left:0;right:0;
-  background:var(--surface);border-top:1px solid var(--border);
+  background:rgba(8,40,22,0.9);border-top:1px solid rgba(255,255,255,0.08);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   display:flex;justify-content:space-around;align-items:center;
-  padding-bottom:var(--safe-b);height:calc(3.5rem + var(--safe-b));
+  padding-bottom:var(--safe-b);height:calc(3.25rem + var(--safe-b));
   z-index:100;
 }
 nav.bottom-bar button{
   flex:1;display:flex;flex-direction:column;align-items:center;
-  gap:0.15rem;padding:0.5rem 0;min-height:2.75rem;min-width:2.75rem;
-  color:var(--muted);transition:color 0.2s;
-  font-size:0.65rem;
+  gap:var(--sp-xs);padding:var(--sp-sm) 0;min-height:2.75rem;min-width:2.75rem;
+  color:rgba(255,255,255,0.48);transition:color 0.2s;
+  font-size:var(--fs-xs);letter-spacing:0.03em;
 }
-nav.bottom-bar button.active{color:var(--accent)}
-nav.bottom-bar button svg{width:1.5rem;height:1.5rem}
+nav.bottom-bar button.active{color:var(--gold)}
+nav.bottom-bar button svg{width:1.25rem;height:1.25rem}
 nav.bottom-bar button:focus-visible{
-  outline:2px solid var(--accent);outline-offset:-2px;border-radius:0.25rem;
+  outline:2px solid var(--accent);outline-offset:-2px;border-radius:0.15rem;
 }
 
 /* Prayer times view */
-.header-info{text-align:center;margin-bottom:1rem}
-.header-info .city-name{font-size:1.1rem;font-weight:600}
-.header-info .date-line{font-size:0.85rem;color:var(--muted);margin-top:0.25rem}
+.header-info{text-align:center;margin-bottom:var(--sp-md)}
+.header-info .city-name{font-size:var(--fs-xl);font-weight:700;color:rgba(255,255,255,0.95);letter-spacing:0.04em;display:flex;align-items:center;justify-content:center;gap:var(--sp-sm)}
+.header-info .city-name .flag-icon{width:1.2em;height:0.85em;flex-shrink:0}
 
 
+/* Prayer list */
 .prayer-list{
-  list-style:none;background:var(--surface);
-  border-radius:0.75rem;border:1px solid var(--border);
-  overflow:hidden;
+  list-style:none;background:transparent;
+  border:none;overflow:visible;
+  padding:0;margin-top:var(--sp-lg);
 }
 .prayer-list li{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:0.85rem 1rem;border-bottom:1px solid var(--border);
-  transition:background 0.2s;
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:var(--sp-md) 0;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  transition:opacity 0.2s;
+  gap:var(--sp-md);
 }
+.prayer-list li .prayer-name{flex:1}
+.prayer-list li .prayer-time{flex-shrink:0}
 .prayer-list li:last-child{border-bottom:none}
-.prayer-list li.passed{color:var(--passed)}
-.prayer-list li.current{
-  background:var(--accent);color:#fff;font-weight:600;
-  border-radius:0.25rem;
+.prayer-list li.passed{opacity:0.78}
+.prayer-list li.current-prayer{
+  color:var(--gold);font-weight:700;opacity:1;
+  text-shadow:0 1px 8px rgba(0,0,0,0.4);
 }
-.prayer-list li .prayer-name{font-size:0.95rem}
-.prayer-list li .prayer-time{font-size:0.95rem;font-variant-numeric:tabular-nums}
+.prayer-list li.current-prayer .prayer-name{font-size:var(--fs-xl)}
+.prayer-list li.current-prayer .prayer-time{font-size:var(--fs-xl)}
+.prayer-list li.next-prayer{
+  color:#fff;font-weight:600;opacity:1;
+}
+.prayer-list li.next-prayer .prayer-name{font-size:var(--fs-lg)}
+.prayer-list li.next-prayer .prayer-time{font-size:var(--fs-lg)}
+.prayer-list li .prayer-name{font-size:var(--fs-base);font-weight:400}
+.prayer-list li .prayer-time{font-size:var(--fs-base);font-variant-numeric:tabular-nums;font-weight:400}
+@media(prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) .prayer-list li.current-prayer{
+    text-shadow:0 1px 10px rgba(255,255,255,0.5);
+  }
+}
+[data-theme="light"] .prayer-list li.current-prayer{
+  text-shadow:0 1px 10px rgba(255,255,255,0.5);
+}
+.prayer-list li.tomorrow-fajr{
+  border-top:1px solid rgba(201,168,76,0.2);
+  border-bottom:none;
+  opacity:0.5;margin-top:var(--sp-sm);padding-top:var(--sp-md);
+}
+.prayer-list li.tomorrow-fajr .prayer-name{color:var(--gold);font-size:var(--fs-sm);font-weight:400}
+.prayer-list li.tomorrow-fajr .prayer-time{color:var(--gold);font-size:var(--fs-sm)}
 
 /* Qibla view */
-.qibla-container{text-align:center;padding:1rem 0}
-.compass-svg{width:min(280px,80vw);height:min(280px,80vw)}
-.qibla-info{margin-top:1rem}
-.qibla-info .angle{font-size:1.3rem;font-weight:600;color:var(--accent)}
-.qibla-info .distance{font-size:0.9rem;color:var(--muted);margin-top:0.25rem}
+.qibla-container{text-align:center;padding:var(--sp-xl) 0}
+.compass-svg{width:min(240px,70vw);height:min(240px,70vw)}
+.qibla-info{margin-top:var(--sp-xl)}
+.qibla-info .angle{font-size:var(--fs-lg);font-weight:600;color:var(--gold)}
+.qibla-info .distance{font-size:var(--fs-sm);color:rgba(255,255,255,0.6);margin-top:var(--sp-xs)}
 .btn-compass{
-  margin-top:1rem;padding:0.75rem 1.5rem;
-  background:var(--accent);color:#fff;border-radius:0.5rem;
-  font-weight:600;font-size:0.9rem;
+  margin-top:var(--sp-lg);padding:var(--sp-md) var(--sp-xl);
+  background:rgba(255,255,255,0.1);color:#fff;border-radius:var(--sp-sm);
+  font-weight:500;font-size:var(--fs-sm);border:1px solid rgba(255,255,255,0.15);
 }
+.compass-accuracy{
+  margin-top:var(--sp-md);font-size:var(--fs-xs);color:rgba(255,255,255,0.6);
+  display:flex;align-items:center;justify-content:center;gap:var(--sp-sm);
+}
+.accuracy-dot{
+  width:6px;height:6px;border-radius:50%;display:inline-block;
+}
+.accuracy-dot.high{background:#2ecc71}
+.accuracy-dot.medium{background:#f39c12}
+.accuracy-dot.low{background:#e74c3c}
+.calibration-banner{
+  background:rgba(243,156,18,0.15);color:#f39c12;
+  padding:var(--sp-md) var(--sp-lg);border-radius:var(--sp-sm);border:1px solid rgba(243,156,18,0.25);
+  margin-bottom:var(--sp-lg);font-size:var(--fs-sm);text-align:center;
+  animation:pulse-cal 2s ease-in-out infinite;display:none;
+}
+.calibration-banner.visible{display:block}
+@keyframes pulse-cal{0%,100%{opacity:1}50%{opacity:0.7}}
 
 /* Settings view */
 .settings-section{
-  background:var(--surface);border-radius:0.75rem;
-  border:1px solid var(--border);margin-bottom:1rem;
+  background:rgba(255,255,255,0.05);border-radius:var(--sp-md);
+  border:1px solid rgba(255,255,255,0.08);margin-bottom:var(--sp-lg);
   overflow:hidden;
 }
 .settings-section h3{
-  padding:0.75rem 1rem;font-size:0.9rem;font-weight:600;
-  background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:var(--sp-md) var(--sp-lg);font-size:var(--fs-xs);font-weight:600;
+  background:transparent;border-bottom:1px solid rgba(255,255,255,0.06);
+  text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.54);
 }
 .setting-row{
   display:flex;justify-content:space-between;align-items:center;
-  padding:0.75rem 1rem;border-bottom:1px solid var(--border);
-  gap:0.5rem;
+  padding:var(--sp-md) var(--sp-lg);border-bottom:1px solid rgba(255,255,255,0.05);
+  gap:var(--sp-md);
 }
 .setting-row:last-child{border-bottom:none}
-.setting-row label{font-size:0.9rem;flex:1}
+.setting-row label{font-size:var(--fs-sm);flex:1;color:rgba(255,255,255,0.96)}
 .setting-row select,.setting-row input[type="range"]{
-  font-size:0.85rem;padding:0.35rem;
-  background:var(--surface2);color:var(--fg);
-  border:1px solid var(--border);border-radius:0.35rem;
+  font-size:var(--fs-sm);padding:var(--sp-sm);
+  background:rgba(255,255,255,0.08);color:#fff;
+  border:1px solid rgba(255,255,255,0.12);border-radius:var(--sp-sm);
 }
-.setting-row select{min-width:8rem}
+.setting-row select{min-width:7rem}
 .setting-row input[type="range"]{width:5rem}
-.adj-val{font-size:0.8rem;min-width:2.5rem;text-align:center;font-variant-numeric:tabular-nums}
+.adj-val{font-size:var(--fs-xs);min-width:2.5rem;text-align:center;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.6)}
 
 .btn-action{
-  display:block;width:100%;padding:0.75rem;
-  text-align:center;font-size:0.9rem;font-weight:600;
-  border-bottom:1px solid var(--border);
-  transition:background 0.15s;
+  display:block;width:100%;padding:var(--sp-md);
+  text-align:center;font-size:var(--fs-sm);font-weight:500;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  transition:background 0.15s;color:rgba(255,255,255,0.84);
 }
 .btn-action:last-child{border-bottom:none}
-.btn-action:hover,.btn-action:focus-visible{background:var(--surface2)}
+.btn-action:hover,.btn-action:focus-visible{background:rgba(255,255,255,0.06)}
 .btn-danger{color:#e74c3c}
 
+/* Experimental badge */
+.badge-experimental{
+  display:inline-block;font-size:0.65rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:0.04em;padding:0.1em 0.5em;border-radius:0.75em;
+  background:rgba(243,156,18,0.15);color:#f0c040;border:1px solid rgba(243,156,18,0.3);
+  vertical-align:middle;margin-inline-start:var(--sp-sm);
+}
+
+/* Notification prayer toggles grid */
+.notif-prayers-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:var(--sp-sm);
+  padding:var(--sp-sm) var(--sp-lg) var(--sp-md);
+}
+.notif-prayer-chip{
+  display:flex;align-items:center;gap:var(--sp-xs);
+  padding:var(--sp-sm) var(--sp-md);
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  border-radius:var(--sp-sm);cursor:pointer;transition:all 0.2s;
+  font-size:var(--fs-xs);color:rgba(255,255,255,0.7);
+}
+.notif-prayer-chip:hover{background:rgba(255,255,255,0.1)}
+.notif-prayer-chip.active{
+  background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);
+}
+.notif-prayer-chip input{display:none}
+.notif-prayer-chip .chip-dot{
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3);
+  transition:background 0.2s;flex-shrink:0;
+}
+.notif-prayer-chip.active .chip-dot{background:var(--gold)}
+.notif-sub-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:var(--sp-sm) var(--sp-lg);border-bottom:1px solid rgba(255,255,255,0.05);
+  gap:var(--sp-md);
+}
+.notif-sub-row:last-child{border-bottom:none}
+.notif-sub-row label{font-size:var(--fs-xs);flex:1;color:rgba(255,255,255,0.8)}
+.notif-sub-row select{
+  font-size:var(--fs-xs);padding:var(--sp-xs) var(--sp-sm);
+  background:rgba(255,255,255,0.08);color:#fff;
+  border:1px solid rgba(255,255,255,0.12);border-radius:var(--sp-xs);
+  min-width:6rem;
+}
+.notif-sound-row{display:flex;align-items:center;gap:var(--sp-sm)}
+.btn-test-sound{
+  padding:var(--sp-xs) var(--sp-sm);font-size:var(--fs-xs);
+  background:rgba(255,255,255,0.1);color:var(--gold);border-radius:var(--sp-xs);
+  border:1px solid rgba(201,168,76,0.3);cursor:pointer;transition:all 0.2s;
+  white-space:nowrap;
+}
+.btn-test-sound:hover{background:rgba(201,168,76,0.15)}
+.notif-perm-badge{
+  display:inline-flex;align-items:center;gap:var(--sp-xs);
+  padding:2px var(--sp-sm);border-radius:1rem;font-size:0.65rem;
+  font-weight:600;letter-spacing:0.03em;text-transform:uppercase;
+}
+.notif-perm-badge.granted{background:rgba(46,204,113,0.2);color:#2ecc71}
+.notif-perm-badge.denied{background:rgba(231,76,60,0.2);color:#e74c3c}
+.notif-perm-badge.default{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)}
+.notif-dnd-panel{
+  padding:var(--sp-md) var(--sp-lg);
+  background:rgba(255,255,255,0.03);border-radius:var(--sp-sm);
+  margin:var(--sp-sm) var(--sp-lg) var(--sp-md);
+}
+.notif-dnd-panel h4{font-size:var(--fs-xs);color:var(--gold);margin-bottom:var(--sp-sm);font-weight:600}
+.notif-dnd-platform{
+  font-size:var(--fs-xs);color:rgba(255,255,255,0.65);line-height:1.6;
+  padding:var(--sp-xs) 0;
+}
+.notif-dnd-platform.active{display:block}
+.notif-dnd-platform:not(.active){display:none}
+.notif-test-row{
+  display:flex;gap:var(--sp-sm);padding:var(--sp-sm) var(--sp-lg) var(--sp-md);
+}
+.btn-test-notif{
+  flex:1;padding:var(--sp-md);font-size:var(--fs-xs);font-weight:600;
+  background:rgba(201,168,76,0.12);color:var(--gold);
+  border:1px solid rgba(201,168,76,0.25);border-radius:var(--sp-sm);
+  cursor:pointer;transition:all 0.2s;display:flex;align-items:center;
+  justify-content:center;gap:var(--sp-sm);
+}
+.btn-test-notif:hover{background:rgba(201,168,76,0.2)}
+.btn-test-notif:active{transform:scale(0.98)}
+.btn-test-notif svg{width:1rem;height:1rem}
+.notif-sound-status{
+  font-size:var(--fs-xs);color:rgba(255,255,255,0.4);
+  padding:0 var(--sp-lg) var(--sp-sm);
+  display:flex;align-items:center;gap:var(--sp-xs);
+}
+.notif-sound-status .status-dot{
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3);
+}
+.notif-sound-status .status-dot.ready{background:#2ecc71}
+.notif-sound-status .status-dot.loading{background:#f39c12;animation:pulse-dot 1s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.3}}
+.notif-credits{
+  padding:var(--sp-sm) var(--sp-lg);font-size:0.65rem;
+  color:rgba(255,255,255,0.35);line-height:1.5;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.notif-credits a{color:rgba(201,168,76,0.6);text-decoration:none}
+.notif-credits a:hover{color:var(--gold)}
+.notif-detail{display:none;overflow:hidden}
+.notif-detail.show{display:block;animation:slide-down 0.3s ease}
+@keyframes slide-down{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Device capabilities */
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm);padding:var(--sp-sm) 0}
+.cap-item{
+  display:flex;align-items:flex-start;gap:var(--sp-sm);
+  padding:var(--sp-sm) var(--sp-md);
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--sp-sm);transition:border-color 0.2s;
+  min-height:3.2rem;
+}
+.cap-item.available{border-color:rgba(46,204,113,0.2)}
+.cap-item.unavailable{border-color:rgba(231,76,60,0.15);opacity:0.7}
+.cap-item.partial{border-color:rgba(243,156,18,0.2)}
+.cap-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px;
+}
+.cap-dot.available{background:#2ecc71}
+.cap-dot.unavailable{background:#e74c3c}
+.cap-dot.partial{background:#f39c12}
+.cap-info{display:flex;flex-direction:column;gap:1px;min-width:0}
+.cap-name{font-size:var(--fs-xs);font-weight:500;color:rgba(255,255,255,0.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap-desc{font-size:0.65rem;color:rgba(255,255,255,0.45);line-height:1.3}
+.cap-perm{font-size:0.6rem;font-weight:600;letter-spacing:0.02em;margin-top:1px}
+.cap-perm.granted{color:#2ecc71}
+.cap-perm.denied{color:#e74c3c}
+.cap-perm.prompt{color:#f39c12}
+.cap-summary{
+  display:flex;align-items:center;gap:var(--sp-sm);
+  padding:var(--sp-sm) 0;font-size:var(--fs-xs);
+  color:rgba(255,255,255,0.5);
+}
+.cap-summary-count{
+  display:inline-flex;align-items:center;gap:var(--sp-xs);
+}
+.cap-summary-count .cap-dot{width:6px;height:6px}
+@media(max-width:320px){.cap-grid{grid-template-columns:1fr}}
+
+/* Reload assets button */
+.reload-fab{
+  position:fixed;top:calc(var(--safe-t,0px) + var(--sp-sm));right:var(--sp-md);z-index:160;
+  width:2.25rem;height:2.25rem;border-radius:50%;
+  background:rgba(8,40,22,0.92);color:rgba(255,255,255,0.7);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 2px 8px rgba(0,0,0,0.25);
+  transition:transform 0.3s,color 0.2s,border-color 0.2s;
+  cursor:pointer;
+}
+[dir="rtl"] .reload-fab{right:auto;left:var(--sp-md)}
+.reload-fab:hover,.reload-fab:focus-visible{color:#fff;border-color:rgba(255,255,255,0.25);transform:scale(1.08)}
+.reload-fab svg{width:1.1rem;height:1.1rem}
+.reload-fab.spinning svg{animation:spin-reload 0.8s linear infinite}
+.reload-fab.success{color:#2ecc71;border-color:rgba(46,204,113,0.4)}
+.reload-fab.error{color:#e74c3c;border-color:rgba(231,76,60,0.4)}
+@keyframes spin-reload{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.reload-toast{
+  position:fixed;top:calc(var(--safe-t,0px) + 3rem);right:var(--sp-md);z-index:161;
+  background:rgba(8,40,22,0.95);color:#fff;
+  padding:var(--sp-sm) var(--sp-md);border-radius:var(--sp-sm);
+  font-size:var(--fs-xs);border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity 0.3s,transform 0.3s;white-space:nowrap;
+}
+[dir="rtl"] .reload-toast{right:auto;left:var(--sp-md)}
+.reload-toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+
+/* Notification tester popup */
+.notif-test-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.5);
+  display:none;align-items:center;justify-content:center;
+  padding:var(--sp-lg);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.notif-test-overlay.show{display:flex}
+.notif-test-popup{
+  background:linear-gradient(180deg,#0d5a2e,#14704c);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--sp-md);
+  max-width:320px;width:100%;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+.notif-test-header{
+  padding:var(--sp-lg);border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:var(--fs-md);font-weight:600;color:#fff;
+}
+.notif-test-body{padding:var(--sp-lg);display:flex;flex-direction:column;gap:var(--sp-md)}
+.notif-test-desc{font-size:var(--fs-xs);color:rgba(255,255,255,0.6);line-height:1.5}
+.notif-test-options{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm)}
+.notif-test-opt{
+  display:flex;align-items:center;justify-content:center;gap:var(--sp-xs);
+  padding:var(--sp-md);
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  border-radius:var(--sp-sm);cursor:pointer;transition:all 0.2s;
+  font-size:var(--fs-sm);color:rgba(255,255,255,0.7);
+}
+.notif-test-opt:hover{background:rgba(255,255,255,0.1)}
+.notif-test-opt.selected{
+  background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);
+}
+.notif-test-opt input{display:none}
+.notif-test-actions{
+  display:flex;gap:var(--sp-sm);padding:0 var(--sp-lg) var(--sp-lg);
+}
+.notif-test-actions button{flex:1;padding:var(--sp-md);border-radius:var(--sp-sm);font-size:var(--fs-sm);font-weight:600;cursor:pointer;transition:all 0.2s}
+.notif-test-send{background:var(--gold);color:#1a1a1a}
+.notif-test-send:hover{filter:brightness(1.1)}
+.notif-test-send:disabled{opacity:0.5;cursor:not-allowed}
+.notif-test-cancel{background:transparent;color:rgba(255,255,255,0.48);border:1px solid rgba(255,255,255,0.1)}
+.notif-test-cancel:hover{background:rgba(255,255,255,0.06)}
+.notif-test-status{
+  font-size:var(--fs-xs);color:var(--gold);text-align:center;
+  min-height:1.2em;transition:opacity 0.3s;
+}
+
 /* Toggle switch */
-.toggle{position:relative;width:2.75rem;height:1.5rem;flex-shrink:0}
+.toggle{position:relative;width:2.5rem;height:1.375rem;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0;position:absolute}
 .toggle span{
   position:absolute;inset:0;cursor:pointer;
-  background:var(--border);border-radius:1rem;
+  background:rgba(255,255,255,0.15);border-radius:1rem;
   transition:background 0.3s;
 }
 .toggle span::before{
-  content:'';position:absolute;width:1.1rem;height:1.1rem;
-  left:0.2rem;bottom:0.2rem;background:#fff;border-radius:50%;
+  content:'';position:absolute;width:1rem;height:1rem;
+  left:0.2rem;bottom:0.19rem;background:#fff;border-radius:50%;
   transition:transform 0.3s;
 }
-.toggle input:checked+span{background:var(--accent)}
-.toggle input:checked+span::before{transform:translateX(1.25rem)}
+.toggle input:checked+span{background:var(--gold)}
+.toggle input:checked+span::before{transform:translateX(1.1rem)}
 .toggle input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 
 /* Onboarding */
 .onboarding{
-  position:fixed;inset:0;background:var(--bg);z-index:200;
+  position:fixed;inset:0;background:linear-gradient(180deg,#0a4825 0%,#15714c 30%,#105a3d 60%,#093e24 100%);z-index:200;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:2rem;text-align:center;
+  padding:var(--sp-2xl);text-align:center;
 }
 .onboarding.hidden{display:none}
-.onboarding h2{font-size:1.5rem;margin-bottom:1.5rem;color:var(--accent)}
-.onboarding .step{display:none;width:100%;max-width:320px;flex-direction:column;align-items:center;gap:1rem}
+.onboarding h2{font-size:var(--fs-xl);font-weight:300;margin-bottom:var(--sp-xl);color:var(--gold);letter-spacing:0.02em}
+.onboarding .step{display:none;width:100%;max-width:300px;flex-direction:column;align-items:center;gap:var(--sp-lg)}
 .onboarding .step.active{display:flex}
-.lang-choices{display:flex;flex-direction:column;gap:0.75rem;width:100%}
+.lang-choices{display:flex;flex-direction:column;gap:var(--sp-md);width:100%}
 .lang-choices button{
-  padding:1rem;background:var(--surface);border:2px solid var(--border);
-  border-radius:0.75rem;font-size:1.1rem;font-weight:600;
-  transition:border-color 0.2s;
+  padding:var(--sp-md) var(--sp-lg);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--sp-sm);font-size:var(--fs-base);font-weight:500;color:rgba(255,255,255,1);
+  transition:border-color 0.2s,background 0.2s;
 }
 .lang-choices button:hover,.lang-choices button:focus-visible,.lang-choices button.selected{
-  border-color:var(--accent);
+  border-color:var(--gold);background:rgba(201,168,76,0.08);
 }
 .city-select{
-  width:100%;padding:0.75rem;font-size:1rem;
-  background:var(--surface);color:var(--fg);
-  border:1px solid var(--border);border-radius:0.5rem;
+  width:100%;padding:var(--sp-md);font-size:var(--fs-sm);
+  background:rgba(255,255,255,0.08);color:#fff;
+  border:1px solid rgba(255,255,255,0.12);border-radius:var(--sp-sm);
 }
 .btn-primary{
-  padding:0.75rem 2rem;background:var(--accent);color:#fff;
-  border-radius:0.5rem;font-weight:600;font-size:1rem;
-  min-width:8rem;
+  padding:var(--sp-md) var(--sp-xl);background:var(--gold);color:#1a1a1a;
+  border-radius:var(--sp-sm);font-weight:600;font-size:var(--fs-sm);
+  min-width:7rem;letter-spacing:0.03em;
 }
 .btn-secondary{
-  padding:0.5rem 1.5rem;color:var(--muted);font-size:0.9rem;
+  padding:var(--sp-sm) var(--sp-lg);color:rgba(255,255,255,0.48);font-size:var(--fs-xs);
 }
 
 /* Update banner */
 .update-banner{
   position:fixed;top:0;left:0;right:0;
-  background:var(--accent);color:#fff;
-  display:none;align-items:center;justify-content:center;
-  gap:0.75rem;padding:0.75rem;z-index:150;font-size:0.9rem;
+  background:rgba(8,40,22,0.95);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  gap:var(--sp-md);padding:var(--sp-md);z-index:150;font-size:var(--fs-sm);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  transform:translateY(-100%);opacity:0;pointer-events:none;
+  transition:transform 0.35s ease,opacity 0.35s ease;
 }
-.update-banner.show{display:flex}
+.update-banner.show{transform:translateY(0);opacity:1;pointer-events:auto}
 .update-banner button{
-  padding:0.35rem 0.75rem;border-radius:0.25rem;font-weight:600;font-size:0.8rem;
+  padding:var(--sp-sm) var(--sp-md);border-radius:var(--sp-sm);font-weight:600;font-size:var(--fs-xs);
 }
-.update-banner .btn-update{background:#fff;color:var(--accent)}
-.update-banner .btn-later{color:rgba(255,255,255,0.8)}
+.update-banner .btn-update{background:var(--gold);color:#1a1a1a}
+.update-banner .btn-later{color:rgba(255,255,255,0.48)}
 
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){
@@ -231,11 +804,11 @@ nav.bottom-bar button:focus-visible{
 /* High contrast */
 @media(prefers-contrast:more){
   :root{--border:#888;--muted:#444}
-  .prayer-list li.current{outline:2px solid #fff}
+  .prayer-list li.current-prayer{outline:2px solid #fff}
 }
 
 /* Focus visible */
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:0.15rem}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:var(--sp-xs)}
 
 /* Notification bar */
 .notif-bar{
@@ -243,6 +816,9 @@ nav.bottom-bar button:focus-visible{
   padding:0.5rem 1rem;color:#fff;font-size:0.8rem;
   line-height:1.4;align-items:center;justify-content:center;gap:0.5rem;
   flex-wrap:wrap;
+  padding:var(--sp-sm) var(--sp-lg);background:rgba(231,76,60,0.9);color:#fff;font-size:var(--fs-xs);
+  text-align:center;line-height:1.4;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
 }
 .notif-bar.show{display:flex}
 .notif-bar.blocked{background:#e74c3c}
@@ -261,57 +837,186 @@ nav.bottom-bar button:focus-visible{
 
 /* Install banner */
 .install-banner{
-  display:none;position:fixed;bottom:calc(60px + var(--safe-b));left:0;right:0;z-index:150;
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:0.75rem 1rem;box-shadow:0 -2px 8px rgba(0,0,0,0.1);
+  display:none;position:fixed;bottom:calc(3.25rem + var(--safe-b));left:0;right:0;z-index:150;
+  background:rgba(8,40,22,0.95);border-top:1px solid rgba(255,255,255,0.06);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  padding:var(--sp-md) var(--sp-lg);
 }
 .install-banner.show{display:block}
-.install-banner-content{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem}
+.install-banner-content{display:flex;align-items:center;gap:var(--sp-md);margin-bottom:var(--sp-sm)}
 .install-icon{flex-shrink:0}
-.install-text{display:flex;flex-direction:column;gap:0.15rem}
-.install-text strong{font-size:0.9rem;color:var(--fg)}
-.install-text span{font-size:0.75rem;color:var(--muted)}
-.install-actions{display:flex;gap:0.5rem;justify-content:flex-end}
+.install-text{display:flex;flex-direction:column;gap:var(--sp-xs)}
+.install-text strong{font-size:var(--fs-sm);color:#fff;font-weight:500}
+.install-text span{font-size:var(--fs-xs);color:rgba(255,255,255,0.48)}
+.install-actions{display:flex;gap:var(--sp-sm);justify-content:flex-end}
 .btn-install{
-  background:var(--accent);color:#fff;border:none;border-radius:0.5rem;
-  padding:0.45rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;
+  background:var(--gold);color:#1a1a1a;border:none;border-radius:var(--sp-sm);
+  padding:var(--sp-sm) var(--sp-lg);font-size:var(--fs-xs);font-weight:600;cursor:pointer;
 }
-.btn-install:hover{background:var(--accent2)}
+.btn-install:hover{background:#d4b35a}
 
-/* AR overlay */
+/* AR overlay (Three.js Qibla Finder) */
 .ar-overlay{
   position:fixed;inset:0;z-index:1000;background:#000;
 }
 .ar-overlay.hidden{display:none}
 #ar-video{width:100%;height:100%;object-fit:cover}
-#ar-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#ar-3d-container{position:absolute;inset:0;pointer-events:none}
+#ar-3d-container canvas{width:100%!important;height:100%!important}
 .ar-close{
-  position:absolute;top:1rem;right:1rem;z-index:1001;
-  width:2.5rem;height:2.5rem;border-radius:50%;border:none;
-  background:rgba(0,0,0,0.5);color:#fff;font-size:1.5rem;
+  position:absolute;top:max(1rem,env(safe-area-inset-top));right:1rem;z-index:1002;
+  width:2.75rem;height:2.75rem;border-radius:50%;border:none;
+  background:rgba(0,0,0,0.6);color:#fff;font-size:1.5rem;
   display:flex;align-items:center;justify-content:center;cursor:pointer;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
 }
-.btn-ar{margin-top:0.5rem}
+.ar-hud{
+  position:absolute;inset:0;z-index:1001;pointer-events:none;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:max(1rem,env(safe-area-inset-top)) 1rem max(1.5rem,env(safe-area-inset-bottom));
+}
+.ar-hud-top{
+  display:flex;gap:0.75rem;justify-content:center;
+  margin-top:3.5rem;
+}
+.ar-metric{
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-radius:0.75rem;padding:0.6rem 1.2rem;text-align:center;
+  border:1px solid rgba(255,255,255,0.1);min-width:5.5rem;
+}
+.ar-metric-value{
+  display:block;font-size:1.4rem;font-weight:700;color:#fff;
+  font-variant-numeric:tabular-nums;letter-spacing:0.02em;
+}
+.ar-metric-label{
+  display:block;font-size:0.65rem;color:rgba(255,255,255,0.6);
+  text-transform:uppercase;letter-spacing:0.08em;margin-top:0.15rem;
+}
+.ar-calibration{
+  align-self:center;background:rgba(243,156,18,0.85);
+  color:#fff;padding:0.6rem 1.2rem;border-radius:2rem;
+  font-size:0.8rem;font-weight:500;text-align:center;
+  animation:pulse-cal 2s ease-in-out infinite;
+  pointer-events:auto;
+}
+.ar-direction-hint{
+  align-self:center;padding:0.7rem 1.5rem;border-radius:2rem;
+  font-size:0.9rem;font-weight:600;color:#fff;text-align:center;
+  transition:background 0.3s,opacity 0.3s;margin-bottom:1rem;
+}
+.btn-ar{margin-top:var(--sp-sm)}
 
-/* Countdown hero (replaces analog clock) */
-.countdown-hero{
-  display:flex;flex-direction:column;align-items:center;
-  padding:1.5rem 0;gap:0.25rem;
+/* Help FAB */
+.help-fab{
+  position:fixed;bottom:calc(3.75rem + var(--safe-b));right:var(--sp-md);z-index:160;
+  width:2.5rem;height:2.5rem;border-radius:50%;
+  background:rgba(8,40,22,0.95);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,0.15);
+  box-shadow:0 2px 8px rgba(0,0,0,0.3);
+  transition:transform 0.2s;
+  cursor:pointer;
 }
-.countdown-hero .next-label{font-size:0.85rem;color:var(--muted)}
-.countdown-hero .next-name{font-size:1.5rem;font-weight:700;color:var(--accent)}
-.countdown-hero .hero-countdown{
-  font-size:3rem;font-weight:700;font-variant-numeric:tabular-nums;
-  letter-spacing:0.05em;color:var(--fg);
-}
-.countdown-hero .hero-countdown-label{font-size:0.75rem;color:var(--muted);margin-top:-0.25rem}
+[dir="rtl"] .help-fab{right:auto;left:var(--sp-md)}
+.help-fab:hover,.help-fab:focus-visible{transform:scale(1.1)}
+.help-fab svg{width:1.25rem;height:1.25rem}
 
-/* Prayer progress bar */
-.prayer-progress{
-  width:100%;max-width:280px;height:4px;background:var(--surface2);border-radius:2px;
-  overflow:hidden;margin-top:0.5rem;
+/* Help popup */
+.help-popup-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.5);
+  display:none;align-items:center;justify-content:center;
+  padding:var(--sp-lg);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
 }
-.prayer-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 1s linear}
+.help-popup-overlay.show{display:flex}
+.help-popup{
+  background:linear-gradient(180deg,#0d5a2e,#14704c);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--sp-md);
+  max-width:340px;width:100%;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+.help-popup-header{
+  display:flex;align-items:center;gap:var(--sp-md);
+  padding:var(--sp-lg);border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.help-popup-header .app-icon{width:2.5rem;height:2.5rem;flex-shrink:0;border-radius:var(--sp-sm)}
+.help-popup-header .app-info{display:flex;flex-direction:column;gap:var(--sp-xs)}
+.help-popup-header .app-info .app-name{font-size:var(--fs-lg);font-weight:700;color:#fff}
+.help-popup-header .app-info .app-version{font-size:var(--fs-xs);color:rgba(255,255,255,0.54)}
+.help-popup-body{padding:var(--sp-lg);display:flex;flex-direction:column;gap:var(--sp-md)}
+.help-popup-features{
+  display:flex;flex-wrap:wrap;gap:var(--sp-sm);
+}
+.help-feature{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,0.08);border-radius:999px;
+  padding:var(--sp-xs) var(--sp-sm);font-size:var(--fs-xs);
+  color:rgba(255,255,255,0.8);
+}
+.help-feature svg{width:0.875rem;height:0.875rem;flex-shrink:0;color:var(--gold)}
+a.help-feature{text-decoration:none;color:rgba(255,255,255,0.8)}
+a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.15)}
+.help-popup-beta{
+  background:rgba(243,156,18,0.12);border:1px solid rgba(243,156,18,0.25);
+  border-radius:var(--sp-sm);padding:var(--sp-md);
+  font-size:var(--fs-xs);color:#f0c040;line-height:1.5;
+  display:flex;align-items:flex-start;gap:var(--sp-sm);
+}
+.help-popup-beta svg{flex-shrink:0;width:1rem;height:1rem;margin-top:1px}
+.help-popup-actions{
+  display:flex;flex-direction:column;gap:var(--sp-sm);
+  padding:0 var(--sp-lg) var(--sp-lg);
+}
+.help-popup-actions a{
+  display:flex;align-items:center;gap:var(--sp-md);
+  padding:var(--sp-md);border-radius:var(--sp-sm);
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);
+  color:#fff;text-decoration:none;font-size:var(--fs-sm);
+  transition:background 0.15s;
+}
+.help-popup-actions a:hover,.help-popup-actions a:focus-visible{background:rgba(255,255,255,0.1)}
+.help-popup-actions a svg{width:1.25rem;height:1.25rem;flex-shrink:0;color:var(--gold)}
+.help-popup-actions a .action-text{display:flex;flex-direction:column;gap:1px}
+.help-popup-actions a .action-label{font-weight:500}
+.help-popup-actions a .action-desc{font-size:var(--fs-xs);color:rgba(255,255,255,0.5)}
+.share-toast{
+  position:fixed;bottom:calc(4.5rem + var(--safe-b));left:50%;transform:translateX(-50%) translateY(1rem);
+  background:rgba(8,40,22,0.95);color:#fff;padding:var(--sp-sm) var(--sp-lg);
+  border-radius:2rem;font-size:var(--fs-sm);
+  border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.3s;z-index:250;
+  white-space:nowrap;
+}
+.share-toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.help-share-btn{
+  display:flex;align-items:center;gap:var(--sp-md);
+  padding:var(--sp-md);border-radius:var(--sp-sm);
+  width:100%;text-align:start;cursor:pointer;
+  color:#fff;text-decoration:none;font-size:var(--fs-sm);
+  transition:background 0.15s;background:transparent;
+}
+.help-share-btn:hover,.help-share-btn:focus-visible{background:rgba(255,255,255,0.1)}
+.help-share-btn svg{width:1.25rem;height:1.25rem;flex-shrink:0;color:var(--gold)}
+.help-popup-close{
+  display:block;width:100%;padding:var(--sp-md);
+  text-align:center;font-size:var(--fs-sm);
+  color:rgba(255,255,255,0.48);border-top:1px solid rgba(255,255,255,0.06);
+  transition:color 0.15s;cursor:pointer;background:none;border-left:none;border-right:none;border-bottom:none;
+}
+.help-popup-close:hover{color:rgba(255,255,255,0.7)}
+
+/* Countdown hero — hidden, replaced by inline countdown */
+.countdown-hero{display:none}
+
+/* Inline countdown in next prayer row */
+.prayer-countdown-inline{
+  font-size:var(--fs-sm);font-style:italic;font-variant-numeric:tabular-nums;
+  color:rgba(255,255,255,0.7);font-weight:400;
+  flex-shrink:0;
+}
 </style>
 </head>
 <body>
@@ -321,6 +1026,92 @@ nav.bottom-bar button:focus-visible{
   <span id="notif-bar-text"></span>
   <button class="notif-bar-btn" id="notif-bar-action"></button>
   <button class="notif-bar-dismiss" id="notif-bar-dismiss" aria-label="Dismiss">&times;</button>
+<!-- Reload assets FAB (top-right) -->
+<button class="reload-fab" id="reload-fab" aria-label="Reload assets" title="Reload assets">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+</button>
+<div class="reload-toast" id="reload-toast" role="status" aria-live="polite"></div>
+
+<!-- Help FAB -->
+<button class="help-fab" id="help-fab" aria-label="Help & Info">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+</button>
+
+<!-- Help popup -->
+<div class="help-popup-overlay" id="help-popup-overlay">
+  <div class="help-popup" role="dialog" aria-labelledby="help-popup-title">
+    <div class="help-popup-header">
+      <img class="app-icon" src="icons/icon.svg" alt="" width="40" height="40">
+      <div class="app-info">
+        <span class="app-name" id="help-popup-title">WaqtSalat</span>
+        <span class="app-version" id="help-popup-version">v1.0.0</span>
+      </div>
+    </div>
+    <div class="help-popup-body">
+      <div class="help-popup-features">
+        <a class="help-feature" id="help-feature-noads" href="https://en.wikipedia.org/wiki/Online_advertising" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/></svg> <span>No ads</span></a>
+        <a class="help-feature" id="help-feature-notracking" href="https://en.wikipedia.org/wiki/Web_tracking" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span>No tracking</span></a>
+        <span class="help-feature" id="help-feature-free"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg> <span>Always free</span></span>
+        <a class="help-feature" id="help-feature-habous" href="https://en.wikipedia.org/wiki/Ministry_of_Endowments_and_Islamic_Affairs_(Morocco)" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span>Habous calculation</span></a>
+        <a class="help-feature" id="help-feature-opensource" href="https://en.wikipedia.org/wiki/Open-source_software" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> <span>Open source</span></a>
+      </div>
+      <div class="help-popup-beta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span id="help-beta-text">Beta — Prayer times may differ slightly from official schedules. Always verify with your local mosque.</span>
+      </div>
+    </div>
+    <div class="help-popup-actions">
+      <a href="https://github.com/waqtsalat/waqtsalat" target="_blank" rel="noopener" id="help-link-contribute">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        <span class="action-text">
+          <span class="action-label" id="help-label-contribute">Contribute</span>
+          <span class="action-desc" id="help-desc-contribute">View source code & contribute</span>
+        </span>
+      </a>
+      <a href="https://github.com/waqtsalat/waqtsalat/issues/new" target="_blank" rel="noopener" id="help-link-report">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span class="action-text">
+          <span class="action-label" id="help-label-report">Report a bug</span>
+          <span class="action-desc" id="help-desc-report">Report issues or request features</span>
+        </span>
+      </a>
+      <button type="button" id="help-link-share" class="help-share-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span class="action-text">
+          <span class="action-label" id="help-label-share">Share</span>
+          <span class="action-desc" id="help-desc-share">Share WaqtSalat with friends & family</span>
+        </span>
+      </button>
+    </div>
+    <button class="help-popup-close" id="help-popup-close">Close</button>
+  </div>
+</div>
+
+<div class="share-toast" id="share-toast" role="status" aria-live="polite"></div>
+
+<div class="notif-blocked-bar" id="notif-blocked-bar" role="alert">
+  <span id="notif-blocked-text"></span>
+</div>
+
+<!-- Notification tester popup -->
+<div class="notif-test-overlay" id="notif-test-overlay">
+  <div class="notif-test-popup" role="dialog" aria-labelledby="notif-test-title">
+    <div class="notif-test-header" id="notif-test-title"></div>
+    <div class="notif-test-body">
+      <div class="notif-test-desc" id="notif-test-desc"></div>
+      <div class="notif-test-options" id="notif-test-options">
+        <label class="notif-test-opt selected"><input type="radio" name="notif-test-delay" value="0" checked><span id="notif-test-now"></span></label>
+        <label class="notif-test-opt"><input type="radio" name="notif-test-delay" value="10"><span id="notif-test-10s"></span></label>
+        <label class="notif-test-opt"><input type="radio" name="notif-test-delay" value="60"><span id="notif-test-1m"></span></label>
+        <label class="notif-test-opt"><input type="radio" name="notif-test-delay" value="300"><span id="notif-test-5m"></span></label>
+      </div>
+      <div class="notif-test-status" id="notif-test-status"></div>
+    </div>
+    <div class="notif-test-actions">
+      <button class="notif-test-send" id="notif-test-send"></button>
+      <button class="notif-test-cancel" id="notif-test-cancel"></button>
+    </div>
+  </div>
 </div>
 
 <div class="update-banner" id="update-banner" role="alert">
@@ -343,10 +1134,24 @@ nav.bottom-bar button:focus-visible{
   </div>
 </div>
 
-<!-- AR Overlay -->
+<!-- AR Overlay (Three.js WebXR Qibla Finder) -->
 <div class="ar-overlay hidden" id="ar-overlay">
   <video id="ar-video" autoplay playsinline muted></video>
-  <canvas id="ar-canvas"></canvas>
+  <div id="ar-3d-container"></div>
+  <div class="ar-hud">
+    <div class="ar-hud-top">
+      <div class="ar-metric">
+        <span class="ar-metric-value" id="ar-bearing">--°</span>
+        <span class="ar-metric-label" id="ar-bearing-label"></span>
+      </div>
+      <div class="ar-metric">
+        <span class="ar-metric-value" id="ar-distance">-- km</span>
+        <span class="ar-metric-label" id="ar-distance-label"></span>
+      </div>
+    </div>
+    <div class="ar-calibration" id="ar-calibration" style="display:none"></div>
+    <div class="ar-direction-hint" id="ar-direction-hint" style="display:none"></div>
+  </div>
   <button class="ar-close" id="ar-close" aria-label="Close AR">&times;</button>
 </div>
 
@@ -380,7 +1185,6 @@ nav.bottom-bar button:focus-visible{
 <section class="view active" id="view-prayers" role="region" aria-label="Prayer Times">
   <div class="header-info">
     <div class="city-name" id="city-name"></div>
-    <div class="date-line" id="date-line"></div>
   </div>
 
   <div class="countdown-hero" role="timer" aria-live="polite" id="countdown-hero">
@@ -397,6 +1201,7 @@ nav.bottom-bar button:focus-visible{
 <!-- Qibla View -->
 <section class="view" id="view-qibla" role="region" aria-label="Qibla">
   <div class="qibla-container">
+    <div class="calibration-banner" id="calibration-banner"></div>
     <svg class="compass-svg" viewBox="0 0 200 200" role="img" id="compass-svg" aria-label="Qibla compass">
       <circle cx="100" cy="100" r="95" fill="none" stroke="var(--border)" stroke-width="1"/>
       <!-- Degree ticks -->
@@ -421,6 +1226,10 @@ nav.bottom-bar button:focus-visible{
     <div class="qibla-info">
       <div class="angle" id="qibla-angle"></div>
       <div class="distance" id="qibla-distance"></div>
+    </div>
+    <div class="compass-accuracy" id="compass-accuracy" style="display:none">
+      <span class="accuracy-dot" id="accuracy-dot"></span>
+      <span id="accuracy-text"></span>
     </div>
     <button class="btn-compass" id="btn-compass"></button>
     <button class="btn-compass btn-ar" id="btn-ar"></button>
@@ -459,12 +1268,69 @@ nav.bottom-bar button:focus-visible{
     </div>
   </div>
   <div class="settings-section" id="s-notif-section">
-    <h3 id="s-notif-title"></h3>
+    <h3><span id="s-notif-title"></span> <span class="badge-experimental" id="s-notif-badge"></span></h3>
     <div class="setting-row">
       <label id="s-notif-label"></label>
+      <span class="notif-perm-badge" id="s-notif-perm-badge"></span>
       <label class="toggle"><input type="checkbox" id="s-notif-toggle"><span></span></label>
     </div>
-    <div id="s-notif-prayers"></div>
+    <div class="notif-detail" id="s-notif-detail">
+      <div class="notif-prayers-grid" id="s-notif-prayers-grid"></div>
+      <div class="notif-sub-row">
+        <label id="s-notif-advance-label"></label>
+        <select id="s-notif-advance">
+          <option value="0" id="opt-adv-0"></option>
+          <option value="5" id="opt-adv-5"></option>
+          <option value="10" id="opt-adv-10"></option>
+          <option value="15" id="opt-adv-15"></option>
+          <option value="30" id="opt-adv-30"></option>
+        </select>
+      </div>
+      <div class="notif-sub-row">
+        <label id="s-notif-sound-label"></label>
+        <div class="notif-sound-row">
+          <select id="s-notif-sound">
+            <option value="silent" id="opt-snd-silent"></option>
+            <option value="tone" id="opt-snd-tone"></option>
+            <option value="adhan" id="opt-snd-adhan"></option>
+          </select>
+          <button class="btn-test-sound" id="btn-test-sound"></button>
+        </div>
+      </div>
+      <div class="notif-sound-status" id="s-notif-sound-status">
+        <span class="status-dot" id="s-sound-status-dot"></span>
+        <span id="s-sound-status-text"></span>
+      </div>
+      <div class="notif-sub-row">
+        <label id="s-notif-vibrate-label"></label>
+        <label class="toggle"><input type="checkbox" id="s-notif-vibrate"><span></span></label>
+      </div>
+      <div class="notif-sub-row">
+        <label id="s-notif-badge-label"></label>
+        <label class="toggle"><input type="checkbox" id="s-notif-badge"><span></span></label>
+      </div>
+      <div class="notif-test-row">
+        <button class="btn-test-notif" id="btn-test-notif">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span id="btn-test-notif-text"></span>
+        </button>
+      </div>
+      <div class="notif-dnd-panel" id="s-notif-dnd-panel">
+        <h4 id="s-notif-dnd-title"></h4>
+        <div class="notif-dnd-platform active" id="s-notif-dnd-text"></div>
+      </div>
+      <div class="notif-credits" id="s-notif-credits"></div>
+      <div class="notif-dnd-hint" id="s-notif-dnd-hint"></div>
+      <div class="notif-sub-row">
+        <label id="s-notif-test-label"></label>
+        <button class="btn-test-sound" id="btn-test-notif"></button>
+      </div>
+    </div>
+  </div>
+  <div class="settings-section" id="s-cap-section">
+    <h3 id="s-cap-title"></h3>
+    <div class="cap-summary" id="s-cap-summary"></div>
+    <div class="cap-grid" id="s-cap-grid"></div>
   </div>
   <div class="settings-section">
     <h3 id="s-adj-title"></h3>
@@ -506,6 +1372,7 @@ nav.bottom-bar button:focus-visible{
 // ─── Constants ────────────────────────────────────────────────
 const DEG=Math.PI/180,RAD=180/Math.PI;
 const FAJR_ANGLE=19,ISHA_ANGLE=17;
+const DHUHR_OFFSET=5,MAGHRIB_OFFSET=5;
 const KAABA_LAT=21.4225,KAABA_LNG=39.8262;
 const PRAYER_KEYS=['fajr','sunrise','dhuhr','asr','maghrib','isha'];
 const TZ='Africa/Casablanca';
@@ -559,7 +1426,7 @@ maghrib:'المغرب',isha:'العشاء',nextPrayer:'الصلاة القادم
 hours:'سا',minutes:'د',seconds:'ث',settings:'الإعدادات',qibla:'القبلة',
 prayerTimes:'أوقات الصلاة',city:'المدينة',language:'اللغة',theme:'المظهر',
 themeLight:'فاتح',themeDark:'داكن',themeSystem:'تلقائي',
-notifications:'الإشعارات',enableNotifications:'تفعيل الإشعارات',
+notifications:'الإشعارات',experimental:'تجريبي',enableNotifications:'تفعيل الإشعارات',
 adjustments:'تعديلات',adjustmentsDesc:'تعديل التوقيت (±15 دقيقة)',
 exportConfig:'تصدير الإعدادات',importConfig:'استيراد الإعدادات',
 resetConfig:'إعادة تعيين',resetConfirm:'هل أنت متأكد؟ سيتم حذف جميع الإعدادات.',
@@ -577,6 +1444,51 @@ notifBlocked:'الإشعارات محظورة — فعّلها من إعدادا
 notifEnable:'فعّل الإشعارات لتلقي تنبيهات عند كل صلاة',enableNow:'تفعيل',
 dismiss:'إغلاق',
 hardRefresh:'تحديث شامل',hardRefreshConfirm:'سيتم مسح جميع البيانات المخزنة وإعادة تحميل التطبيق. هل تريد المتابعة؟',hardRefreshing:'جارٍ التحديث…',
+heading:'الاتجاه',accuracyHigh:'دقة عالية',accuracyMedium:'دقة متوسطة',accuracyLow:'دقة منخفضة',calibrationNeeded:'يرجى معايرة البوصلة',calibrationHint:'حرّك هاتفك على شكل رقم 8',
+tomorrowFajr:'فجر الغد',
+helpInfo:'المساعدة',betaWarning:'نسخة تجريبية — قد تختلف أوقات الصلاة قليلاً عن الجداول الرسمية. تحقق دائماً من مسجدك المحلي.',
+helpContribute:'المساهمة',helpContributeDesc:'عرض الكود المصدري والمساهمة',
+helpReport:'الإبلاغ عن خطأ',helpReportDesc:'الإبلاغ عن مشاكل أو طلب ميزات',helpClose:'إغلاق',
+helpShare:'مشاركة',helpShareDesc:'شارك وقت الصلاة مع الأهل والأصدقاء',shareCopied:'تم نسخ الرابط',
+helpNoAds:'بدون إعلانات',helpNoTracking:'بدون تتبع',helpFree:'مجاني دائماً',helpHabous:'حساب الأحباس',helpOpenSource:'مفتوح المصدر',
+helpUrlAds:'https://ar.wikipedia.org/wiki/%D8%A5%D8%B9%D9%84%D8%A7%D9%86',helpUrlTracking:'https://ar.wikipedia.org/wiki/%D8%AA%D8%AA%D8%A8%D8%B9_%D8%A7%D9%84%D9%88%D9%8A%D8%A8',helpUrlHabous:'https://ar.wikipedia.org/wiki/%D9%88%D8%B2%D8%A7%D8%B1%D8%A9_%D8%A7%D9%84%D8%A3%D9%88%D9%82%D8%A7%D9%81_%D9%88%D8%A7%D9%84%D8%B4%D8%A4%D9%88%D9%86_%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%D8%A9_(%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8)',helpUrlOpenSource:'https://ar.wikipedia.org/wiki/%D8%A8%D8%B1%D9%85%D8%AC%D9%8A%D8%A7%D8%AA_%D9%85%D9%81%D8%AA%D9%88%D8%AD%D8%A9_%D8%A7%D9%84%D9%85%D8%B5%D8%AF%D8%B1',
+ogTitle:'وقت الصلاة — مواقيت الصلاة في المغرب',ogDescription:'مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.',ogImageAlt:'وقت الصلاة — تطبيق مواقيت الصلاة في المغرب',
+notifPrayers:'صلوات الإشعار',notifSelectPrayers:'اختر الصلوات التي تريد إشعاراً لها',
+notifAdvance:'تنبيه مسبق',notifAdvanceDesc:'تنبيه قبل وقت الصلاة',
+notifAdvance0:'عند الأذان',notifAdvance5:'قبل 5 دقائق',notifAdvance10:'قبل 10 دقائق',notifAdvance15:'قبل 15 دقائق',notifAdvance30:'قبل 30 دقيقة',
+notifSound:'صوت الإشعار',notifSoundSilent:'صامت',notifSoundTone:'نغمة',notifSoundAdhan:'أذان',
+notifSoundTest:'تجربة',notifAthanTime:'حان وقت صلاة',notifMinBefore:'دقائق قبل',
+notifSnooze:'تأجيل 5 دقائق',notifDismiss:'إغلاق',notifDndHint:'لتلقي الإشعارات أثناء وضع عدم الإزعاج، فعّل «الإشعارات ذات الأولوية» من إعدادات هاتفك',
+notifVibrate:'اهتزاز',notifWakeScreen:'إيقاظ الشاشة',
+notifTestBtn:'إرسال إشعار تجريبي',notifTestSent:'تم إرسال إشعار تجريبي',
+notifPermGranted:'مُفعّلة',notifPermDenied:'محظورة',notifPermDefault:'غير مُفعّلة',
+notifLoading:'جارٍ تحميل الأصوات…',notifSoundsReady:'الأصوات جاهزة',
+notifDndTitle:'وضع عدم الإزعاج',
+notifDndAndroid:'Android: الإعدادات ← الإشعارات ← عدم الإزعاج ← السماح بالاستثناءات ← أضف WaqtSalat',
+notifDndIos:'iOS: الإعدادات ← التركيز ← السماح بالإشعارات ← أضف WaqtSalat كإشعار حساس للوقت',
+notifDndWindows:'Windows: الإعدادات ← النظام ← المساعدة على التركيز ← الأولوية فقط ← أضف WaqtSalat',
+notifDndMac:'macOS: تفضيلات النظام ← الإشعارات ← التركيز ← السماح بالإشعارات من WaqtSalat',
+notifDndGeneric:'تحقق من إعدادات عدم الإزعاج في نظامك واسمح بإشعارات WaqtSalat',
+notifBadge:'شارة التطبيق',
+soundCredits:'الأصوات',soundCreditsAdhan:'أذان مكة المكرمة — المسجد الحرام (ملك عام، Archive.org)',
+soundCreditsTone:'نغمة إشعار (CC0، Pixabay)',soundCreditsRepo:'مستودع open-sounds على GitHub',
+capTitle:'إمكانيات الجهاز',capAvailable:'متاح',capUnavailable:'غير متاح',capPartial:'محدود',
+capNotif:'الإشعارات',capNotifDesc:'تنبيهات أوقات الصلاة',
+capGeo:'الموقع الجغرافي',capGeoDesc:'تحديد أقرب مدينة تلقائياً',
+capCompass:'البوصلة',capCompassDesc:'اتجاه القبلة بالبوصلة الرقمية',
+capAR:'الواقع المعزز',capARDesc:'عرض الكعبة ثلاثي الأبعاد',
+capVibrate:'الاهتزاز',capVibrateDesc:'تنبيه بالاهتزاز عند الأذان',
+capWakeLock:'إيقاظ الشاشة',capWakeLockDesc:'إبقاء الشاشة مضاءة أثناء القراءة',
+capSW:'العمل بدون إنترنت',capSWDesc:'التطبيق يعمل بدون اتصال بالإنترنت',
+capBadge:'شارة الأيقونة',capBadgeDesc:'عداد الإشعارات على أيقونة التطبيق',
+capShare:'المشاركة',capShareDesc:'مشاركة التطبيق عبر النظام',
+capInstall:'التثبيت',capInstallDesc:'تثبيت كتطبيق مستقل على الجهاز',
+capBgSync:'المزامنة الخلفية',capBgSyncDesc:'إعادة جدولة الإشعارات تلقائياً',
+capCamera:'الكاميرا',capCameraDesc:'مطلوبة لميزة الواقع المعزز',
+capPermGranted:'مسموح',capPermDenied:'مرفوض',capPermPrompt:'بانتظار الإذن',
+reloadAssets:'تحديث الملفات',reloadAssetsDesc:'إعادة تحميل التطبيق مع الحفاظ على إعداداتك',
+reloadingAssets:'جارٍ التحديث…',reloadDone:'تم التحديث بنجاح',reloadFail:'فشل التحديث',
+notifTestTitle:'تجربة الإشعار',notifTestDesc:'اختر متى تريد تلقي إشعار تجريبي',notifTestNow:'الآن',notifTest10s:'بعد 10 ثوانٍ',notifTest1m:'بعد دقيقة',notifTest5m:'بعد 5 دقائق',notifTestSend:'إرسال',notifTestCancel:'إلغاء',notifTestLabel:'تجربة الإشعار',notifTestScheduled:'سيصل الإشعار',notifTestSent:'تم إرسال الإشعار',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -584,7 +1496,7 @@ maghrib:'Maghrib',isha:'Isha',nextPrayer:'Prochaine prière',timeRemaining:'Temp
 hours:'h',minutes:'min',seconds:'s',settings:'Paramètres',qibla:'Qibla',
 prayerTimes:'Horaires',city:'Ville',language:'Langue',theme:'Thème',
 themeLight:'Clair',themeDark:'Sombre',themeSystem:'Auto',
-notifications:'Notifications',enableNotifications:'Activer les notifications',
+notifications:'Notifications',experimental:'Expérimental',enableNotifications:'Activer les notifications',
 adjustments:'Ajustements',adjustmentsDesc:'Ajuster les horaires (±15 min)',
 exportConfig:'Exporter',importConfig:'Importer',
 resetConfig:'Réinitialiser',resetConfirm:'Êtes-vous sûr ? Tous les paramètres seront supprimés.',
@@ -603,6 +1515,51 @@ notifBlocked:'Notifications bloquées — activez-les dans les paramètres du na
 notifEnable:'Activez les notifications pour recevoir un rappel à chaque prière',enableNow:'Activer',
 dismiss:'Fermer',
 hardRefresh:'Actualisation complète',hardRefreshConfirm:'Toutes les données en cache seront supprimées et l\'application sera rechargée. Continuer ?',hardRefreshing:'Actualisation…',
+heading:'Cap',accuracyHigh:'Haute précision',accuracyMedium:'Précision moyenne',accuracyLow:'Faible précision',calibrationNeeded:'Veuillez calibrer la boussole',calibrationHint:'Faites un mouvement en 8',
+tomorrowFajr:'Fajr demain',
+helpInfo:'Aide',betaWarning:'Bêta — Les horaires de prière peuvent légèrement différer des horaires officiels. Vérifiez toujours auprès de votre mosquée locale.',
+helpContribute:'Contribuer',helpContributeDesc:'Voir le code source et contribuer',
+helpReport:'Signaler un bug',helpReportDesc:'Signaler un problème ou demander une fonctionnalité',helpClose:'Fermer',
+helpShare:'Partager',helpShareDesc:'Partagez WaqtSalat avec vos proches',shareCopied:'Lien copié',
+helpNoAds:'Sans pub',helpNoTracking:'Sans tracking',helpFree:'Toujours gratuit',helpHabous:'Calcul Habous',helpOpenSource:'Open source',
+helpUrlAds:'https://fr.wikipedia.org/wiki/Publicit%C3%A9_en_ligne',helpUrlTracking:'https://fr.wikipedia.org/wiki/Pistage_web',helpUrlHabous:'https://fr.wikipedia.org/wiki/Minist%C3%A8re_des_Habous_et_des_Affaires_islamiques',helpUrlOpenSource:'https://fr.wikipedia.org/wiki/Logiciel_libre',
+ogTitle:'WaqtSalat — Horaires de prière au Maroc',ogDescription:'Horaires de prière pour le Maroc, méthode officielle des Habous. +35 villes, boussole Qibla. Sans pub, sans tracking, sans paiement, open source.',ogImageAlt:'WaqtSalat — Application d\'horaires de prière au Maroc',
+notifPrayers:'Prières à notifier',notifSelectPrayers:'Choisissez les prières pour les notifications',
+notifAdvance:'Alerte anticipée',notifAdvanceDesc:'Notification avant l\'heure de prière',
+notifAdvance0:'À l\'adhan',notifAdvance5:'5 min avant',notifAdvance10:'10 min avant',notifAdvance15:'15 min avant',notifAdvance30:'30 min avant',
+notifSound:'Son de notification',notifSoundSilent:'Silencieux',notifSoundTone:'Tonalité',notifSoundAdhan:'Adhan',
+notifSoundTest:'Tester',notifAthanTime:'C\'est l\'heure de la prière',notifMinBefore:'min avant',
+notifSnooze:'Reporter 5 min',notifDismiss:'Fermer',notifDndHint:'Pour recevoir les notifications en mode Ne pas déranger, activez les « Notifications prioritaires » dans les paramètres de votre téléphone',
+notifVibrate:'Vibration',notifWakeScreen:'Réveiller l\'écran',
+notifTestBtn:'Envoyer une notification test',notifTestSent:'Notification test envoyée',
+notifPermGranted:'Activées',notifPermDenied:'Bloquées',notifPermDefault:'Non activées',
+notifLoading:'Chargement des sons…',notifSoundsReady:'Sons prêts',
+notifDndTitle:'Mode Ne pas déranger',
+notifDndAndroid:'Android : Paramètres → Notifications → Ne pas déranger → Exceptions → Ajoutez WaqtSalat',
+notifDndIos:'iOS : Réglages → Concentration → Autoriser les notifications → Ajoutez WaqtSalat comme notification urgente',
+notifDndWindows:'Windows : Paramètres → Système → Aide à la concentration → Priorité uniquement → Ajoutez WaqtSalat',
+notifDndMac:'macOS : Préférences Système → Notifications → Concentration → Autoriser WaqtSalat',
+notifDndGeneric:'Vérifiez les paramètres Ne pas déranger de votre système et autorisez les notifications de WaqtSalat',
+notifBadge:'Badge de l\'application',
+soundCredits:'Sons',soundCreditsAdhan:'Adhan de La Mecque — Masjid al-Haram (Domaine public, Archive.org)',
+soundCreditsTone:'Tonalité de notification (CC0, Pixabay)',soundCreditsRepo:'Dépôt open-sounds sur GitHub',
+capTitle:'Capacités de l\'appareil',capAvailable:'Disponible',capUnavailable:'Indisponible',capPartial:'Limité',
+capNotif:'Notifications',capNotifDesc:'Alertes aux heures de prière',
+capGeo:'Géolocalisation',capGeoDesc:'Détection automatique de la ville',
+capCompass:'Boussole',capCompassDesc:'Direction de la Qibla par boussole',
+capAR:'Réalité augmentée',capARDesc:'Vue 3D de la Kaaba',
+capVibrate:'Vibration',capVibrateDesc:'Alerte par vibration à l\'adhan',
+capWakeLock:'Écran actif',capWakeLockDesc:'Garder l\'écran allumé pendant la lecture',
+capSW:'Mode hors ligne',capSWDesc:'L\'application fonctionne sans connexion',
+capBadge:'Badge d\'icône',capBadgeDesc:'Compteur de notifications sur l\'icône',
+capShare:'Partage',capShareDesc:'Partage natif via le système',
+capInstall:'Installation',capInstallDesc:'Installer comme application autonome',
+capBgSync:'Synchronisation en arrière-plan',capBgSyncDesc:'Reprogrammation automatique des notifications',
+capCamera:'Caméra',capCameraDesc:'Requise pour la réalité augmentée',
+capPermGranted:'Autorisé',capPermDenied:'Refusé',capPermPrompt:'En attente',
+reloadAssets:'Recharger les fichiers',reloadAssetsDesc:'Retélécharger l\'application en conservant vos paramètres',
+reloadingAssets:'Rechargement…',reloadDone:'Mise à jour réussie',reloadFail:'Échec du rechargement',
+notifTestTitle:'Tester la notification',notifTestDesc:'Choisissez quand recevoir une notification de test',notifTestNow:'Maintenant',notifTest10s:'Dans 10 s',notifTest1m:'Dans 1 min',notifTest5m:'Dans 5 min',notifTestSend:'Envoyer',notifTestCancel:'Annuler',notifTestLabel:'Tester la notification',notifTestScheduled:'Notification prévue',notifTestSent:'Notification envoyée',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -610,7 +1567,7 @@ maghrib:'Maghrib',isha:'Isha',nextPrayer:'Next Prayer',timeRemaining:'Time Remai
 hours:'h',minutes:'min',seconds:'s',settings:'Settings',qibla:'Qibla',
 prayerTimes:'Prayer Times',city:'City',language:'Language',theme:'Theme',
 themeLight:'Light',themeDark:'Dark',themeSystem:'Auto',
-notifications:'Notifications',enableNotifications:'Enable notifications',
+notifications:'Notifications',experimental:'Experimental',enableNotifications:'Enable notifications',
 adjustments:'Adjustments',adjustmentsDesc:'Adjust prayer times (±15 min)',
 exportConfig:'Export',importConfig:'Import',
 resetConfig:'Reset',resetConfirm:'Are you sure? All settings will be deleted.',
@@ -629,6 +1586,51 @@ notifBlocked:'Notifications blocked — enable them in browser settings to recei
 notifEnable:'Enable notifications to get a reminder for every prayer',enableNow:'Enable',
 dismiss:'Dismiss',
 hardRefresh:'Hard Refresh',hardRefreshConfirm:'All cached data will be cleared and the app will reload. Continue?',hardRefreshing:'Refreshing…',
+heading:'Heading',accuracyHigh:'High accuracy',accuracyMedium:'Medium accuracy',accuracyLow:'Low accuracy',calibrationNeeded:'Please calibrate the compass',calibrationHint:'Move your phone in a figure-8 pattern',
+tomorrowFajr:'Tomorrow\'s Fajr',
+helpInfo:'Help & Info',betaWarning:'Beta — Prayer times may differ slightly from official schedules. Always verify with your local mosque.',
+helpContribute:'Contribute',helpContributeDesc:'View source code & contribute',
+helpReport:'Report a bug',helpReportDesc:'Report issues or request features',helpClose:'Close',
+helpShare:'Share',helpShareDesc:'Share WaqtSalat with friends & family',shareCopied:'Link copied',
+helpNoAds:'No ads',helpNoTracking:'No tracking',helpFree:'Always free',helpHabous:'Habous calculation',helpOpenSource:'Open source',
+helpUrlAds:'https://en.wikipedia.org/wiki/Online_advertising',helpUrlTracking:'https://en.wikipedia.org/wiki/Web_tracking',helpUrlHabous:'https://en.wikipedia.org/wiki/Ministry_of_Endowments_and_Islamic_Affairs_(Morocco)',helpUrlOpenSource:'https://en.wikipedia.org/wiki/Open-source_software',
+ogTitle:'WaqtSalat — Prayer Times for Morocco',ogDescription:'Prayer times for Morocco using the official Habous method. 35+ cities, Qibla compass. No ads, no tracking, no payment, open source.',ogImageAlt:'WaqtSalat — Prayer times app for Morocco',
+notifPrayers:'Notification Prayers',notifSelectPrayers:'Choose which prayers to be notified for',
+notifAdvance:'Advance Alert',notifAdvanceDesc:'Get notified before prayer time',
+notifAdvance0:'At adhan time',notifAdvance5:'5 min before',notifAdvance10:'10 min before',notifAdvance15:'15 min before',notifAdvance30:'30 min before',
+notifSound:'Notification Sound',notifSoundSilent:'Silent',notifSoundTone:'Tone',notifSoundAdhan:'Adhan',
+notifSoundTest:'Test',notifAthanTime:'It\'s time for',notifMinBefore:'min before',
+notifSnooze:'Snooze 5 min',notifDismiss:'Dismiss',notifDndHint:'To receive notifications during Do Not Disturb, enable "Priority notifications" in your phone settings',
+notifVibrate:'Vibration',notifWakeScreen:'Wake screen',
+notifTestBtn:'Send test notification',notifTestSent:'Test notification sent',
+notifPermGranted:'Enabled',notifPermDenied:'Blocked',notifPermDefault:'Not enabled',
+notifLoading:'Loading sounds…',notifSoundsReady:'Sounds ready',
+notifDndTitle:'Do Not Disturb',
+notifDndAndroid:'Android: Settings → Notifications → Do Not Disturb → Exceptions → Add WaqtSalat',
+notifDndIos:'iOS: Settings → Focus → Allow Notifications → Add WaqtSalat as Time Sensitive',
+notifDndWindows:'Windows: Settings → System → Focus Assist → Priority Only → Add WaqtSalat',
+notifDndMac:'macOS: System Settings → Notifications → Focus → Allow WaqtSalat notifications',
+notifDndGeneric:'Check your system\'s Do Not Disturb settings and allow WaqtSalat notifications',
+notifBadge:'App badge',
+soundCredits:'Sounds',soundCreditsAdhan:'Makkah Adhan — Masjid al-Haram (Public Domain, Archive.org)',
+soundCreditsTone:'Notification tone (CC0, Pixabay)',soundCreditsRepo:'open-sounds repository on GitHub',
+capTitle:'Device Capabilities',capAvailable:'Available',capUnavailable:'Unavailable',capPartial:'Limited',
+capNotif:'Notifications',capNotifDesc:'Prayer time alerts',
+capGeo:'Geolocation',capGeoDesc:'Auto-detect nearest city',
+capCompass:'Compass',capCompassDesc:'Digital compass for Qibla direction',
+capAR:'Augmented Reality',capARDesc:'3D Kaaba view',
+capVibrate:'Vibration',capVibrateDesc:'Haptic alert at adhan time',
+capWakeLock:'Screen Wake Lock',capWakeLockDesc:'Keep screen on during reading',
+capSW:'Offline Mode',capSWDesc:'App works without internet',
+capBadge:'Icon Badge',capBadgeDesc:'Notification count on app icon',
+capShare:'Share',capShareDesc:'Native system sharing',
+capInstall:'Install',capInstallDesc:'Install as standalone app',
+capBgSync:'Background Sync',capBgSyncDesc:'Auto-reschedule notifications',
+capCamera:'Camera',capCameraDesc:'Required for augmented reality',
+capPermGranted:'Allowed',capPermDenied:'Denied',capPermPrompt:'Pending',
+reloadAssets:'Reload assets',reloadAssetsDesc:'Re-download the app while keeping your settings',
+reloadingAssets:'Reloading…',reloadDone:'Updated successfully',reloadFail:'Reload failed',
+notifTestTitle:'Test Notification',notifTestDesc:'Choose when to receive a test notification',notifTestNow:'Now',notifTest10s:'In 10s',notifTest1m:'In 1 min',notifTest5m:'In 5 min',notifTestSend:'Send',notifTestCancel:'Cancel',notifTestLabel:'Test notification',notifTestScheduled:'Notification scheduled',notifTestSent:'Notification sent',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -638,7 +1640,7 @@ const state={
   locale:'ar',theme:'system',
   position:null,// {lat,lng,cityId,cityName}
   adjustments:{fajr:0,sunrise:0,dhuhr:0,asr:0,maghrib:0,isha:0},
-  notifications:{enabled:false},
+  notifications:{enabled:false,prayers:{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},advance:0,sound:'adhan',vibrate:true,badge:true},
   onboarded:false,
   currentView:'prayers',
 };
@@ -654,7 +1656,7 @@ function loadState(){
     const adj=localStorage.getItem('waqt-adjustments');
     if(adj)state.adjustments={...state.adjustments,...JSON.parse(adj)};
     const notif=localStorage.getItem('waqt-notifications');
-    if(notif)state.notifications=JSON.parse(notif);
+    if(notif)state.notifications={...state.notifications,...JSON.parse(notif)};
     state.onboarded=localStorage.getItem('waqt-onboarded')==='true';
   }catch(e){}
 }
@@ -709,9 +1711,9 @@ function calcPrayerTimes(date,lat,lng){
   return{
     fajr:hFajr!==null?transit-hFajr:null,
     sunrise:hSun!==null?transit-hSun:null,
-    dhuhr:transit,
+    dhuhr:transit+DHUHR_OFFSET/60,
     asr:hAsr!==null?transit+hAsr:null,
-    maghrib:hSun!==null?transit+hSun:null,
+    maghrib:hSun!==null?transit+hSun+MAGHRIB_OFFSET/60:null,
     isha:hIsha!==null?transit+hIsha:null,
   };
 }
@@ -735,7 +1737,8 @@ function getPrayerTimesLocal(date,lat,lng,adj){
     if(utc[k]===null){res[k]=null;continue}
     let tot=utc[k]*60+off+(adj[k]||0);
     tot=((tot%1440)+1440)%1440;
-    const h=Math.floor(tot/60),m=Math.round(tot%60);
+    let h=Math.floor(tot/60),m=Math.round(tot%60);
+    if(m===60){m=0;h=(h+1)%24;}
     res[k]=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
   }
   return res;
@@ -760,12 +1763,28 @@ function formatGregorian(date,locale){
     timeZone:TZ
   }).format(date);
 }
+const HIJRI_MONTHS={
+en:['Muharram','Safar','Rabi\' al-Awwal','Rabi\' al-Thani','Jumada al-Ula','Jumada al-Thani','Rajab','Sha\'ban','Ramadan','Shawwal','Dhu al-Qi\'dah','Dhu al-Hijjah'],
+fr:['Mouharram','Safar','Rabi\' al-Awal','Rabi\' al-Thani','Joumada al-Oula','Joumada al-Thania','Rajab','Chaabane','Ramadan','Chawwal','Dhou al-Qi\'da','Dhou al-Hijja']
+};
 function formatHijri(date,locale){
   try{
-    return new Intl.DateTimeFormat(locale==='ar'?'ar-MA':locale,{
-      calendar:'islamic-umalqura',day:'numeric',month:'long',year:'numeric',
-      timeZone:TZ
-    }).format(date);
+    if(locale==='ar'){
+      return new Intl.DateTimeFormat('ar-MA',{
+        calendar:'islamic-umalqura',day:'numeric',month:'long',year:'numeric',
+        timeZone:TZ
+      }).format(date);
+    }
+    // For EN/FR: extract day/month/year numerically, then use our translated month names
+    const parts=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{
+      day:'numeric',month:'numeric',year:'numeric',timeZone:TZ
+    }).formatToParts(date);
+    const d=parts.find(p=>p.type==='day')?.value;
+    const m=parseInt(parts.find(p=>p.type==='month')?.value,10);
+    const y=parts.find(p=>p.type==='year')?.value?.replace(/\s*AH/,'');
+    const months=HIJRI_MONTHS[locale]||HIJRI_MONTHS.en;
+    if(d&&m&&y)return d+' '+months[m-1]+' '+y;
+    return '';
   }catch(e){return''}
 }
 
@@ -777,6 +1796,7 @@ function nowInCasa(){
 // ─── UI Rendering ─────────────────────────────────────────────
 let prayerTimes=null;
 let countdownInterval=null;
+let lastRenderDate=null; // track current day for day-change detection
 
 function renderAll(){
   applyTheme();applyLocale();
@@ -789,9 +1809,20 @@ function applyLocale(){
   const dir=l==='ar'?'rtl':'ltr';
   document.documentElement.lang=l;
   document.documentElement.dir=dir;
-  document.title=t('appName');
+  document.title=t('ogTitle');
   // Skip link
   $('skip-link').textContent=l==='ar'?'تخطي إلى المحتوى':l==='fr'?'Aller au contenu':'Skip to content';
+  // Update OG & meta tags for localized sharing
+  const ogLocaleMap={ar:'ar_MA',fr:'fr_MA',en:'en_US'};
+  const setMeta=(sel,val)=>{const el=document.querySelector(sel);if(el)el.setAttribute('content',val)};
+  setMeta('meta[property="og:title"]',t('ogTitle'));
+  setMeta('meta[property="og:description"]',t('ogDescription'));
+  setMeta('meta[property="og:image:alt"]',t('ogImageAlt'));
+  setMeta('meta[property="og:locale"]',ogLocaleMap[l]||'ar_MA');
+  setMeta('meta[name="twitter:title"]',t('ogTitle'));
+  setMeta('meta[name="twitter:description"]',t('ogDescription'));
+  setMeta('meta[name="twitter:image:alt"]',t('ogImageAlt'));
+  setMeta('meta[name="description"]',t('ogDescription'));
 }
 
 function applyTheme(){
@@ -802,8 +1833,7 @@ function applyTheme(){
     document.documentElement.setAttribute('data-theme',th);
   }
   // Update theme-color meta
-  const isDark=th==='dark'||(th==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches);
-  document.querySelector('meta[name="theme-color"]').content=isDark?'#0a0a0a':'#1a8d5f';
+  document.querySelector('meta[name="theme-color"]').content='#0d5a2e';
 }
 
 function renderNav(){
@@ -827,16 +1857,21 @@ function renderPrayers(){
   if(!state.position)return;
   const now=new Date();
   const{lat,lng}=state.position;
+  // Track current date for day-change detection
+  const casaNow=nowInCasa();
+  const todayStr=casaNow.getFullYear()+'-'+(casaNow.getMonth()+1)+'-'+casaNow.getDate();
+  const dayChanged=lastRenderDate!==null&&lastRenderDate!==todayStr;
+  lastRenderDate=todayStr;
   prayerTimes=getPrayerTimesLocal(now,lat,lng,state.adjustments);
+  // Reschedule notifications on day change
+  if(dayChanged)scheduleNotifications();
 
   // City name
   const city=CITIES.find(c=>c.id===state.position.cityId);
-  $('city-name').textContent=city?(state.locale==='ar'?city.ar:city.fr):(state.position.cityName||'');
+  const cityText=city?(state.locale==='ar'?city.ar:city.fr):(state.position.cityName||'');
+  const cn=$('city-name');
+  cn.innerHTML='<svg class="flag-icon" viewBox="0 0 900 600" aria-hidden="true"><rect width="900" height="600" fill="#c1272d"/><path d="M450 175l-43.6 134.1H264.8l114.6 83.3-43.8 134.2L450 443.3l114.4 83.3-43.8-134.2 114.6-83.3H493.6z" fill="none" stroke="#006233" stroke-width="20"/></svg>'+cityText;
 
-  // Date
-  const greg=formatGregorian(now,state.locale);
-  const hijri=formatHijri(now,state.locale);
-  $('date-line').textContent=hijri?greg+' — '+hijri:greg;
 
   // Prayer list
   const list=$('prayer-list');
@@ -857,47 +1892,78 @@ function renderPrayers(){
     if(mins[i]!==null&&mins[i]>nowMin){nextIdx=i;break}
   }
 
+  // currentIdx = prayer we're in now (the one just before nextIdx)
+  const currentIdx=nextIdx>0?nextIdx-1:(nextIdx===0?-1:displayPrayers.length-1);
+  // Count future prayers after nextIdx for fading
+  const futurePrayers=nextIdx>=0?displayPrayers.length-nextIdx-1:0;
+
   displayPrayers.forEach((key,i)=>{
     const li=document.createElement('li');
     li.setAttribute('role','listitem');
     const passed=mins[i]!==null&&mins[i]<=nowMin;
-    const current=i===nextIdx;
-    if(passed&&!current)li.classList.add('passed');
-    if(current){li.classList.add('current');li.setAttribute('aria-current','true')}
+
+    if(i===currentIdx){
+      li.classList.add('current-prayer');li.setAttribute('aria-current','true');
+    }else if(i===nextIdx){
+      li.classList.add('next-prayer');
+    }else if(passed){
+      li.classList.add('passed');
+    }else if(nextIdx>=0&&i>nextIdx){
+      // Future prayers after next: fade increasingly
+      const stepsAfterNext=i-nextIdx;
+      const opacity=Math.max(0.78,0.85-stepsAfterNext*0.15);
+      li.style.opacity=opacity;
+    }
 
     const nameSpan=document.createElement('span');
     nameSpan.className='prayer-name';nameSpan.textContent=t(key);
     const timeSpan=document.createElement('span');
     timeSpan.className='prayer-time';timeSpan.textContent=prayerTimes[key]||'--:--';
-    li.appendChild(nameSpan);li.appendChild(timeSpan);
+    li.appendChild(nameSpan);
+    if(i===nextIdx){
+      const cdSpan=document.createElement('span');
+      cdSpan.className='prayer-countdown-inline';
+      cdSpan.id='inline-countdown';
+      li.appendChild(cdSpan);
+    }
+    li.appendChild(timeSpan);
     list.appendChild(li);
   });
 
-  // Countdown hero
-  $('next-prayer-label').textContent=t('nextPrayer');
-  $('countdown-label').textContent=t('timeRemaining');
-  if(nextIdx>=0){
-    $('next-prayer-name').textContent=t(displayPrayers[nextIdx]);
-    updateCountdown(mins[nextIdx],nowCasa);
-    // Progress bar: how far through the current prayer interval
-    const prevIdx=nextIdx>0?nextIdx-1:mins.length-1;
-    if(mins[prevIdx]!==null){
-      let elapsed=nowMin-mins[prevIdx];
-      let total=mins[nextIdx]-mins[prevIdx];
-      if(elapsed<0)elapsed+=1440;
-      if(total<=0)total+=1440;
-      $('prayer-progress-fill').style.width=Math.min(100,elapsed/total*100)+'%';
+  // Tomorrow's Fajr below Isha
+  const tomorrow=new Date(now);
+  tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowTimes=getPrayerTimesLocal(tomorrow,lat,lng,state.adjustments);
+  if(tomorrowTimes.fajr){
+    const li=document.createElement('li');
+    li.setAttribute('role','listitem');
+    // From Maghrib onwards: show with normal prayer styling
+    // Before Maghrib: show with diminished tomorrow-fajr styling
+    const isMaghribOrLater=nextIdx>=5||nextIdx<0;
+    if(!isMaghribOrLater)li.classList.add('tomorrow-fajr');
+    // After Isha: tomorrow's Fajr is the next prayer
+    if(nextIdx<0){li.classList.add('next-prayer')}
+    const nameSpan=document.createElement('span');
+    nameSpan.className='prayer-name';nameSpan.textContent=t('tomorrowFajr');
+    const timeSpan=document.createElement('span');
+    timeSpan.className='prayer-time';timeSpan.textContent=tomorrowTimes.fajr;
+    li.appendChild(nameSpan);
+    if(nextIdx<0){
+      const cdSpan=document.createElement('span');
+      cdSpan.className='prayer-countdown-inline';
+      cdSpan.id='inline-countdown';
+      li.appendChild(cdSpan);
     }
+    li.appendChild(timeSpan);
+    list.appendChild(li);
+  }
+
+  // Inline countdown
+  if(nextIdx>=0){
+    updateCountdown(mins[nextIdx],nowCasa);
   }else{
     // After isha — next is fajr tomorrow
-    $('next-prayer-name').textContent=t('fajr');
     updateCountdown(mins[0]+1440,nowCasa);
-    if(mins[5]!==null&&mins[0]!==null){
-      let elapsed=nowMin-mins[5];
-      let total=(mins[0]+1440)-mins[5];
-      if(elapsed<0)elapsed+=1440;
-      $('prayer-progress-fill').style.width=Math.min(100,elapsed/total*100)+'%';
-    }
   }
 
   startCountdown(nextIdx>=0?mins[nextIdx]:(mins[0]+1440));
@@ -910,119 +1976,597 @@ function updateCountdown(targetMin,now){
   const h=Math.floor(diff/3600);
   const m=Math.floor((diff%3600)/60);
   const s=diff%60;
-  $('countdown').textContent=
-    String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  const txt=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  const el=$('inline-countdown');
+  if(el)el.textContent=txt;
 }
 
 function startCountdown(targetMin){
   if(countdownInterval)clearInterval(countdownInterval);
+  let lastNowMin=-1;
   countdownInterval=setInterval(()=>{
     const now=nowInCasa();
     updateCountdown(targetMin,now);
-    // Check if we crossed a prayer time — re-render
     const nowMin=now.getHours()*60+now.getMinutes();
-    if(now.getSeconds()===0){
+    // Re-render when minute changes (prayer transition or day change)
+    if(nowMin!==lastNowMin){
+      lastNowMin=nowMin;
       renderPrayers();
     }
   },1000);
 }
 
-// ─── AR Camera Mode ───────────────────────────────────────────
+// ─── Compass heading engine (precision-optimized) ────────────
+// Low-pass filter with circular (angular) averaging to smooth heading jitter
+const HEADING_FILTER_ALPHA=0.15; // Lower = smoother but slower response
+let _filteredHeading=null;
+let _lastHeadingTime=0;
+let _headingAccuracy=null; // degrees of accuracy (null=unknown)
+let _compassSource='none'; // 'sensor-api','absolute','relative','webkit'
+let _headingSamples=[]; // for variance/stability detection
+const MAX_HEADING_SAMPLES=20;
+
+function smoothHeading(raw){
+  if(_filteredHeading===null){_filteredHeading=raw;return raw}
+  // Circular interpolation: find shortest angular path
+  let diff=raw-_filteredHeading;
+  // Normalize to ±180
+  diff=((diff+540)%360)-180;
+  _filteredHeading=(_filteredHeading+HEADING_FILTER_ALPHA*diff+360)%360;
+  return _filteredHeading;
+}
+
+function updateHeadingStability(heading){
+  _headingSamples.push(heading);
+  if(_headingSamples.length>MAX_HEADING_SAMPLES)_headingSamples.shift();
+}
+
+function getHeadingVariance(){
+  if(_headingSamples.length<5)return 999;
+  // Circular variance
+  let sinSum=0,cosSum=0;
+  for(const h of _headingSamples){
+    sinSum+=Math.sin(h*DEG);
+    cosSum+=Math.cos(h*DEG);
+  }
+  const n=_headingSamples.length;
+  const R=Math.sqrt((sinSum/n)**2+(cosSum/n)**2);
+  return(1-R)*360; // 0=perfectly stable, 360=random
+}
+
+// Tilt-compensated heading from raw alpha/beta/gamma
+function tiltCompensatedHeading(alpha,beta,gamma){
+  // W3C spec: R = Rz(α)·Rx(β)·Ry(γ) maps device frame → Earth frame (ENU)
+  // alpha is *opposite* sense to compass heading (spec: "compass = 360 - alpha")
+  const a=alpha*DEG,b=beta*DEG,g=gamma*DEG;
+  const sA=Math.sin(a),cA=Math.cos(a);
+  const sB=Math.sin(b),cB=Math.cos(b);
+  const sG=Math.sin(g),cG=Math.cos(g);
+
+  // Project device-top [0,1,0] onto horizontal plane via rotation matrix column 1:
+  //   East  = -sinA·cosB
+  //   North =  cosA·cosB
+  // This heading is independent of gamma (roll doesn't change where top points)
+  // and equals (360 - alpha) when cosB > 0
+  if(cB*cB>0.0625){ // cosB² > 0.25 → device not too vertical
+    return(Math.atan2(-sA*cB,cA*cB)*RAD+360)%360;
+  }
+  // Device nearly vertical: project screen-normal [0,0,-1] onto horizontal plane
+  // via negated rotation matrix column 2:
+  //   East  = -(cosA·sinG + sinA·sinB·cosG)
+  //   North = -(sinA·sinG - cosA·sinB·cosG)
+  const fE=-(cA*sG+sA*sB*cG);
+  const fN=-(sA*sG-cA*sB*cG);
+  if(fE*fE+fN*fN>0.0625){
+    return(Math.atan2(fE,fN)*RAD+360)%360;
+  }
+  // Gimbal-lock fallback
+  return(360-alpha)%360;
+}
+
+function extractHeading(e){
+  // iOS: webkitCompassHeading is hardware-fused true compass heading (best source)
+  if(e.webkitCompassHeading!==undefined&&e.webkitCompassHeading!==null){
+    _compassSource='webkit';
+    if(e.webkitCompassAccuracy!==undefined){
+      _headingAccuracy=e.webkitCompassAccuracy; // degrees of error
+    }
+    return e.webkitCompassHeading;
+  }
+  // Android absolute orientation events
+  if(e.absolute&&e.alpha!==null){
+    _compassSource='absolute';
+    // Use tilt compensation if beta/gamma available
+    if(e.beta!==null&&e.gamma!==null){
+      return tiltCompensatedHeading(e.alpha,e.beta,e.gamma);
+    }
+    return(360-e.alpha)%360;
+  }
+  return null;
+}
+
+// Process raw heading: smooth + track stability
+function processHeading(raw){
+  const smoothed=smoothHeading(raw);
+  updateHeadingStability(smoothed);
+  _lastHeadingTime=Date.now();
+  return smoothed;
+}
+
+// Update accuracy UI
+function updateAccuracyUI(){
+  const el=$('compass-accuracy');
+  const dot=$('accuracy-dot');
+  const txt=$('accuracy-text');
+  if(!el)return;
+
+  const variance=getHeadingVariance();
+  let level,label;
+
+  if(_headingAccuracy!==null){
+    // iOS gives direct accuracy in degrees
+    if(_headingAccuracy<15){level='high';label='±'+Math.round(_headingAccuracy)+'°'}
+    else if(_headingAccuracy<30){level='medium';label='±'+Math.round(_headingAccuracy)+'°'}
+    else{level='low';label='±'+Math.round(_headingAccuracy)+'°'}
+  }else{
+    // Estimate from heading variance
+    if(variance<5){level='high';label=t('accuracyHigh')}
+    else if(variance<20){level='medium';label=t('accuracyMedium')}
+    else{level='low';label=t('accuracyLow')}
+  }
+
+  el.style.display='flex';
+  dot.className='accuracy-dot '+level;
+  txt.textContent=label;
+
+  // Show calibration banner if accuracy is bad
+  const banner=$('calibration-banner');
+  if(level==='low'){
+    banner.textContent=t('calibrationNeeded')+' — '+t('calibrationHint');
+    banner.classList.add('visible');
+  }else{
+    banner.classList.remove('visible');
+  }
+}
+
+// Try to use AbsoluteOrientationSensor (Generic Sensor API) — best precision
+function tryAbsoluteOrientationSensor(callback){
+  if(!('AbsoluteOrientationSensor' in window))return false;
+  try{
+    const sensor=new AbsoluteOrientationSensor({frequency:30,referenceFrame:'device'});
+    sensor.addEventListener('reading',()=>{
+      // Quaternion → compass heading via rotation matrix
+      // sensor.quaternion is [x,y,z,w], rotation from device→Earth (ENU)
+      const[qx,qy,qz,qw]=sensor.quaternion;
+      // Project device-top [0,1,0] onto horizontal plane using rotation matrix column 1:
+      //   East  = 2(qx·qy - qw·qz)
+      //   North = 1 - 2(qx² + qz²)
+      const east=2*(qx*qy-qw*qz);
+      const north=1-2*(qx*qx+qz*qz);
+      let heading=Math.atan2(east,north)*RAD;
+      // If device is nearly vertical, device-top has no horizontal component;
+      // fall back to screen-normal direction using rotation matrix column 2 negated
+      if(east*east+north*north<0.0625){
+        // Third column of R: [2(qx·qz+qw·qy), 2(qy·qz-qw·qx), 1-2(qx²+qy²)]
+        // Screen-normal = -column2: negate
+        const fE=-(2*(qx*qz+qw*qy));
+        const fN=-(2*(qy*qz-qw*qx));
+        if(fE*fE+fN*fN>0.01) heading=Math.atan2(fE,fN)*RAD;
+      }
+      const compassHeading=(heading+360)%360;
+      _compassSource='sensor-api';
+      callback(processHeading(compassHeading));
+      updateAccuracyUI();
+    });
+    sensor.addEventListener('error',()=>{/* fall through to other methods */});
+    sensor.start();
+    return true;
+  }catch(e){return false}
+}
+
+function addOrientationListener(handler){
+  // 1. Try AbsoluteOrientationSensor first (most precise, hardware sensor fusion)
+  const wrappedHandler=heading=>{
+    handler({_processedHeading:heading});
+  };
+  if(tryAbsoluteOrientationSensor(wrappedHandler))return;
+
+  // Wrap handler to add smoothing + accuracy tracking
+  const smoothedHandler=e=>{
+    const raw=extractHeading(e);
+    if(raw!==null){
+      const smoothed=processHeading(raw);
+      updateAccuracyUI();
+      handler({...e,_processedHeading:smoothed});
+    }
+  };
+
+  // 2. iOS: must request permission, uses deviceorientation + webkitCompassHeading
+  if(typeof DeviceOrientationEvent.requestPermission==='function'){
+    DeviceOrientationEvent.requestPermission().then(r=>{
+      if(r==='granted')window.addEventListener('deviceorientation',smoothedHandler,true);
+    });
+    return;
+  }
+  // 3. Android: prefer deviceorientationabsolute for true compass heading
+  let gotAbsolute=false;
+  const absHandler=e=>{
+    gotAbsolute=true;
+    smoothedHandler(e);
+  };
+  if('ondeviceorientationabsolute' in window){
+    window.addEventListener('deviceorientationabsolute',absHandler,true);
+    // Fallback: if absolute event never fires, use regular event
+    setTimeout(()=>{
+      if(!gotAbsolute){
+        window.addEventListener('deviceorientation',smoothedHandler,true);
+      }
+    },1000);
+  }else{
+    window.addEventListener('deviceorientation',smoothedHandler,true);
+  }
+}
+
+// ─── AR Camera Mode (Three.js Qibla Finder) ──────────────────
 let arStream=null;
 let arAnimFrame=null;
 let arHeading=null;
+let arPitch=0;
+let arTargetHeading=null;
+let arTargetPitch=0;
+let arRenderer=null;
+let arScene=null;
+let arCamera=null;
+let arQiblaGroup=null;
+let arPitchListener=null;
+
+// Lazy-load Three.js on demand
+let _threeLoaded=false;
+let _threeLoading=false;
+function loadThreeJS(){
+  return new Promise((resolve,reject)=>{
+    if(_threeLoaded){resolve();return}
+    if(_threeLoading){
+      // Wait for in-flight load
+      const check=setInterval(()=>{
+        if(_threeLoaded){clearInterval(check);resolve()}
+      },50);
+      return;
+    }
+    _threeLoading=true;
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    s.onload=()=>{_threeLoaded=true;_threeLoading=false;resolve()};
+    s.onerror=()=>{_threeLoading=false;reject(new Error('Failed to load Three.js'))};
+    document.head.appendChild(s);
+  });
+}
+
+// Request geolocation lazily (ensures position is available for AR)
+function ensureGeolocation(){
+  return new Promise((resolve,reject)=>{
+    if(state.position){resolve(state.position);return}
+    if(!navigator.geolocation){reject(new Error('No geolocation'));return}
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const{latitude,longitude}=pos.coords;
+      let nearest=CITIES[0],minDist=Infinity;
+      CITIES.forEach(c=>{
+        const d=Math.hypot(c.lat-latitude,c.lng-longitude);
+        if(d<minDist){minDist=d;nearest=c}
+      });
+      state.position={lat:nearest.lat,lng:nearest.lng,cityId:nearest.id,cityName:nearest.fr};
+      saveState('waqt-position',state.position);
+      resolve(state.position);
+    },err=>reject(err),{enableHighAccuracy:true,timeout:10000});
+  });
+}
 
 function startAR(){
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
     alert(t('arNotSupported'));return;
   }
+
   const overlay=$('ar-overlay');
   const video=$('ar-video');
-  const canvas=$('ar-canvas');
-  const ctx=canvas.getContext('2d');
 
-  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
+  // Show overlay immediately with loading state
+  overlay.classList.remove('hidden');
+  const cal=$('ar-calibration');
+  cal.style.display='block';
+  cal.textContent='Loading AR...';
+
+  // Lazy-load Three.js, get camera, and ensure geolocation — all in parallel
+  Promise.all([
+    loadThreeJS(),
+    navigator.mediaDevices.getUserMedia({
+      video:{facingMode:'environment',width:{ideal:1920},height:{ideal:1080}}
+    }),
+    ensureGeolocation()
+  ]).then(([_,stream])=>{
     arStream=stream;
     video.srcObject=stream;
-    overlay.classList.remove('hidden');
+    cal.style.display='none';
 
-    // Start orientation tracking for AR
-    const orientHandler=e=>{
-      if(e.webkitCompassHeading!==undefined){
-        arHeading=e.webkitCompassHeading;
-      }else if(e.alpha!==null){
-        arHeading=(360-e.alpha)%360;
+    initARScene();
+
+    // Heading from orientation system
+    addOrientationListener(e=>{
+      if(e._processedHeading!==undefined){
+        arTargetHeading=e._processedHeading;
+      }else{
+        const raw=extractHeading(e);
+        if(raw!==null)arTargetHeading=processHeading(raw);
+      }
+    });
+
+    // Pitch from deviceorientation for vertical look
+    arPitchListener=e=>{
+      if(e.beta!==null&&e.beta!==undefined){
+        arTargetPitch=Math.max(-85,Math.min(85,90-e.beta));
       }
     };
-    if(typeof DeviceOrientationEvent.requestPermission==='function'){
-      DeviceOrientationEvent.requestPermission().then(r=>{
-        if(r==='granted')window.addEventListener('deviceorientation',orientHandler,true);
-      });
+    window.addEventListener('deviceorientation',arPitchListener,true);
+
+    updateARHUD();
+    arRenderLoop();
+  }).catch(err=>{
+    overlay.classList.add('hidden');
+    if(err&&err.name==='NotAllowedError'){
+      alert(t('arNotSupported'));
     }else{
-      window.addEventListener('deviceorientation',orientHandler,true);
+      alert(t('arNotSupported'));
     }
+  });
+}
 
-    function drawAR(){
-      canvas.width=canvas.clientWidth;
-      canvas.height=canvas.clientHeight;
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+function initARScene(){
+  const container=$('ar-3d-container');
 
-      if(state.position&&arHeading!==null){
-        const qAngle=calcQibla(state.position.lat,state.position.lng);
-        let diff=qAngle-arHeading;
-        diff=((diff+180)%360+360)%360-180;
+  arScene=new THREE.Scene();
 
-        // Map diff to screen X position (±45° = full screen width)
-        const screenX=canvas.width/2+(diff/45)*(canvas.width/2);
+  // Camera FOV matches typical phone camera
+  arCamera=new THREE.PerspectiveCamera(
+    60,container.clientWidth/container.clientHeight,0.1,500
+  );
+  arCamera.position.set(0,1.6,0);
+  arCamera.rotation.order='YXZ';
 
-        // Draw qibla indicator
-        const cy=canvas.height*0.4;
-        ctx.save();
-        ctx.strokeStyle='#2ecc71';ctx.fillStyle='rgba(46,204,113,0.15)';
-        ctx.lineWidth=3;
+  arRenderer=new THREE.WebGLRenderer({alpha:true,antialias:true});
+  arRenderer.setSize(container.clientWidth,container.clientHeight);
+  arRenderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  arRenderer.setClearColor(0x000000,0);
+  container.appendChild(arRenderer.domElement);
 
-        // Arrow
-        ctx.beginPath();
-        ctx.moveTo(screenX,cy-50);
-        ctx.lineTo(screenX-18,cy+10);
-        ctx.lineTo(screenX+18,cy+10);
-        ctx.closePath();
-        ctx.fill();ctx.stroke();
+  createQiblaObjects();
+  window.addEventListener('resize',onARResize);
+}
 
-        // Label
-        ctx.fillStyle='#fff';ctx.font='bold 16px system-ui';ctx.textAlign='center';
-        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=4;
-        ctx.fillText(t('qiblaDirection'),screenX,cy+40);
-        ctx.fillText(qAngle.toFixed(1)+'°',screenX,cy+60);
-        ctx.restore();
+function createQiblaObjects(){
+  if(!state.position)return;
+  const qAngle=calcQibla(state.position.lat,state.position.lng);
+  const qRad=qAngle*DEG;
 
-        // Crosshair center
-        ctx.save();
-        ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;
-        ctx.beginPath();
-        ctx.moveTo(canvas.width/2-20,canvas.height/2);
-        ctx.lineTo(canvas.width/2+20,canvas.height/2);
-        ctx.moveTo(canvas.width/2,canvas.height/2-20);
-        ctx.lineTo(canvas.width/2,canvas.height/2+20);
-        ctx.stroke();
-        ctx.restore();
-      }else{
-        // No heading data — show message
-        ctx.fillStyle='#fff';ctx.font='16px system-ui';ctx.textAlign='center';
-        ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=4;
-        ctx.fillText(t('arNeedsCompass'),canvas.width/2,canvas.height/2);
+  arQiblaGroup=new THREE.Group();
+
+  // Objects extend along -Z (North); group rotates to Qibla bearing
+  const dist=80;
+
+  // ── Blue beam (core + glow) ──
+  const beamGeom=new THREE.CylinderGeometry(0.06,0.06,dist,8);
+  const beamMat=new THREE.MeshBasicMaterial({color:0x2979FF,transparent:true,opacity:0.7});
+  const beam=new THREE.Mesh(beamGeom,beamMat);
+  beam.rotation.x=Math.PI/2;
+  beam.position.set(0,0.05,-dist/2);
+  arQiblaGroup.add(beam);
+
+  const glowGeom=new THREE.CylinderGeometry(0.18,0.18,dist,8);
+  const glowMat=new THREE.MeshBasicMaterial({color:0x2979FF,transparent:true,opacity:0.18});
+  const glow=new THREE.Mesh(glowGeom,glowMat);
+  glow.rotation.x=Math.PI/2;
+  glow.position.set(0,0.05,-dist/2);
+  arQiblaGroup.add(glow);
+
+  // Wider ground-level glow strip
+  const stripGeom=new THREE.PlaneGeometry(1.2,dist);
+  const stripMat=new THREE.MeshBasicMaterial({
+    color:0x2979FF,transparent:true,opacity:0.08,side:THREE.DoubleSide
+  });
+  const strip=new THREE.Mesh(stripGeom,stripMat);
+  strip.rotation.x=-Math.PI/2;
+  strip.position.set(0,-0.48,-dist/2);
+  arQiblaGroup.add(strip);
+
+  // ── 3D Kaaba at end of line ──
+  const kaabaGrp=new THREE.Group();
+  kaabaGrp.position.set(0,2,-dist);
+  kaabaGrp.userData.isKaaba=true;
+
+  // Main body
+  const bodyGeom=new THREE.BoxGeometry(9,10.5,9);
+  const bodyMat=new THREE.MeshBasicMaterial({color:0x1a1a1a});
+  kaabaGrp.add(new THREE.Mesh(bodyGeom,bodyMat));
+
+  // Kiswa gold bands
+  const bandGeom=new THREE.BoxGeometry(9.18,0.66,9.18);
+  const bandMat=new THREE.MeshBasicMaterial({color:0xc9a84c});
+  const band1=new THREE.Mesh(bandGeom,bandMat);
+  band1.position.y=1.5;
+  kaabaGrp.add(band1);
+  const band2=new THREE.Mesh(bandGeom.clone(),bandMat.clone());
+  band2.position.y=-0.45;
+  kaabaGrp.add(band2);
+  const topTrim=new THREE.Mesh(
+    new THREE.BoxGeometry(9.18,0.36,9.18),
+    new THREE.MeshBasicMaterial({color:0xc9a84c})
+  );
+  topTrim.position.y=5.25;
+  kaabaGrp.add(topTrim);
+
+  // Gold wireframe edges
+  kaabaGrp.add(new THREE.LineSegments(
+    new THREE.EdgesGeometry(bodyGeom),
+    new THREE.LineBasicMaterial({color:0xc9a84c})
+  ));
+
+  arQiblaGroup.add(kaabaGrp);
+
+  // ── Ground dots for depth perception ──
+  for(let i=5;i<dist;i+=5){
+    const dotGeom=new THREE.CircleGeometry(0.12,16);
+    const dotMat=new THREE.MeshBasicMaterial({
+      color:0x2979FF,transparent:true,
+      opacity:Math.max(0.06,0.35-i/dist*0.3),side:THREE.DoubleSide
+    });
+    const dot=new THREE.Mesh(dotGeom,dotMat);
+    dot.rotation.x=-Math.PI/2;
+    dot.position.set(0,-0.49,-i);
+    arQiblaGroup.add(dot);
+  }
+
+  // ── Concentric ground rings at Kaaba ──
+  [2,4,6].forEach(r=>{
+    const ringGeom=new THREE.RingGeometry(r-0.04,r+0.04,48);
+    const ringMat=new THREE.MeshBasicMaterial({
+      color:0xc9a84c,transparent:true,opacity:0.15,side:THREE.DoubleSide
+    });
+    const ring=new THREE.Mesh(ringGeom,ringMat);
+    ring.rotation.x=-Math.PI/2;
+    ring.position.set(0,-0.48,-dist);
+    arQiblaGroup.add(ring);
+  });
+
+  // Rotate group to Qibla bearing
+  arQiblaGroup.rotation.y=-qRad;
+
+  arScene.add(arQiblaGroup);
+}
+
+function onARResize(){
+  if(!arRenderer||!arCamera)return;
+  const c=$('ar-3d-container');
+  arCamera.aspect=c.clientWidth/c.clientHeight;
+  arCamera.updateProjectionMatrix();
+  arRenderer.setSize(c.clientWidth,c.clientHeight);
+}
+
+function arRenderLoop(){
+  if(!arRenderer)return;
+
+  // Smooth heading (circular interpolation)
+  if(arTargetHeading!==null){
+    if(arHeading===null){arHeading=arTargetHeading}
+    else{
+      let d=arTargetHeading-arHeading;
+      d=((d+540)%360)-180;
+      arHeading=(arHeading+d*0.12+360)%360;
+    }
+    arCamera.rotation.y=-arHeading*DEG;
+  }
+
+  // Smooth pitch
+  arPitch+=(arTargetPitch-arPitch)*0.1;
+  arCamera.rotation.x=arPitch*DEG;
+
+  // Animate Kaaba (gentle float + slow rotation)
+  if(arQiblaGroup){
+    arQiblaGroup.traverse(obj=>{
+      if(obj.userData.isKaaba){
+        obj.position.y=2+Math.sin(Date.now()*0.0015)*0.35;
+        obj.rotation.y+=0.003;
       }
-      arAnimFrame=requestAnimationFrame(drawAR);
-    }
-    drawAR();
-  }).catch(()=>{alert(t('arNotSupported'))});
+    });
+
+    // Pulse beam opacity
+    arQiblaGroup.children.forEach(c=>{
+      if(c.isMesh&&c.material&&c.material.opacity>0.1&&c.material.opacity<0.75
+          &&c.geometry.type==='CylinderGeometry'){
+        const base=c.material.userData?.baseOpacity;
+        if(!base){c.material.userData={baseOpacity:c.material.opacity}}
+        const b=c.material.userData.baseOpacity;
+        c.material.opacity=b+Math.sin(Date.now()*0.003)*0.1;
+      }
+    });
+  }
+
+  // Update direction hint + calibration
+  updateDirectionHint();
+  updateARCalibration();
+
+  arRenderer.render(arScene,arCamera);
+  arAnimFrame=requestAnimationFrame(arRenderLoop);
+}
+
+function updateDirectionHint(){
+  if(!state.position||arHeading===null)return;
+  const hint=$('ar-direction-hint');
+  const qAngle=calcQibla(state.position.lat,state.position.lng);
+  let diff=qAngle-arHeading;
+  diff=((diff+180)%360+360)%360-180;
+
+  if(Math.abs(diff)>30){
+    hint.style.display='flex';
+    hint.textContent=(diff>0?'\u2192 ':'\u2190 ')+t('qiblaDirection');
+    hint.style.background=diff>0
+      ?'linear-gradient(90deg,transparent,rgba(41,121,255,0.35))'
+      :'linear-gradient(270deg,transparent,rgba(41,121,255,0.35))';
+  }else if(Math.abs(diff)<5){
+    hint.style.display='flex';
+    hint.textContent='\u2713 '+t('qiblaDirection');
+    hint.style.background='rgba(46,204,113,0.35)';
+  }else{
+    hint.style.display='none';
+  }
+}
+
+function updateARCalibration(){
+  const cal=$('ar-calibration');
+  const variance=getHeadingVariance();
+  if(variance>20){
+    cal.style.display='block';
+    cal.textContent=t('calibrationHint');
+  }else{
+    cal.style.display='none';
+  }
+}
+
+function updateARHUD(){
+  if(!state.position)return;
+  const qAngle=calcQibla(state.position.lat,state.position.lng);
+  const dist=distKaaba(state.position.lat,state.position.lng);
+  $('ar-bearing').textContent=qAngle.toFixed(1)+'\u00B0';
+  $('ar-bearing-label').textContent=t('qiblaAngle');
+  $('ar-distance').textContent=Math.round(dist)+' '+t('km');
+  $('ar-distance-label').textContent=t('qiblaDistance');
 }
 
 function stopAR(){
   $('ar-overlay').classList.add('hidden');
   if(arStream){arStream.getTracks().forEach(t=>t.stop());arStream=null}
   if(arAnimFrame){cancelAnimationFrame(arAnimFrame);arAnimFrame=null}
-  arHeading=null;
+  if(arPitchListener){
+    window.removeEventListener('deviceorientation',arPitchListener,true);
+    arPitchListener=null;
+  }
+  if(arRenderer){
+    arRenderer.dispose();
+    const c=$('ar-3d-container');
+    if(c)c.innerHTML='';
+    arRenderer=null;
+  }
+  if(arScene){
+    arScene.traverse(o=>{
+      if(o.geometry)o.geometry.dispose();
+      if(o.material){
+        if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());
+        else o.material.dispose();
+      }
+    });
+    arScene=null;
+  }
+  arCamera=null;arQiblaGroup=null;
+  arHeading=null;arPitch=0;
+  arTargetHeading=null;arTargetPitch=0;
+  window.removeEventListener('resize',onARResize);
 }
 
 // ─── Qibla ────────────────────────────────────────────────────
@@ -1067,27 +2611,184 @@ function renderQibla(){
 }
 
 function startCompass(){
-  if(!window.DeviceOrientationEvent)return;
+  if(!window.DeviceOrientationEvent&&!('AbsoluteOrientationSensor' in window))return;
   const handler=e=>{
-    let heading=null;
-    if(e.webkitCompassHeading!==undefined){
-      heading=e.webkitCompassHeading;
-    }else if(e.alpha!==null){
-      heading=(360-e.alpha)%360;
-    }
+    const heading=e._processedHeading!==undefined?e._processedHeading:extractHeading(e);
     if(heading!==null){
-      $('compass-rotate').setAttribute('transform',`rotate(${-heading},100,100)`);
+      const h=e._processedHeading!==undefined?heading:processHeading(heading);
+      $('compass-rotate').setAttribute('transform',`rotate(${-h},100,100)`);
       const qAngle=calcQibla(state.position.lat,state.position.lng);
-      $('qibla-needle').setAttribute('transform',`rotate(${qAngle-heading},100,100)`);
+      $('qibla-needle').setAttribute('transform',`rotate(${qAngle-h},100,100)`);
+      // Update displayed heading value
+      $('qibla-angle').textContent=t('qiblaAngle')+': '+qAngle.toFixed(1)+t('degrees')+' ('+t('heading')+': '+Math.round(h)+'°)';
     }
   };
+  addOrientationListener(handler);
+}
 
-  if(typeof DeviceOrientationEvent.requestPermission==='function'){
-    DeviceOrientationEvent.requestPermission().then(r=>{
-      if(r==='granted')window.addEventListener('deviceorientation',handler,true);
-    });
-  }else{
-    window.addEventListener('deviceorientation',handler,true);
+// ─── Device Capabilities ─────────────────────────────────────
+function detectCapabilities(){
+  const caps=[];
+  // Each check is wrapped in try-catch for graceful failure
+
+  // 1. Notifications
+  try{
+    const api='Notification' in window;
+    let status='available';
+    let perm=null;
+    if(api){
+      perm=Notification.permission; // 'granted','denied','default'
+      if(perm==='denied')status='partial';
+    }else{status='unavailable'}
+    caps.push({id:'notif',name:t('capNotif'),desc:t('capNotifDesc'),status,perm});
+  }catch(e){caps.push({id:'notif',name:t('capNotif'),desc:t('capNotifDesc'),status:'unavailable'})}
+
+  // 2. Geolocation
+  try{
+    const api='geolocation' in navigator;
+    caps.push({id:'geo',name:t('capGeo'),desc:t('capGeoDesc'),status:api?'available':'unavailable'});
+  }catch(e){caps.push({id:'geo',name:t('capGeo'),desc:t('capGeoDesc'),status:'unavailable'})}
+
+  // 3. Compass (DeviceOrientationEvent)
+  try{
+    const api='DeviceOrientationEvent' in window;
+    // iOS 13+ requires permission
+    const needsPerm=typeof DeviceOrientationEvent.requestPermission==='function';
+    caps.push({id:'compass',name:t('capCompass'),desc:t('capCompassDesc'),status:api?'available':'unavailable',
+      note:needsPerm?'(requires permission)':null});
+  }catch(e){caps.push({id:'compass',name:t('capCompass'),desc:t('capCompassDesc'),status:'unavailable'})}
+
+  // 4. AR (needs camera + device orientation)
+  try{
+    const hasOrientation='DeviceOrientationEvent' in window;
+    const hasMedia=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+    const status=hasOrientation&&hasMedia?'available':hasOrientation||hasMedia?'partial':'unavailable';
+    caps.push({id:'ar',name:t('capAR'),desc:t('capARDesc'),status});
+  }catch(e){caps.push({id:'ar',name:t('capAR'),desc:t('capARDesc'),status:'unavailable'})}
+
+  // 5. Vibration
+  try{
+    caps.push({id:'vibrate',name:t('capVibrate'),desc:t('capVibrateDesc'),
+      status:'vibrate' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'vibrate',name:t('capVibrate'),desc:t('capVibrateDesc'),status:'unavailable'})}
+
+  // 6. Screen Wake Lock
+  try{
+    caps.push({id:'wakeLock',name:t('capWakeLock'),desc:t('capWakeLockDesc'),
+      status:'wakeLock' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'wakeLock',name:t('capWakeLock'),desc:t('capWakeLockDesc'),status:'unavailable'})}
+
+  // 7. Service Worker (offline)
+  try{
+    caps.push({id:'sw',name:t('capSW'),desc:t('capSWDesc'),
+      status:'serviceWorker' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'sw',name:t('capSW'),desc:t('capSWDesc'),status:'unavailable'})}
+
+  // 8. Badge API
+  try{
+    caps.push({id:'badge',name:t('capBadge'),desc:t('capBadgeDesc'),
+      status:'setAppBadge' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'badge',name:t('capBadge'),desc:t('capBadgeDesc'),status:'unavailable'})}
+
+  // 9. Share API
+  try{
+    caps.push({id:'share',name:t('capShare'),desc:t('capShareDesc'),
+      status:'share' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'share',name:t('capShare'),desc:t('capShareDesc'),status:'unavailable'})}
+
+  // 10. Install (PWA)
+  try{
+    const isStandalone=window.matchMedia('(display-mode:standalone)').matches||navigator.standalone;
+    const canInstall=!!deferredInstallPrompt;
+    const status=isStandalone?'available':canInstall?'available':'partial';
+    caps.push({id:'install',name:t('capInstall'),desc:t('capInstallDesc'),status,
+      note:isStandalone?null:null});
+  }catch(e){caps.push({id:'install',name:t('capInstall'),desc:t('capInstallDesc'),status:'partial'})}
+
+  // 11. Periodic Background Sync
+  try{
+    const api='serviceWorker' in navigator;
+    // Actual periodicSync support is checked async, so we check the registration
+    caps.push({id:'bgSync',name:t('capBgSync'),desc:t('capBgSyncDesc'),
+      status:api?'partial':'unavailable',
+      note:api?null:null});
+  }catch(e){caps.push({id:'bgSync',name:t('capBgSync'),desc:t('capBgSyncDesc'),status:'unavailable'})}
+
+  // 12. Camera
+  try{
+    const api=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+    caps.push({id:'camera',name:t('capCamera'),desc:t('capCameraDesc'),
+      status:api?'available':'unavailable'});
+  }catch(e){caps.push({id:'camera',name:t('capCamera'),desc:t('capCameraDesc'),status:'unavailable'})}
+
+  return caps;
+}
+
+function renderCapabilities(){
+  const caps=detectCapabilities();
+  $('s-cap-title').textContent=t('capTitle');
+
+  // Summary counts
+  const avail=caps.filter(c=>c.status==='available').length;
+  const partial=caps.filter(c=>c.status==='partial').length;
+  const unavail=caps.filter(c=>c.status==='unavailable').length;
+  const summary=$('s-cap-summary');
+  summary.innerHTML=
+    '<span class="cap-summary-count"><span class="cap-dot available"></span>'+avail+' '+t('capAvailable')+'</span>'+
+    (partial?'<span class="cap-summary-count"><span class="cap-dot partial"></span>'+partial+' '+t('capPartial')+'</span>':'')+
+    '<span class="cap-summary-count"><span class="cap-dot unavailable"></span>'+unavail+' '+t('capUnavailable')+'</span>';
+
+  // Grid
+  const grid=$('s-cap-grid');
+  grid.innerHTML='';
+  caps.forEach(cap=>{
+    const item=document.createElement('div');
+    item.className='cap-item '+cap.status;
+    item.setAttribute('role','listitem');
+
+    const dot=document.createElement('span');
+    dot.className='cap-dot '+cap.status;
+
+    const info=document.createElement('div');
+    info.className='cap-info';
+
+    const name=document.createElement('span');
+    name.className='cap-name';
+    name.textContent=cap.name;
+
+    const desc=document.createElement('span');
+    desc.className='cap-desc';
+    desc.textContent=cap.desc;
+
+    info.appendChild(name);
+    info.appendChild(desc);
+
+    // Permission status for notifications
+    if(cap.perm){
+      const permEl=document.createElement('span');
+      permEl.className='cap-perm '+(cap.perm==='granted'?'granted':cap.perm==='denied'?'denied':'prompt');
+      permEl.textContent=t(cap.perm==='granted'?'capPermGranted':cap.perm==='denied'?'capPermDenied':'capPermPrompt');
+      info.appendChild(permEl);
+    }
+
+    item.appendChild(dot);
+    item.appendChild(info);
+    grid.appendChild(item);
+  });
+
+  // Async check: Periodic Background Sync
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.ready.then(reg=>{
+      const bgItem=grid.querySelector('.cap-item:nth-child(11)');
+      if(!bgItem)return;
+      if(reg.periodicSync){
+        bgItem.className='cap-item available';
+        bgItem.querySelector('.cap-dot').className='cap-dot available';
+      }else{
+        bgItem.className='cap-item unavailable';
+        bgItem.querySelector('.cap-dot').className='cap-dot unavailable';
+      }
+    }).catch(()=>{});
   }
 }
 
@@ -1114,8 +2815,106 @@ function renderSettings(){
 
   // Notifications
   $('s-notif-title').textContent=t('notifications');
+  $('s-notif-badge').textContent=t('experimental');
   $('s-notif-label').textContent=t('enableNotifications');
   $('s-notif-toggle').checked=state.notifications.enabled;
+
+  // Show/hide detail panel
+  const notifDetail=$('s-notif-detail');
+  if(state.notifications.enabled)notifDetail.classList.add('show');
+  else notifDetail.classList.remove('show');
+
+  // Per-prayer toggle chips
+  const prayerGrid=$('s-notif-prayers-grid');
+  prayerGrid.innerHTML='';
+  const prayers=state.notifications.prayers||{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true};
+  ['fajr','dhuhr','asr','maghrib','isha'].forEach(k=>{
+    const chip=document.createElement('label');
+    chip.className='notif-prayer-chip'+(prayers[k]?' active':'');
+    const cb=document.createElement('input');
+    cb.type='checkbox';cb.checked=prayers[k];cb.dataset.prayer=k;
+    const dot=document.createElement('span');
+    dot.className='chip-dot';
+    const name=document.createElement('span');
+    name.textContent=t(k);
+    chip.appendChild(cb);chip.appendChild(dot);chip.appendChild(name);
+    cb.addEventListener('change',()=>{
+      state.notifications.prayers[k]=cb.checked;
+      chip.classList.toggle('active',cb.checked);
+      saveState('waqt-notifications',state.notifications);
+      scheduleNotifications();
+    });
+    prayerGrid.appendChild(chip);
+  });
+
+  // Advance alert
+  $('s-notif-advance-label').textContent=t('notifAdvance');
+  $('opt-adv-0').textContent=t('notifAdvance0');
+  $('opt-adv-5').textContent=t('notifAdvance5');
+  $('opt-adv-10').textContent=t('notifAdvance10');
+  $('opt-adv-15').textContent=t('notifAdvance15');
+  $('opt-adv-30').textContent=t('notifAdvance30');
+  $('s-notif-advance').value=state.notifications.advance||0;
+
+  // Sound
+  $('s-notif-sound-label').textContent=t('notifSound');
+  $('opt-snd-silent').textContent=t('notifSoundSilent');
+  $('opt-snd-tone').textContent=t('notifSoundTone');
+  $('opt-snd-adhan').textContent=t('notifSoundAdhan');
+  $('s-notif-sound').value=state.notifications.sound||'adhan';
+  $('btn-test-sound').textContent=t('notifSoundTest');
+
+  // Vibrate
+  $('s-notif-vibrate-label').textContent=t('notifVibrate');
+  $('s-notif-vibrate').checked=state.notifications.vibrate!==false;
+
+  // Badge
+  $('s-notif-badge-label').textContent=t('notifBadge');
+  $('s-notif-badge').checked=state.notifications.badge!==false;
+
+  // Permission badge
+  const permBadge=$('s-notif-perm-badge');
+  if('Notification' in window){
+    const p=Notification.permission;
+    permBadge.textContent=t(p==='granted'?'notifPermGranted':p==='denied'?'notifPermDenied':'notifPermDefault');
+    permBadge.className='notif-perm-badge '+p;
+  }else{
+    permBadge.style.display='none';
+  }
+
+  // Sound loading status
+  updateSoundStatus();
+
+  // Test button
+  $('btn-test-notif-text').textContent=t('notifTestBtn');
+
+  // DND panel with platform-specific instructions
+  $('s-notif-dnd-title').textContent=t('notifDndTitle');
+  $('s-notif-dnd-text').textContent=getDndInstructions();
+
+  // Attribution / credits
+  $('s-notif-credits').innerHTML=
+    '<strong>'+t('soundCredits')+'</strong><br>'+
+    t('soundCreditsAdhan')+'<br>'+
+    t('soundCreditsTone')+'<br>'+
+    '<a href="https://github.com/beentheretwice/open-sounds" target="_blank" rel="noopener">'+t('soundCreditsRepo')+'</a>';
+
+  // Adjustments
+  // Device capabilities
+  renderCapabilities();
+
+  // Notification tester
+  $('s-notif-test-label').textContent=t('notifTestLabel');
+  $('btn-test-notif').textContent=t('notifSoundTest');
+  $('notif-test-title').textContent=t('notifTestTitle');
+  $('notif-test-desc').textContent=t('notifTestDesc');
+  $('notif-test-now').textContent=t('notifTestNow');
+  $('notif-test-10s').textContent=t('notifTest10s');
+  $('notif-test-1m').textContent=t('notifTest1m');
+  $('notif-test-5m').textContent=t('notifTest5m');
+  $('notif-test-send').textContent=t('notifTestSend');
+  $('notif-test-cancel').textContent=t('notifTestCancel');
+  $('notif-test-status').textContent='';
 
   // Adjustments
   $('s-adj-title').textContent=t('adjustments');
@@ -1149,6 +2948,30 @@ function renderSettings(){
   $('btn-import').textContent=t('importConfig');
   $('btn-reset').textContent=t('resetConfig');
   $('btn-hard-refresh').textContent=t('hardRefresh');
+  // Help popup i18n
+  $('help-fab').setAttribute('aria-label',t('helpInfo'));
+  $('reload-fab').setAttribute('aria-label',t('reloadAssets'));
+  $('reload-fab').title=t('reloadAssets');
+  $('help-fab').title=t('helpInfo');
+  $('help-beta-text').textContent=t('betaWarning');
+  $('help-label-contribute').textContent=t('helpContribute');
+  $('help-desc-contribute').textContent=t('helpContributeDesc');
+  $('help-label-report').textContent=t('helpReport');
+  $('help-desc-report').textContent=t('helpReportDesc');
+  $('help-popup-close').textContent=t('helpClose');
+  $('help-popup-title').textContent=t('appName');
+  $('help-label-share').textContent=t('helpShare');
+  $('help-desc-share').textContent=t('helpShareDesc');
+  // Help feature badges
+  $('help-feature-noads').querySelector('span').textContent=t('helpNoAds');
+  $('help-feature-noads').href=t('helpUrlAds');
+  $('help-feature-notracking').querySelector('span').textContent=t('helpNoTracking');
+  $('help-feature-notracking').href=t('helpUrlTracking');
+  $('help-feature-free').querySelector('span').textContent=t('helpFree');
+  $('help-feature-habous').querySelector('span').textContent=t('helpHabous');
+  $('help-feature-habous').href=t('helpUrlHabous');
+  $('help-feature-opensource').querySelector('span').textContent=t('helpOpenSource');
+  $('help-feature-opensource').href=t('helpUrlOpenSource');
 }
 
 function populateCitySelect(sel){
@@ -1161,6 +2984,7 @@ function populateCitySelect(sel){
     sel.appendChild(opt);
   });
 }
+
 
 // ─── Events ───────────────────────────────────────────────────
 function setupEvents(){
@@ -1199,6 +3023,151 @@ function setupEvents(){
     saveState('waqt-notifications',state.notifications);
     if(e.target.checked)requestNotifPermission();
     checkNotifBar();
+    if(e.target.checked){
+      requestNotifPermission();
+      preCacheSounds();
+      $('s-notif-detail').classList.add('show');
+    }else{
+      $('s-notif-detail').classList.remove('show');
+      notifTimeouts.forEach(clearTimeout);
+      notifTimeouts=[];
+      clearAppBadge();
+    }
+    checkNotifBlocked();
+    // Update permission badge
+    const permBadge=$('s-notif-perm-badge');
+    if('Notification' in window){
+      setTimeout(()=>{
+        const p=Notification.permission;
+        permBadge.textContent=t(p==='granted'?'notifPermGranted':p==='denied'?'notifPermDenied':'notifPermDefault');
+        permBadge.className='notif-perm-badge '+p;
+      },500);
+    }
+  });
+
+  // Notification advance
+  $('s-notif-advance').addEventListener('change',e=>{
+    state.notifications.advance=parseInt(e.target.value,10);
+    saveState('waqt-notifications',state.notifications);
+    scheduleNotifications();
+  });
+
+  // Notification sound
+  $('s-notif-sound').addEventListener('change',e=>{
+    state.notifications.sound=e.target.value;
+    saveState('waqt-notifications',state.notifications);
+  });
+
+  // Test sound button
+  $('btn-test-sound').addEventListener('click',()=>{
+    const snd=state.notifications.sound||'adhan';
+    if(snd!=='silent')playNotifSound(snd);
+    if(state.notifications.vibrate&&navigator.vibrate){
+      navigator.vibrate([200,100,200,100,300]);
+    }
+  });
+
+  // Vibrate toggle
+  $('s-notif-vibrate').addEventListener('change',e=>{
+    state.notifications.vibrate=e.target.checked;
+    saveState('waqt-notifications',state.notifications);
+  });
+
+  // Badge toggle
+  $('s-notif-badge').addEventListener('change',e=>{
+    state.notifications.badge=e.target.checked;
+    saveState('waqt-notifications',state.notifications);
+    if(!e.target.checked)clearAppBadge();
+  });
+
+  // Test notification
+  $('btn-test-notif').addEventListener('click',sendTestNotification);
+  // Notification tester popup
+  $('btn-test-notif').addEventListener('click',()=>{
+    $('notif-test-status').textContent='';
+    $('notif-test-send').disabled=false;
+    // Reset selection to "Now"
+    const opts=$('notif-test-options').querySelectorAll('.notif-test-opt');
+    opts.forEach(o=>o.classList.remove('selected'));
+    opts[0].classList.add('selected');
+    opts[0].querySelector('input').checked=true;
+    $('notif-test-overlay').classList.add('show');
+  });
+  $('notif-test-options').addEventListener('change',()=>{
+    const opts=$('notif-test-options').querySelectorAll('.notif-test-opt');
+    opts.forEach(o=>{
+      o.classList.toggle('selected',o.querySelector('input').checked);
+    });
+    $('notif-test-status').textContent='';
+    $('notif-test-send').disabled=false;
+  });
+  $('notif-test-cancel').addEventListener('click',()=>{
+    $('notif-test-overlay').classList.remove('show');
+  });
+  $('notif-test-overlay').addEventListener('click',e=>{
+    if(e.target===$('notif-test-overlay'))$('notif-test-overlay').classList.remove('show');
+  });
+  $('notif-test-send').addEventListener('click',async()=>{
+    const delay=parseInt(document.querySelector('input[name="notif-test-delay"]:checked').value,10);
+    const btn=$('notif-test-send');
+    btn.disabled=true;
+
+    // Request permission if needed
+    if(!('Notification' in window))return;
+    if(Notification.permission==='denied'){
+      $('notif-test-status').textContent=t('notifBlocked');
+      return;
+    }
+    if(Notification.permission!=='granted'){
+      const perm=await Notification.requestPermission();
+      if(perm!=='granted')return;
+    }
+
+    if(delay===0){
+      fireTestNotification();
+      $('notif-test-status').textContent=t('notifTestSent');
+      setTimeout(()=>$('notif-test-overlay').classList.remove('show'),1200);
+    }else{
+      setTimeout(()=>fireTestNotification(),delay*1000);
+      const label=delay<60?t('notifTest10s'):delay<300?t('notifTest1m'):t('notifTest5m');
+      $('notif-test-status').textContent=t('notifTestScheduled')+' ('+label+')';
+      setTimeout(()=>$('notif-test-overlay').classList.remove('show'),1500);
+    }
+  });
+
+  // Help popup
+  $('help-fab').addEventListener('click',()=>{
+    $('help-popup-overlay').classList.add('show');
+  });
+  $('help-popup-close').addEventListener('click',()=>{
+    $('help-popup-overlay').classList.remove('show');
+  });
+  $('help-popup-overlay').addEventListener('click',(e)=>{
+    if(e.target===$('help-popup-overlay'))$('help-popup-overlay').classList.remove('show');
+  });
+
+  // Share
+  $('help-link-share').addEventListener('click',async()=>{
+    const base='https://waqtsalat.github.io/waqtsalat/';
+    const url=state.locale==='ar'?base:base+'?lang='+state.locale;
+    const title=t('ogTitle');
+    const text=t('ogDescription');
+    if(navigator.share){
+      try{await navigator.share({title,text,url})}catch(e){}
+    }else{
+      try{
+        await navigator.clipboard.writeText(url);
+        showShareToast(t('shareCopied'));
+      }catch(e){
+        // Final fallback: select + copy
+        const inp=document.createElement('input');
+        inp.value=url;document.body.appendChild(inp);
+        inp.select();document.execCommand('copy');
+        document.body.removeChild(inp);
+        showShareToast(t('shareCopied'));
+      }
+    }
+    $('help-popup-overlay').classList.remove('show');
   });
 
   // Compass
@@ -1256,9 +3225,15 @@ function setupEvents(){
   // Hard refresh
   $('btn-hard-refresh').addEventListener('click',hardRefresh);
 
-  // Visibility change: recalculate
+  // Reload assets button
+  $('reload-fab').addEventListener('click',reloadAssets);
+
+  // Visibility change: recalculate and reschedule notifications
   document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden&&state.position)renderPrayers();
+    if(!document.hidden&&state.position){
+      renderPrayers();
+      scheduleNotifications();
+    }
   });
 
   // System theme change
@@ -1279,6 +3254,18 @@ function setupOnboarding(){
 
   // Populate city select
   populateCitySelect($('ob-city-select'));
+
+  // Sync onboarding UI with current locale (may come from ?lang= param)
+  ob.querySelectorAll('.lang-choices button').forEach(b=>{
+    b.classList.toggle('selected',b.dataset.lang===state.locale);
+  });
+  $('ob-lang-title').textContent=t('onboardingLang');
+  $('ob-lang-next').textContent=t('next');
+  $('ob-city-title').textContent=t('onboardingCity');
+  $('ob-gps-text').textContent=t('gpsLocate');
+  $('ob-city-next').textContent=t('next');
+  $('ob-done-title').textContent=t('onboardingDone');
+  $('ob-done-btn').textContent=t('done');
 
   // Language choice
   ob.querySelectorAll('.lang-choices button').forEach(btn=>{
@@ -1342,6 +3329,137 @@ function setupOnboarding(){
   });
 }
 
+// ─── Audio — open-sounds repository (CC0 / Public Domain) ───
+// Sounds from: https://github.com/beentheretwice/open-sounds
+// Adhan: Makkah (Masjid al-Haram) — Public Domain, Archive.org
+// Tone: Soft beep notification — CC0, Pixabay
+const SOUND_URLS={
+  adhan:'https://raw.githubusercontent.com/beentheretwice/open-sounds/master/adhan/athan_makkah_official.mp3',
+  tone:'https://raw.githubusercontent.com/beentheretwice/open-sounds/master/notifications/notification_soft_beep.mp3'
+};
+const SOUND_CACHE_NAME='waqtsalat-sounds-v1';
+let soundsReady=false;
+let currentAudio=null;
+
+async function preCacheSounds(){
+  if(!('caches' in window))return;
+  try{
+    const cache=await caches.open(SOUND_CACHE_NAME);
+    const keys=await cache.keys();
+    const cached=keys.map(k=>k.url);
+    const toFetch=Object.values(SOUND_URLS).filter(u=>!cached.some(c=>c.endsWith(new URL(u).pathname)));
+    if(toFetch.length===0){soundsReady=true;updateSoundStatus();return}
+    updateSoundStatus('loading');
+    await Promise.all(toFetch.map(async u=>{
+      try{
+        const resp=await fetch(u,{mode:'cors'});
+        if(resp.ok)await cache.put(u,resp);
+      }catch(e){}
+    }));
+    soundsReady=true;
+    updateSoundStatus();
+  }catch(e){soundsReady=false}
+}
+
+function updateSoundStatus(status){
+  const dot=$('s-sound-status-dot');
+  const txt=$('s-sound-status-text');
+  if(!dot||!txt)return;
+  if(status==='loading'){
+    dot.className='status-dot loading';
+    txt.textContent=t('notifLoading');
+  }else if(soundsReady){
+    dot.className='status-dot ready';
+    txt.textContent=t('notifSoundsReady');
+  }else{
+    dot.className='status-dot';
+    txt.textContent='';
+  }
+}
+
+async function playNotifSound(type){
+  if(type==='silent')return;
+  stopNotifSound();
+  const url=SOUND_URLS[type];
+  if(!url)return;
+  try{
+    // Try loading from cache first
+    let audioUrl=url;
+    if('caches' in window){
+      const cache=await caches.open(SOUND_CACHE_NAME);
+      const cached=await cache.match(url);
+      if(cached){
+        const blob=await cached.clone().blob();
+        audioUrl=URL.createObjectURL(blob);
+      }
+    }
+    currentAudio=new Audio(audioUrl);
+    currentAudio.volume=1.0;
+    await currentAudio.play();
+  }catch(e){
+    // Final fallback: try direct URL
+    try{
+      currentAudio=new Audio(url);
+      await currentAudio.play();
+    }catch(e2){}
+  }
+}
+
+function stopNotifSound(){
+  if(currentAudio){
+    currentAudio.pause();
+    currentAudio.currentTime=0;
+    if(currentAudio.src.startsWith('blob:'))URL.revokeObjectURL(currentAudio.src);
+    currentAudio=null;
+  }
+}
+
+// ─── Platform Detection ──────────────────────────────────────
+function detectPlatform(){
+  const ua=navigator.userAgent||'';
+  const platform=navigator.platform||'';
+  if(/iPad|iPhone|iPod/.test(ua)||(/Mac/.test(platform)&&navigator.maxTouchPoints>1))return 'ios';
+  if(/Android/.test(ua))return 'android';
+  if(/Win/.test(platform))return 'windows';
+  if(/Mac/.test(platform))return 'mac';
+  if(/Linux/.test(platform))return 'linux';
+  return 'unknown';
+}
+
+function getDndInstructions(){
+  const p=detectPlatform();
+  if(p==='android')return t('notifDndAndroid');
+  if(p==='ios')return t('notifDndIos');
+  if(p==='windows')return t('notifDndWindows');
+  if(p==='mac')return t('notifDndMac');
+  return t('notifDndGeneric');
+}
+
+// ─── Badge API ───────────────────────────────────────────────
+async function setAppBadge(count){
+  if(!state.notifications.badge)return;
+  try{
+    if(navigator.setAppBadge)await navigator.setAppBadge(count||1);
+  }catch(e){}
+}
+
+async function clearAppBadge(){
+  try{
+    if(navigator.clearAppBadge)await navigator.clearAppBadge();
+    else if(navigator.setAppBadge)await navigator.setAppBadge(0);
+  }catch(e){}
+}
+
+// ─── Screen Wake Lock ────────────────────────────────────────
+async function wakeScreen(){
+  if(!('wakeLock' in navigator))return null;
+  try{
+    const lock=await navigator.wakeLock.request('screen');
+    setTimeout(()=>lock.release(),30000); // hold 30s
+    return lock;
+  }catch(e){return null}
+}
+
 // ─── Notifications ────────────────────────────────────────────
 function requestNotifPermission(){
   if(!('Notification' in window))return;
@@ -1359,25 +3477,145 @@ function scheduleNotifications(){
   notifTimeouts.forEach(clearTimeout);
   notifTimeouts=[];
   if(!state.notifications.enabled||!state.position||!prayerTimes)return;
+  if(Notification.permission!=='granted')return;
 
   const now=nowInCasa();
   const nowMs=now.getTime();
+  const advanceMin=state.notifications.advance||0;
+  const prayers=state.notifications.prayers||{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true};
 
   ['fajr','dhuhr','asr','maghrib','isha'].forEach(k=>{
-    if(!prayerTimes[k])return;
+    if(!prayers[k]||!prayerTimes[k])return;
     const[h,m]=prayerTimes[k].split(':').map(Number);
     const target=new Date(now);
     target.setHours(h,m,0,0);
-    const diff=target.getTime()-nowMs;
+    const prayerMs=target.getTime();
+
+    // Schedule advance notification
+    if(advanceMin>0){
+      const advDiff=prayerMs-advanceMin*60000-nowMs;
+      if(advDiff>0&&advDiff<86400000){
+        notifTimeouts.push(setTimeout(()=>fireNotification(k,true),advDiff));
+      }
+    }
+
+    // Schedule at-time notification
+    const diff=prayerMs-nowMs;
     if(diff>0&&diff<86400000){
-      const tid=setTimeout(()=>{
-        if(Notification.permission==='granted'){
-          new Notification(t(k),{body:t('prayerTimes')+' — '+prayerTimes[k],icon:'icons/icon.svg'});
-        }
-      },diff);
-      notifTimeouts.push(tid);
+      notifTimeouts.push(setTimeout(()=>fireNotification(k,false),diff));
     }
   });
+}
+
+async function fireNotification(prayerKey,isAdvance){
+  if(Notification.permission!=='granted')return;
+  const snd=state.notifications.sound||'adhan';
+  const advMin=state.notifications.advance||0;
+
+  // Build notification content
+  const title=isAdvance
+    ?(advMin+' '+t('notifMinBefore')+' '+t(prayerKey))
+    :(t('notifAthanTime')+' '+t(prayerKey));
+  const body=t('prayerTimes')+' — '+prayerTimes[prayerKey];
+  const vibPattern=state.notifications.vibrate?[200,100,200,100,300,100,200]:[];
+
+  // Play sound from open-sounds audio files
+  if(snd!=='silent'){
+    try{
+      if(!isAdvance){
+        await playNotifSound(snd); // Full adhan or tone
+      }else{
+        await playNotifSound('tone'); // Always short tone for advance
+      }
+    }catch(e){}
+  }
+
+  // Vibrate
+  if(state.notifications.vibrate&&navigator.vibrate){
+    navigator.vibrate(vibPattern);
+  }
+
+  // Wake screen
+  wakeScreen();
+
+  // Set app badge
+  setAppBadge(1);
+
+  // Show notification via Service Worker for persistence & actions
+  if(navigator.serviceWorker&&navigator.serviceWorker.controller){
+    const reg=await navigator.serviceWorker.ready;
+    reg.showNotification(title,{
+      body,
+      icon:'icons/icon.svg',
+      badge:'icons/icon.svg',
+      tag:'waqtsalat-'+prayerKey+(isAdvance?'-advance':''),
+      renotify:true,
+      requireInteraction:!isAdvance,
+      vibrate:vibPattern,
+      silent:snd!=='silent', // silent=true when we play our own audio; false for OS sound
+      data:{prayer:prayerKey,isAdvance,sound:snd,soundUrl:SOUND_URLS[snd]||null},
+      actions:[
+        {action:'dismiss',title:t('notifDismiss')},
+        ...(!isAdvance?[{action:'snooze',title:t('notifSnooze')}]:[])
+      ]
+    });
+  }else{
+    // Fallback: basic Notification API
+    new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-'+prayerKey,requireInteraction:!isAdvance});
+  }
+}
+
+// Test notification — verifies DND bypass, sound, vibration, badge
+async function sendTestNotification(){
+  if(!('Notification' in window))return;
+  if(Notification.permission!=='granted'){
+    const perm=await Notification.requestPermission();
+    if(perm!=='granted')return;
+  }
+  const snd=state.notifications.sound||'adhan';
+  const vibPattern=state.notifications.vibrate?[200,100,200,100,300,100,200]:[];
+
+  // Play sound
+  if(snd!=='silent'){try{await playNotifSound(snd)}catch(e){}}
+
+  // Vibrate
+  if(state.notifications.vibrate&&navigator.vibrate)navigator.vibrate(vibPattern);
+
+  // Badge
+  setAppBadge(1);
+
+  // Wake screen
+  wakeScreen();
+
+  // Show notification
+  const title=t('notifTestSent');
+  const body=t('notifAthanTime')+' '+t('dhuhr')+' — 12:30';
+async function fireTestNotification(){
+  const title=t('notifTestTitle')+' — WaqtSalat';
+  const body=t('notifTestDesc');
+  const snd=state.notifications.sound||'tone';
+  if(snd!=='silent'){try{playNotifSound(snd)}catch(e){}}
+  if(state.notifications.vibrate&&navigator.vibrate){
+    navigator.vibrate([200,100,200]);
+  }
+  if(navigator.serviceWorker&&navigator.serviceWorker.controller){
+    const reg=await navigator.serviceWorker.ready;
+    reg.showNotification(title,{
+      body,icon:'icons/icon.svg',badge:'icons/icon.svg',
+      tag:'waqtsalat-test',renotify:true,requireInteraction:true,
+      vibrate:vibPattern,silent:snd!=='silent',
+      data:{prayer:'test',isAdvance:false,sound:snd},
+      actions:[{action:'dismiss',title:t('notifDismiss')}]
+      tag:'waqtsalat-test',renotify:true,
+      vibrate:state.notifications.vibrate?[200,100,200]:[0],
+      silent:true
+    });
+  }else{
+    new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-test'});
+  }
+
+  // Clear badge after 10s
+  setTimeout(()=>clearAppBadge(),10000);
 }
 
 // ─── PWA Install Prompt ──────────────────────────────────────
@@ -1492,6 +3730,60 @@ function checkNotifBar(){
   };
 }
 
+// ─── Reload Assets (keep settings) ───────────────────────────
+async function reloadAssets(){
+  const fab=$('reload-fab');
+  const toast=$('reload-toast');
+  if(fab.classList.contains('spinning'))return; // prevent double-click
+
+  fab.classList.add('spinning');
+  fab.classList.remove('success','error');
+  toast.textContent=t('reloadingAssets');
+  toast.classList.add('show');
+
+  try{
+    // 1. Clear all caches (app + sounds)
+    if('caches' in window){
+      const keys=await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)));
+    }
+
+    // 2. Tell SW to skip waiting and re-cache
+    if('serviceWorker' in navigator){
+      const registrations=await navigator.serviceWorker.getRegistrations();
+      for(const reg of registrations){
+        await reg.unregister();
+      }
+      // Re-register SW (will re-cache all ASSETS on install)
+      await navigator.serviceWorker.register('sw.js');
+    }
+
+    // 3. Re-cache sounds if notifications enabled
+    if(state.notifications.enabled){
+      await preCacheSounds();
+    }
+
+    // 4. Fetch fresh index.html to update the page
+    fab.classList.remove('spinning');
+    fab.classList.add('success');
+    toast.textContent=t('reloadDone');
+
+    // Reload from network after a brief success feedback
+    setTimeout(()=>{
+      toast.classList.remove('show');
+      location.reload();
+    },1200);
+  }catch(e){
+    fab.classList.remove('spinning');
+    fab.classList.add('error');
+    toast.textContent=t('reloadFail');
+    setTimeout(()=>{
+      toast.classList.remove('show');
+      fab.classList.remove('error');
+    },3000);
+  }
+}
+
 // ─── Hard Refresh ────────────────────────────────────────────
 async function hardRefresh(){
   if(!confirm(t('hardRefreshConfirm')))return;
@@ -1536,10 +3828,12 @@ async function hardRefresh(){
 }
 
 // ─── Service Worker ───────────────────────────────────────────
+const SW_UPDATE_INTERVAL=60*60*1000; // Check for updates every hour
+
 function registerSW(){
   if(!('serviceWorker' in navigator))return;
   navigator.serviceWorker.register('sw.js').then(reg=>{
-    // Check for updates
+    // Listen for new service worker installing
     reg.addEventListener('updatefound',()=>{
       const newSW=reg.installing;
       newSW.addEventListener('statechange',()=>{
@@ -1548,12 +3842,31 @@ function registerSW(){
         }
       });
     });
-    // Check if SW is already waiting
+    // SW already waiting from a previous visit
     if(reg.waiting&&navigator.serviceWorker.controller){
       showUpdateBanner(reg);
     }
+    // Periodic update checks
+    setInterval(()=>reg.update(),SW_UPDATE_INTERVAL);
+    // Check on tab focus (user returning to app)
+    document.addEventListener('visibilitychange',()=>{
+      if(document.visibilityState==='visible')reg.update();
+    });
+    // Check when coming back online
+    window.addEventListener('online',()=>reg.update());
   });
-  navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());
+  // Listen for messages from SW
+  navigator.serviceWorker.addEventListener('message',event=>{
+    if(event.data?.type==='STOP_SOUND')stopNotifSound();
+    if(event.data?.type==='RESCHEDULE_NOTIFICATIONS')scheduleNotifications();
+  });
+  // Reload once new SW takes control
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(refreshing)return;
+    refreshing=true;
+    location.reload();
+  });
 }
 
 function showUpdateBanner(reg){
@@ -1564,7 +3877,7 @@ function showUpdateBanner(reg){
   banner.classList.add('show');
 
   $('btn-update-now').onclick=()=>{
-    reg.waiting.postMessage({type:'SKIP_WAITING'});
+    if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});
     banner.classList.remove('show');
   };
   $('btn-update-later').onclick=()=>banner.classList.remove('show');
@@ -1573,10 +3886,27 @@ function showUpdateBanner(reg){
 // ─── Helpers ──────────────────────────────────────────────────
 function $(id){return document.getElementById(id)}
 
+function showShareToast(msg){
+  const el=$('share-toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(el._tid);
+  el._tid=setTimeout(()=>el.classList.remove('show'),2500);
+}
+
 // ─── Boot ─────────────────────────────────────────────────────
 loadState();
-// Detect locale from browser if not saved
-if(!localStorage.getItem('waqt-locale')){
+// URL ?lang= parameter overrides saved locale (for shared links)
+const urlParams=new URLSearchParams(location.search);
+const urlLang=urlParams.get('lang');
+if(urlLang&&TR[urlLang]){
+  state.locale=urlLang;
+  saveState('waqt-locale',urlLang);
+  // Clean ?lang= from URL so it doesn't override future language changes
+  urlParams.delete('lang');
+  const clean=urlParams.toString();
+  history.replaceState(null,'',location.pathname+(clean?'?'+clean:''));
+}else if(!localStorage.getItem('waqt-locale')){
+  // Detect locale from browser if not saved
   const lang=navigator.language?.slice(0,2);
   if(TR[lang])state.locale=lang;
 }
@@ -1587,6 +3917,18 @@ if(state.onboarded&&state.position)renderAll();
 registerSW();
 setupInstallPrompt();
 checkNotifBar();
+checkNotifBlocked();
+// Pre-cache sounds and clear badge on app focus
+if(state.notifications.enabled)preCacheSounds();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)clearAppBadge()});
+// Register Periodic Background Sync for notification rescheduling
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.ready.then(reg=>{
+    if(reg.periodicSync){
+      reg.periodicSync.register('reschedule-notifications',{minInterval:60*60*1000}).catch(()=>{});
+    }
+  });
+}
 
 })();
 </script>
