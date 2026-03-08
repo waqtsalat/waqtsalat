@@ -637,6 +637,7 @@ nav.bottom-bar button:focus-visible{
 .cap-perm.granted{color:#2ecc71}
 .cap-perm.denied{color:#e74c3c}
 .cap-perm.prompt{color:#f39c12}
+.cap-note{font-size:0.6rem;color:var(--muted);margin-top:1px;font-style:italic}
 .cap-summary{
   display:flex;align-items:center;gap:var(--sp-sm);
   padding:var(--sp-sm) 0;font-size:var(--fs-xs);
@@ -1292,14 +1293,25 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
         </select>
       </div>
       <div class="notif-sub-row">
-        <label id="s-notif-sound-label"></label>
+        <label id="s-notif-sound-pre-label"></label>
         <div class="notif-sound-row">
-          <select id="s-notif-sound">
-            <option value="silent" id="opt-snd-silent"></option>
-            <option value="tone" id="opt-snd-tone"></option>
-            <option value="adhan" id="opt-snd-adhan"></option>
+          <select id="s-notif-sound-pre">
+            <option value="silent" id="opt-sndpre-silent"></option>
+            <option value="tone" id="opt-sndpre-tone"></option>
+            <option value="adhan" id="opt-sndpre-adhan"></option>
           </select>
-          <button class="btn-test-sound" id="btn-test-sound"></button>
+          <button class="btn-test-sound" id="btn-test-sound-pre"></button>
+        </div>
+      </div>
+      <div class="notif-sub-row">
+        <label id="s-notif-sound-at-label"></label>
+        <div class="notif-sound-row">
+          <select id="s-notif-sound-at">
+            <option value="silent" id="opt-sndat-silent"></option>
+            <option value="tone" id="opt-sndat-tone"></option>
+            <option value="adhan" id="opt-sndat-adhan"></option>
+          </select>
+          <button class="btn-test-sound" id="btn-test-sound-at"></button>
         </div>
       </div>
       <div class="notif-sound-status" id="s-notif-sound-status">
@@ -1461,7 +1473,7 @@ ogTitle:'وقت الصلاة — مواقيت الصلاة في المغرب',og
 notifPrayers:'صلوات الإشعار',notifSelectPrayers:'اختر الصلوات التي تريد إشعاراً لها',
 notifAdvance:'تنبيه مسبق',notifAdvanceDesc:'تنبيه قبل وقت الصلاة',
 notifAdvance0:'عند الأذان',notifAdvance5:'قبل 5 دقائق',notifAdvance10:'قبل 10 دقائق',notifAdvance15:'قبل 15 دقائق',notifAdvance30:'قبل 30 دقيقة',
-notifSound:'صوت الإشعار',notifSoundSilent:'بدون صوت',notifSoundTone:'نغمة',notifSoundAdhan:'أذان',
+notifSoundPre:'صوت التنبيه المسبق',notifSoundAt:'صوت وقت الصلاة',notifSoundSilent:'بدون صوت',notifSoundTone:'نغمة',notifSoundAdhan:'أذان',
 notifSoundTest:'تجربة',notifAthanTime:'حان وقت صلاة',notifMinBefore:'دقائق قبل',
 notifSnooze:'تأجيل 5 دقائق',notifDismiss:'إغلاق',notifDndHint:'لتلقي الإشعارات أثناء وضع عدم الإزعاج، فعّل «الإشعارات ذات الأولوية» من إعدادات هاتفك',
 notifVibrate:'اهتزاز',notifWakeScreen:'إيقاظ الشاشة',
@@ -1490,6 +1502,7 @@ capShare:'المشاركة',capShareDesc:'مشاركة التطبيق عبر ا�
 capInstall:'التثبيت',capInstallDesc:'تثبيت كتطبيق مستقل على الجهاز',
 capBgSync:'المزامنة الخلفية',capBgSyncDesc:'إعادة جدولة الإشعارات تلقائياً',
 capCamera:'الكاميرا',capCameraDesc:'مطلوبة لميزة الواقع المعزز',
+capDnd:'عدم الإزعاج (DND)',capDndDesc:'حالة وضع عدم الإزعاج',capDndUnknown:'غير قابل للكشف عبر الويب',capDndActive:'قد يكون مفعّلاً',capDndOff:'غير مفعّل على الأرجح',
 capPermGranted:'مسموح',capPermDenied:'مرفوض',capPermPrompt:'بانتظار الإذن',
 reloadAssets:'تحديث الملفات',reloadAssetsDesc:'إعادة تحميل التطبيق مع الحفاظ على إعداداتك',
 reloadingAssets:'جارٍ التحديث…',reloadDone:'تم التحديث بنجاح',reloadFail:'فشل التحديث',
@@ -1532,7 +1545,7 @@ ogTitle:'WaqtSalat — Horaires de prière au Maroc',ogDescription:'Horaires de 
 notifPrayers:'Prières à notifier',notifSelectPrayers:'Choisissez les prières pour les notifications',
 notifAdvance:'Alerte anticipée',notifAdvanceDesc:'Notification avant l\'heure de prière',
 notifAdvance0:'À l\'adhan',notifAdvance5:'5 min avant',notifAdvance10:'10 min avant',notifAdvance15:'15 min avant',notifAdvance30:'30 min avant',
-notifSound:'Son de notification',notifSoundSilent:'Sans son',notifSoundTone:'Tonalité',notifSoundAdhan:'Adhan',
+notifSoundPre:'Son alerte anticipée',notifSoundAt:'Son heure de prière',notifSoundSilent:'Sans son',notifSoundTone:'Tonalité',notifSoundAdhan:'Adhan',
 notifSoundTest:'Tester',notifAthanTime:'C\'est l\'heure de la prière',notifMinBefore:'min avant',
 notifSnooze:'Reporter 5 min',notifDismiss:'Fermer',notifDndHint:'Pour recevoir les notifications en mode Ne pas déranger, activez les « Notifications prioritaires » dans les paramètres de votre téléphone',
 notifVibrate:'Vibration',notifWakeScreen:'Réveiller l\'écran',
@@ -1561,6 +1574,7 @@ capShare:'Partage',capShareDesc:'Partage natif via le système',
 capInstall:'Installation',capInstallDesc:'Installer comme application autonome',
 capBgSync:'Synchronisation en arrière-plan',capBgSyncDesc:'Reprogrammation automatique des notifications',
 capCamera:'Caméra',capCameraDesc:'Requise pour la réalité augmentée',
+capDnd:'Ne pas déranger (DND)',capDndDesc:'État du mode Ne pas déranger',capDndUnknown:'Non détectable via le web',capDndActive:'Possiblement activé',capDndOff:'Probablement désactivé',
 capPermGranted:'Autorisé',capPermDenied:'Refusé',capPermPrompt:'En attente',
 reloadAssets:'Recharger les fichiers',reloadAssetsDesc:'Retélécharger l\'application en conservant vos paramètres',
 reloadingAssets:'Rechargement…',reloadDone:'Mise à jour réussie',reloadFail:'Échec du rechargement',
@@ -1603,7 +1617,7 @@ ogTitle:'WaqtSalat — Prayer Times for Morocco',ogDescription:'Prayer times for
 notifPrayers:'Notification Prayers',notifSelectPrayers:'Choose which prayers to be notified for',
 notifAdvance:'Advance Alert',notifAdvanceDesc:'Get notified before prayer time',
 notifAdvance0:'At adhan time',notifAdvance5:'5 min before',notifAdvance10:'10 min before',notifAdvance15:'15 min before',notifAdvance30:'30 min before',
-notifSound:'Notification Sound',notifSoundSilent:'No sound',notifSoundTone:'Tone',notifSoundAdhan:'Adhan',
+notifSoundPre:'Pre-alert Sound',notifSoundAt:'Prayer Time Sound',notifSoundSilent:'No sound',notifSoundTone:'Tone',notifSoundAdhan:'Adhan',
 notifSoundTest:'Test',notifAthanTime:'It\'s time for',notifMinBefore:'min before',
 notifSnooze:'Snooze 5 min',notifDismiss:'Dismiss',notifDndHint:'To receive notifications during Do Not Disturb, enable "Priority notifications" in your phone settings',
 notifVibrate:'Vibration',notifWakeScreen:'Wake screen',
@@ -1632,6 +1646,7 @@ capShare:'Share',capShareDesc:'Native system sharing',
 capInstall:'Install',capInstallDesc:'Install as standalone app',
 capBgSync:'Background Sync',capBgSyncDesc:'Auto-reschedule notifications',
 capCamera:'Camera',capCameraDesc:'Required for augmented reality',
+capDnd:'Do Not Disturb (DND)',capDndDesc:'DND mode status',capDndUnknown:'Not detectable via web',capDndActive:'Possibly active',capDndOff:'Likely off',
 capPermGranted:'Allowed',capPermDenied:'Denied',capPermPrompt:'Pending',
 reloadAssets:'Reload assets',reloadAssetsDesc:'Re-download the app while keeping your settings',
 reloadingAssets:'Reloading…',reloadDone:'Updated successfully',reloadFail:'Reload failed',
@@ -1645,7 +1660,7 @@ const state={
   locale:'ar',theme:'system',
   position:null,// {lat,lng,cityId,cityName}
   adjustments:{fajr:0,sunrise:0,dhuhr:0,asr:0,maghrib:0,isha:0},
-  notifications:{enabled:false,prayers:{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},advance:0,sound:'adhan',vibrate:true,badge:true},
+  notifications:{enabled:false,prayers:{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},advance:0,soundPre:'tone',soundAt:'adhan',vibrate:true,badge:true},
   onboarded:false,
   currentView:'prayers',
 };
@@ -1661,7 +1676,12 @@ function loadState(){
     const adj=localStorage.getItem('waqt-adjustments');
     if(adj)state.adjustments={...state.adjustments,...JSON.parse(adj)};
     const notif=localStorage.getItem('waqt-notifications');
-    if(notif)state.notifications={...state.notifications,...JSON.parse(notif)};
+    if(notif){
+      const saved=JSON.parse(notif);
+      // Migrate: old 'sound' key → split into soundPre/soundAt
+      if(saved.sound&&!saved.soundAt){saved.soundAt=saved.sound;saved.soundPre=saved.soundPre||'tone';delete saved.sound}
+      state.notifications={...state.notifications,...saved};
+    }
     state.onboarded=localStorage.getItem('waqt-onboarded')==='true';
   }catch(e){}
 }
@@ -2726,6 +2746,30 @@ function detectCapabilities(){
       status:api?'available':'unavailable'});
   }catch(e){caps.push({id:'camera',name:t('capCamera'),desc:t('capCameraDesc'),status:'unavailable'})}
 
+  // 13. Do Not Disturb (DND) — probing via Notification API heuristics
+  try{
+    // Web APIs cannot directly detect DND mode. Best-effort probing:
+    // - If notifications are denied → DND status irrelevant (blocked anyway)
+    // - If notifications are granted → we can infer DND might be active if
+    //   the notification channel importance is low (Android), but this isn't
+    //   exposed to web. Show "unknown" with platform-specific guidance.
+    const notifApi='Notification' in window;
+    let dndStatus='partial'; // unknown by default
+    let dndNote=t('capDndUnknown');
+    if(!notifApi){
+      dndStatus='unavailable';
+    }else if(Notification.permission==='denied'){
+      dndStatus='unavailable';
+      dndNote=t('capPermDenied');
+    }else if(Notification.permission==='granted'){
+      // Notifications allowed — DND may or may not be active
+      // We can't detect it, but we show the platform and instructions
+      dndStatus='partial';
+      dndNote=detectPlatform()+' — '+t('capDndUnknown');
+    }
+    caps.push({id:'dnd',name:t('capDnd'),desc:t('capDndDesc'),status:dndStatus,note:dndNote});
+  }catch(e){caps.push({id:'dnd',name:t('capDnd'),desc:t('capDndDesc'),status:'partial',note:t('capDndUnknown')})}
+
   return caps;
 }
 
@@ -2774,6 +2818,13 @@ function renderCapabilities(){
       permEl.className='cap-perm '+(cap.perm==='granted'?'granted':cap.perm==='denied'?'denied':'prompt');
       permEl.textContent=t(cap.perm==='granted'?'capPermGranted':cap.perm==='denied'?'capPermDenied':'capPermPrompt');
       info.appendChild(permEl);
+    }
+    // Note (e.g., DND status detail)
+    if(cap.note){
+      const noteEl=document.createElement('span');
+      noteEl.className='cap-note';
+      noteEl.textContent=cap.note;
+      info.appendChild(noteEl);
     }
 
     item.appendChild(dot);
@@ -2861,13 +2912,21 @@ function renderSettings(){
   $('opt-adv-30').textContent=t('notifAdvance30');
   $('s-notif-advance').value=state.notifications.advance||0;
 
-  // Sound
-  $('s-notif-sound-label').textContent=t('notifSound');
-  $('opt-snd-silent').textContent=t('notifSoundSilent');
-  $('opt-snd-tone').textContent=t('notifSoundTone');
-  $('opt-snd-adhan').textContent=t('notifSoundAdhan');
-  $('s-notif-sound').value=state.notifications.sound||'adhan';
-  $('btn-test-sound').textContent=t('notifSoundTest');
+  // Sound — pre-notification (advance alert)
+  $('s-notif-sound-pre-label').textContent=t('notifSoundPre');
+  $('opt-sndpre-silent').textContent=t('notifSoundSilent');
+  $('opt-sndpre-tone').textContent=t('notifSoundTone');
+  $('opt-sndpre-adhan').textContent=t('notifSoundAdhan');
+  $('s-notif-sound-pre').value=state.notifications.soundPre||'tone';
+  $('btn-test-sound-pre').textContent=t('notifSoundTest');
+
+  // Sound — at prayer time
+  $('s-notif-sound-at-label').textContent=t('notifSoundAt');
+  $('opt-sndat-silent').textContent=t('notifSoundSilent');
+  $('opt-sndat-tone').textContent=t('notifSoundTone');
+  $('opt-sndat-adhan').textContent=t('notifSoundAdhan');
+  $('s-notif-sound-at').value=state.notifications.soundAt||'adhan';
+  $('btn-test-sound-at').textContent=t('notifSoundTest');
 
   // Vibrate
   $('s-notif-vibrate-label').textContent=t('notifVibrate');
@@ -3059,19 +3118,32 @@ function setupEvents(){
     scheduleNotifications();
   });
 
-  // Notification sound
-  $('s-notif-sound').addEventListener('change',e=>{
-    state.notifications.sound=e.target.value;
+  // Notification sound — pre-notification (advance)
+  $('s-notif-sound-pre').addEventListener('change',e=>{
+    state.notifications.soundPre=e.target.value;
     saveState('waqt-notifications',state.notifications);
+    syncNotifDataToSW();
   });
 
-  // Test sound button
-  $('btn-test-sound').addEventListener('click',()=>{
-    const snd=state.notifications.sound||'adhan';
+  // Test pre-notification sound
+  $('btn-test-sound-pre').addEventListener('click',()=>{
+    const snd=state.notifications.soundPre||'tone';
     if(snd!=='silent')playNotifSound(snd);
-    if(state.notifications.vibrate&&navigator.vibrate){
-      navigator.vibrate([200,100,200,100,300]);
-    }
+    if(state.notifications.vibrate&&navigator.vibrate)navigator.vibrate([200,100,200]);
+  });
+
+  // Notification sound — at prayer time
+  $('s-notif-sound-at').addEventListener('change',e=>{
+    state.notifications.soundAt=e.target.value;
+    saveState('waqt-notifications',state.notifications);
+    syncNotifDataToSW();
+  });
+
+  // Test at-time sound
+  $('btn-test-sound-at').addEventListener('click',()=>{
+    const snd=state.notifications.soundAt||'adhan';
+    if(snd!=='silent')playNotifSound(snd);
+    if(state.notifications.vibrate&&navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
   });
 
   // Vibrate toggle
@@ -3497,6 +3569,8 @@ function scheduleNotifications(){
   notifTimeouts=[];
   if(notifCheckInterval)clearInterval(notifCheckInterval);
   notifCheckInterval=null;
+  // Always sync data to SW (even if disabled, so SW knows to stop)
+  syncNotifDataToSW();
   if(!state.notifications.enabled||!state.position||!prayerTimes)return;
   if(Notification.permission!=='granted')return;
 
@@ -3504,6 +3578,22 @@ function scheduleNotifications(){
   checkAndFireNotifications();
   // Poll every 15s as safety net (setTimeout is unreliable when backgrounded)
   notifCheckInterval=setInterval(checkAndFireNotifications,15000);
+}
+
+// Sync prayer times + notification settings to Service Worker
+// so SW can fire notifications independently (Android background, closed tab)
+function syncNotifDataToSW(){
+  if(!navigator.serviceWorker||!navigator.serviceWorker.controller)return;
+  navigator.serviceWorker.controller.postMessage({
+    type:'SYNC_NOTIF_DATA',
+    prayerTimes:prayerTimes||null,
+    settings:state.notifications,
+    i18n:{
+      fajr:t('fajr'),dhuhr:t('dhuhr'),asr:t('asr'),maghrib:t('maghrib'),isha:t('isha'),
+      athanTime:t('notifAthanTime'),minBefore:t('notifMinBefore'),
+      prayerTimes:t('prayerTimes'),dismiss:t('notifDismiss'),snooze:t('notifSnooze')
+    }
+  });
 }
 
 function checkAndFireNotifications(){
@@ -3552,7 +3642,9 @@ function checkAndFireNotifications(){
 
 async function fireNotification(prayerKey,isAdvance){
   if(Notification.permission!=='granted')return;
-  const snd=state.notifications.sound||'adhan';
+  const sndPre=state.notifications.soundPre||'tone';
+  const sndAt=state.notifications.soundAt||state.notifications.sound||'adhan';
+  const snd=isAdvance?sndPre:sndAt;
   const advMin=state.notifications.advance||0;
 
   // Build notification content
@@ -3564,13 +3656,7 @@ async function fireNotification(prayerKey,isAdvance){
 
   // Play sound from open-sounds audio files
   if(snd!=='silent'){
-    try{
-      if(!isAdvance){
-        await playNotifSound(snd); // Full adhan or tone
-      }else{
-        await playNotifSound('tone'); // Always short tone for advance
-      }
-    }catch(e){}
+    try{await playNotifSound(snd)}catch(e){}
   }
 
   // Vibrate
@@ -3615,7 +3701,7 @@ async function sendTestNotification(){
     const perm=await Notification.requestPermission();
     if(perm!=='granted')return;
   }
-  const snd=state.notifications.sound||'adhan';
+  const snd=state.notifications.soundAt||'adhan';
   const vibPattern=state.notifications.vibrate?[200,100,200,100,300,100,200]:[];
 
   // Play sound
@@ -3635,7 +3721,7 @@ async function sendTestNotification(){
 async function fireTestNotification(){
   const title=t('notifTestTitle')+' — WaqtSalat';
   const body=t('notifTestDesc');
-  const snd=state.notifications.sound||'tone';
+  const snd=state.notifications.soundAt||'tone';
   if(snd!=='silent'){try{playNotifSound(snd)}catch(e){}}
   if(state.notifications.vibrate&&navigator.vibrate){
     navigator.vibrate([200,100,200]);
@@ -3900,6 +3986,16 @@ function registerSW(){
   navigator.serviceWorker.addEventListener('message',event=>{
     if(event.data?.type==='STOP_SOUND')stopNotifSound();
     if(event.data?.type==='RESCHEDULE_NOTIFICATIONS')scheduleNotifications();
+    // SW fired a notification — play sound on the page (SW can't play audio)
+    if(event.data?.type==='PLAY_SOUND'){
+      const snd=event.data.sound||'tone';
+      if(snd!=='silent'){try{playNotifSound(snd)}catch(e){}}
+      if(state.notifications.vibrate&&navigator.vibrate){
+        navigator.vibrate([200,100,200,100,300,100,200]);
+      }
+      wakeScreen();
+      setAppBadge(1);
+    }
   });
   // Reload once new SW takes control
   let refreshing=false;

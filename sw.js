@@ -1,12 +1,164 @@
-const SW_VERSION = '1.3.0';
+const SW_VERSION = '1.4.0';
 const CACHE_NAME = 'waqtsalat-v' + SW_VERSION;
 const SOUND_CACHE_NAME = 'waqtsalat-sounds-v1';
+const NOTIF_CACHE_NAME = 'waqtsalat-notif-v1';
+const NOTIF_DATA_KEY = '/waqtsalat-notif-data.json';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icons/icon.svg',
 ];
+
+// ─── Notification Data Persistence (Cache API) ──────────────
+// Stores prayer times + settings so SW can fire notifications
+// independently of the page (Android background, closed tab, etc.)
+
+async function loadNotifData() {
+  try {
+    const cache = await caches.open(NOTIF_CACHE_NAME);
+    const resp = await cache.match(NOTIF_DATA_KEY);
+    if (resp) return await resp.json();
+  } catch (e) {}
+  return null;
+}
+
+async function saveNotifData(data) {
+  try {
+    const cache = await caches.open(NOTIF_CACHE_NAME);
+    await cache.put(NOTIF_DATA_KEY, new Response(JSON.stringify(data), {
+      headers: { 'Content-Type': 'application/json' }
+    }));
+  } catch (e) {}
+}
+
+// ─── Casablanca Time Helper ─────────────────────────────────
+function nowInCasablanca() {
+  const now = new Date();
+  const parts = {};
+  new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Africa/Casablanca',
+    hour: 'numeric', minute: 'numeric', second: 'numeric',
+    hour12: false,
+    year: 'numeric', month: 'numeric', day: 'numeric'
+  }).formatToParts(now).forEach(p => { parts[p.type] = p.value; });
+  return {
+    h: parseInt(parts.hour === '24' ? '0' : parts.hour),
+    m: parseInt(parts.minute),
+    day: parts.day, month: parts.month, year: parts.year,
+    todayStr: parts.year + '-' + parts.month + '-' + parts.day
+  };
+}
+
+// ─── SW Notification Check & Fire ───────────────────────────
+// Runs independently of the page — triggered by periodicsync,
+// fetch piggyback, and message events.
+
+const GRACE_MIN = 5; // 5 min grace period for catch-up
+
+async function swCheckNotifications() {
+  const data = await loadNotifData();
+  if (!data || !data.settings || !data.settings.enabled) return;
+  if (!data.prayerTimes) return;
+
+  const casa = nowInCasablanca();
+  const nowMin = casa.h * 60 + casa.m;
+
+  // Reset fired keys on day change
+  if (data.date !== casa.todayStr) {
+    data.firedKeys = [];
+    data.date = casa.todayStr;
+  }
+  if (!data.firedKeys) data.firedKeys = [];
+
+  const advance = data.settings.advance || 0;
+  const prayers = data.settings.prayers || { fajr: true, dhuhr: true, asr: true, maghrib: true, isha: true };
+  let changed = false;
+
+  for (const k of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
+    if (!prayers[k] || !data.prayerTimes[k]) continue;
+    const [ph, pm] = data.prayerTimes[k].split(':').map(Number);
+    const prayerMin = ph * 60 + pm;
+
+    // Advance notification
+    if (advance > 0) {
+      const advTarget = prayerMin - advance;
+      const advKey = k + '-advance';
+      const advDiff = nowMin - advTarget;
+      if (advDiff >= 0 && advDiff < GRACE_MIN && !data.firedKeys.includes(advKey)) {
+        data.firedKeys.push(advKey);
+        changed = true;
+        await showSwNotification(k, true, data);
+      }
+    }
+
+    // At-time notification
+    const atKey = k + '-atime';
+    const atDiff = nowMin - prayerMin;
+    if (atDiff >= 0 && atDiff < GRACE_MIN && !data.firedKeys.includes(atKey)) {
+      data.firedKeys.push(atKey);
+      changed = true;
+      await showSwNotification(k, false, data);
+    }
+  }
+
+  if (changed) await saveNotifData(data);
+}
+
+async function showSwNotification(prayerKey, isAdvance, data) {
+  const advance = data.settings.advance || 0;
+  const time = data.prayerTimes[prayerKey];
+  const name = prayerKey.charAt(0).toUpperCase() + prayerKey.slice(1);
+  const i18n = data.i18n || {};
+
+  const title = isAdvance
+    ? (advance + ' ' + (i18n.minBefore || 'min →') + ' ' + (i18n[prayerKey] || name))
+    : ((i18n.athanTime || '') + ' ' + (i18n[prayerKey] || name));
+  const body = (i18n.prayerTimes || '') + ' — ' + time;
+
+  const sndPre = data.settings.soundPre || 'tone';
+  const sndAt = data.settings.soundAt || data.settings.sound || 'adhan';
+  const snd = isAdvance ? sndPre : sndAt;
+  const vibrate = data.settings.vibrate !== false;
+
+  await self.registration.showNotification(title.trim(), {
+    body,
+    icon: 'icons/icon.svg',
+    badge: 'icons/icon.svg',
+    tag: 'waqtsalat-v2-' + prayerKey + (isAdvance ? '-advance' : ''),
+    renotify: true,
+    requireInteraction: true,
+    vibrate: vibrate ? [200, 100, 200, 100, 300, 100, 200] : [],
+    silent: false,
+    data: { prayer: prayerKey, isAdvance, sound: snd },
+    actions: [
+      { action: 'dismiss', title: i18n.dismiss || '✕' },
+      ...(!isAdvance ? [{ action: 'snooze', title: i18n.snooze || '⏰ 5min' }] : [])
+    ]
+  });
+
+  // Tell open pages to play sound
+  const clients = await self.clients.matchAll({ type: 'window' });
+  for (const client of clients) {
+    client.postMessage({ type: 'PLAY_SOUND', sound: snd, prayer: prayerKey, isAdvance });
+  }
+
+  // Set app badge
+  try { navigator.setAppBadge && navigator.setAppBadge(1); } catch (e) {}
+}
+
+// ─── Throttled check (avoid running too frequently) ─────────
+let lastCheckTs = 0;
+const CHECK_THROTTLE_MS = 30000; // 30s minimum between checks
+
+function throttledCheck() {
+  const now = Date.now();
+  if (now - lastCheckTs < CHECK_THROTTLE_MS) return Promise.resolve();
+  lastCheckTs = now;
+  return swCheckNotifications();
+}
+
+// ─── Service Worker Lifecycle ───────────────────────────────
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -18,7 +170,8 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(k => k !== CACHE_NAME && k !== SOUND_CACHE_NAME).map(k => caches.delete(k))
+        keys.filter(k => k !== CACHE_NAME && k !== SOUND_CACHE_NAME && k !== NOTIF_CACHE_NAME)
+          .map(k => caches.delete(k))
       )
     ).then(() => self.clients.claim())
   );
@@ -28,6 +181,8 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(cached => cached || fetch(event.request))
   );
+  // Piggyback: check notifications on any fetch event (keeps SW alive)
+  event.waitUntil(throttledCheck());
 });
 
 self.addEventListener('message', event => {
@@ -40,16 +195,28 @@ self.addEventListener('message', event => {
         .then(() => self.skipWaiting())
     );
   }
+  // Receive prayer times + notification settings from page
+  if (event.data && event.data.type === 'SYNC_NOTIF_DATA') {
+    event.waitUntil((async () => {
+      const existing = await loadNotifData() || {};
+      const casa = nowInCasablanca();
+      const newData = {
+        prayerTimes: event.data.prayerTimes,
+        settings: event.data.settings,
+        i18n: event.data.i18n || existing.i18n || {},
+        date: existing.date === casa.todayStr ? existing.date : casa.todayStr,
+        firedKeys: existing.date === casa.todayStr ? (existing.firedKeys || []) : []
+      };
+      await saveNotifData(newData);
+      await swCheckNotifications();
+    })());
+  }
 });
 
 // Notification click — open the app, handle snooze/dismiss, clear badge
 self.addEventListener('notificationclick', event => {
   event.notification.close();
 
-  // Clear app badge
-  if (self.registration.navigationPreload) {
-    // Badge API in SW context
-  }
   try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
 
   if (event.action === 'snooze') {
@@ -96,15 +263,17 @@ self.addEventListener('notificationclose', event => {
   try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
 });
 
-// Periodic Background Sync — reschedule notifications when browser allows
+// Periodic Background Sync — check notifications directly from SW
 self.addEventListener('periodicsync', event => {
   if (event.tag === 'reschedule-notifications') {
-    event.waitUntil(
-      self.clients.matchAll({ type: 'window' }).then(clients => {
-        for (const client of clients) {
-          client.postMessage({ type: 'RESCHEDULE_NOTIFICATIONS' });
-        }
-      })
-    );
+    event.waitUntil((async () => {
+      // SW checks notifications independently
+      await swCheckNotifications();
+      // Also tell open pages to reschedule (for sound playback)
+      const clients = await self.clients.matchAll({ type: 'window' });
+      for (const client of clients) {
+        client.postMessage({ type: 'RESCHEDULE_NOTIFICATIONS' });
+      }
+    })());
   }
 });
