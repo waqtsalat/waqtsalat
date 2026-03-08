@@ -3560,11 +3560,11 @@ async function fireNotification(prayerKey,isAdvance){
       body,
       icon:'icons/icon.svg',
       badge:'icons/icon.svg',
-      tag:'waqtsalat-'+prayerKey+(isAdvance?'-advance':''),
+      tag:'waqtsalat-v2-'+prayerKey+(isAdvance?'-advance':''),
       renotify:true,
-      requireInteraction:!isAdvance,
-      vibrate:vibPattern,
-      silent:false, // must be false so Android Chrome shows heads-up notification
+      requireInteraction:true,
+      vibrate:[200,100,200,100,300,100,200], // always set for Android channel importance
+      silent:false, // must be false so Android creates IMPORTANCE_DEFAULT channel (DND-eligible)
       data:{prayer:prayerKey,isAdvance,sound:snd,soundUrl:SOUND_URLS[snd]||null},
       actions:[
         {action:'dismiss',title:t('notifDismiss')},
@@ -3573,7 +3573,7 @@ async function fireNotification(prayerKey,isAdvance){
     });
   }else{
     // Fallback: basic Notification API
-    new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-'+prayerKey,requireInteraction:!isAdvance});
+    new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-v2-'+prayerKey,requireInteraction:true});
   }
 }
 
@@ -3613,14 +3613,15 @@ async function fireTestNotification(){
     const reg=await navigator.serviceWorker.ready;
     reg.showNotification(title,{
       body,icon:'icons/icon.svg',badge:'icons/icon.svg',
-      tag:'waqtsalat-test',renotify:true,
-      vibrate:state.notifications.vibrate?[200,100,200]:[0],
-      silent:false, // must be false so Android Chrome shows heads-up notification
+      tag:'waqtsalat-v2-test',renotify:true,
+      requireInteraction:true,
+      vibrate:[200,100,200], // always set for Android channel importance
+      silent:false, // must be false so Android creates IMPORTANCE_DEFAULT channel (DND-eligible)
       data:{prayer:'test',isAdvance:false,sound:snd},
       actions:[{action:'dismiss',title:t('notifDismiss')}]
     });
   }else{
-    new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-test'});
+    new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-v2-test',requireInteraction:true});
   }
 
   // Clear badge after 10s
