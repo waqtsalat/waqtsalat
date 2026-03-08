@@ -153,7 +153,7 @@ waqtsalat/
 Contributions are welcome. Please note:
 
 1. **Morocco only** — Do not add support for other countries. This is by design.
-2. **Zero dependencies** — The production app must have no external dependencies. Everything is inlined.
+2. **Minimum dependencies** — The production app uses Three.js for AR mode (loaded on demand). Core functionality has no external dependencies.
 3. **Test first** — All prayer calculation changes must include tests validated against the Al Adhan API (method MOROCCO, id=21). Tolerance: ±1 minute.
 4. **Accessibility** — Maintain WCAG 2.1 AA compliance. Test with screen readers.
 5. **Single-file** — The final `index.html` must remain self-contained.
