@@ -123,7 +123,7 @@ export function calculatePrayerTimes(date, lat, lng) {
   // Isha: 17° below horizon
   const hIsha = hourAngle(ISHA_ANGLE);
 
-  // Asr: shadow = object length + noon shadow (Malikite/Standard)
+  // Asr: shadow = object length + noon shadow
   const asrAngle = asrShadowAngle(dec, lat);
   const hAsr = hourAngle(-asrAngle); // negative because it's above horizon
 
@@ -145,7 +145,7 @@ export function calculatePrayerTimes(date, lat, lng) {
 }
 
 /**
- * Calculate the altitude angle for Asr (standard/Malikite).
+ * Calculate the altitude angle for Asr.
  * tan(A) = 1 / (1 + tan(|lat - dec|))
  * Actually: cot(A) = 1 + cot(zenith_at_noon) = 1 + tan(|lat - dec|)
  * So A = atan(1 / (1 + tan(|lat - dec|)))

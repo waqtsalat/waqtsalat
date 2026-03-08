@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Prayer times PWA for Morocco</strong><br>
-  Malikite rite &bull; Habous method &bull; Offline-first &bull; Zero tracking
+  Habous method &bull; Offline-first &bull; Zero tracking
 </p>
 
 <p align="center">
@@ -27,7 +27,6 @@
   <img src="https://img.shields.io/badge/offline-first-4CAF50" alt="Offline First">
   <img src="https://img.shields.io/badge/tracking-zero-green" alt="Zero Tracking">
   <img src="https://img.shields.io/badge/country-Morocco%20%F0%9F%87%B2%F0%9F%87%A6-red" alt="Morocco Only">
-  <img src="https://img.shields.io/badge/rite-Malikite-orange" alt="Malikite Rite">
   <img src="https://img.shields.io/badge/method-Habous-blue" alt="Habous Method">
 </p>
 
@@ -37,17 +36,16 @@
 
 > **This application is designed exclusively for Morocco.**
 >
-> All prayer times are calculated using the method of the **Ministere des Habous et des Affaires Islamiques** (Fajr 19°, Isha 17°, Asr Malikite). The timezone is hardcoded to `Africa/Casablanca` with Morocco-specific DST handling (including Ramadan decrees). Only Moroccan cities are included. This app will **not** produce correct prayer times for any other country.
+> All prayer times are calculated using the method of the **Ministere des Habous et des Affaires Islamiques** (Fajr 19°, Isha 17°). The timezone is hardcoded to `Africa/Casablanca` with Morocco-specific DST handling (including Ramadan decrees). Only Moroccan cities are included. This app will **not** produce correct prayer times for any other country.
 
 ---
 
 ## Features
 
-- **Accurate prayer times** — Astronomical calculations based on Jean Meeus' algorithms, validated against official Habous data within ±1 minute tolerance
+- **Prayer times** — Habous method calculations validated against official data within ±1 minute tolerance
 - **6 daily prayers** — Fajr, Chourouk (sunrise), Dhuhr, Asr, Maghrib, Isha
 - **Trilingual** — Arabic (العربية), French (Francais), English — switchable instantly without reload
 - **Full RTL support** — Native right-to-left layout for Arabic using CSS logical properties
-- **Analog clock** — SVG clock face with colored arcs showing prayer time periods
 - **Qibla compass** — 2D SVG compass with real-time device orientation (when available), AR mode as progressive enhancement
 - **Offline-first PWA** — Works 100% offline after first visit. Zero network requests at runtime
 - **Installable** — Add to home screen on Android and iOS with guided installation flow
@@ -146,7 +144,7 @@ waqtsalat/
 | Method | Ministere des Habous et des Affaires Islamiques |
 | Fajr angle | 19° |
 | Isha angle | 17° |
-| Asr | Shadow = 1x object length + shadow at zenith (Malikite) |
+| Asr | Shadow = 1x object length + shadow at zenith |
 | Timezone | `Africa/Casablanca` (with Morocco-specific DST) |
 | Algorithm | Jean Meeus — Astronomical Algorithms |
 
@@ -185,7 +183,7 @@ npm test
 A: No. The prayer times use the Moroccan Habous method and only Moroccan cities are included. The timezone is fixed to `Africa/Casablanca`. Use a different app for other countries.
 
 **Q: Why is there no choice of calculation method?**
-A: This app targets Moroccan Muslims who follow the Malikite rite and the official Habous timings. Simplicity is a feature.
+A: This app targets Moroccan Muslims who follow the official Habous timings. Simplicity is a feature.
 
 **Q: Do I need an internet connection?**
 A: Only for the very first visit. After that, everything works offline, including prayer time calculations.
@@ -193,7 +191,7 @@ A: Only for the very first visit. After that, everything works offline, includin
 **Q: Does the app collect any data?**
 A: No. Zero cookies, zero analytics, zero network requests after installation. Your settings are stored locally on your device in `localStorage`.
 
-**Q: How accurate are the prayer times?**
+**Q: How close are the prayer times to the official schedule?**
 A: Within ±1 minute of the official Habous times. The app uses the same astronomical algorithms and parameters.
 
 **Q: Can I adjust times to match my local mosque?**

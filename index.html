@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#0d5a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>WaqtSalat — وقت الصلاة | Prayer Times for Morocco</title>
+<title>وقت الصلاة — مواقيت الصلاة في المغرب</title>
 
 <!-- SEO Meta Tags -->
-<meta name="description" content="Accurate prayer times for Morocco. Offline PWA using the official Habous method (Malikite rite). Fajr, Dhuhr, Asr, Maghrib, Isha + Qibla compass. 35+ Moroccan cities. Zero tracking.">
-<meta name="keywords" content="prayer times, Morocco, salat, horaires prière, أوقات الصلاة, المغرب, Habous, Malikite, Fajr, Dhuhr, Asr, Maghrib, Isha, Qibla, PWA, offline, مواقيت الصلاة">
+<meta name="description" content="مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
+<meta name="keywords" content="prayer times, Morocco, salat, horaires prière, أوقات الصلاة, المغرب, Habous, Fajr, Dhuhr, Asr, Maghrib, Isha, Qibla, PWA, offline, مواقيت الصلاة">
 <meta name="author" content="WaqtSalat">
 <meta name="robots" content="index, follow">
 <meta name="language" content="Arabic">
@@ -21,13 +21,13 @@
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://waqtsalat.github.io/waqtsalat/">
-<meta property="og:title" content="WaqtSalat — وقت الصلاة | Prayer Times for Morocco">
-<meta property="og:description" content="Accurate prayer times for Morocco. Offline PWA using the official Habous method (Malikite rite). 35+ cities, Qibla compass, trilingual (AR/FR/EN). Zero tracking.">
+<meta property="og:title" content="وقت الصلاة — مواقيت الصلاة في المغرب">
+<meta property="og:description" content="مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
 <meta property="og:image" content="https://waqtsalat.github.io/waqtsalat/icons/og-image.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="WaqtSalat — Prayer times app for Morocco">
+<meta property="og:image:alt" content="وقت الصلاة — تطبيق مواقيت الصلاة في المغرب">
 <meta property="og:locale" content="ar_MA">
 <meta property="og:locale:alternate" content="fr_MA">
 <meta property="og:locale:alternate" content="en_US">
@@ -36,10 +36,10 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://waqtsalat.github.io/waqtsalat/">
-<meta name="twitter:title" content="WaqtSalat — وقت الصلاة | Prayer Times for Morocco">
-<meta name="twitter:description" content="Accurate prayer times for Morocco. Offline PWA using the official Habous method (Malikite rite). 35+ cities, Qibla compass, trilingual. Zero tracking.">
+<meta name="twitter:title" content="وقت الصلاة — مواقيت الصلاة في المغرب">
+<meta name="twitter:description" content="مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
 <meta name="twitter:image" content="https://waqtsalat.github.io/waqtsalat/icons/og-image.png">
-<meta name="twitter:image:alt" content="WaqtSalat — Prayer times app for Morocco">
+<meta name="twitter:image:alt" content="وقت الصلاة — تطبيق مواقيت الصلاة في المغرب">
 
 <!-- PWA & App Meta -->
 <meta name="application-name" content="WaqtSalat">
@@ -60,7 +60,7 @@
   "name": "WaqtSalat",
   "alternateName": "وقت الصلاة",
   "url": "https://waqtsalat.github.io/waqtsalat/",
-  "description": "Accurate prayer times for Morocco. Offline-first PWA using the official Habous method (Malikite rite). Covers 35+ Moroccan cities with Qibla compass, trilingual interface, and local notifications. Zero tracking, zero cookies.",
+  "description": "Prayer times for Morocco. Offline-first PWA using the official Habous method. Covers 35+ Moroccan cities with Qibla compass, trilingual interface, and local notifications. Zero tracking, zero cookies.",
   "applicationCategory": "LifestyleApplication",
   "operatingSystem": "Any",
   "browserRequirements": "Requires a modern browser with JavaScript and Service Worker support",
@@ -70,13 +70,12 @@
     "priceCurrency": "MAD"
   },
   "featureList": [
-    "Accurate prayer times using the official Moroccan Habous method",
+    "Prayer times using the official Moroccan Habous method",
     "6 daily prayers: Fajr, Chourouk, Dhuhr, Asr, Maghrib, Isha",
     "35+ Moroccan cities with GPS auto-detection",
     "Qibla compass with device orientation and AR mode",
     "Trilingual interface: Arabic, French, English",
     "Full RTL support for Arabic",
-    "Analog clock with prayer time arcs",
     "Local push notifications with Do Not Disturb mode",
     "Pre-prayer notifications (5/10/15/30 minutes)",
     "Manual time adjustments per prayer (±15 min)",
@@ -130,10 +129,10 @@
     },
     {
       "@type": "Question",
-      "name": "How accurate are the prayer times?",
+      "name": "How close are the prayer times to the official schedule?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "WaqtSalat calculates prayer times within ±1 minute of the official Habous (Ministry of Islamic Affairs) times. The app uses the same astronomical parameters: Fajr at 19°, Isha at 17°, and the Malikite method for Asr."
+        "text": "WaqtSalat calculates prayer times within ±1 minute of the official Habous (Ministry of Islamic Affairs) times. The app uses the same astronomical parameters: Fajr at 19°, Isha at 17°."
       }
     },
     {
@@ -165,7 +164,7 @@
       "name": "What calculation method does WaqtSalat use?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "WaqtSalat uses the method of the Moroccan Ministry of Habous and Islamic Affairs: Fajr angle 19°, Isha angle 17°, and Asr calculated as shadow = 1x object length + shadow at zenith (Malikite school). The astronomical algorithms are based on Jean Meeus' 'Astronomical Algorithms'."
+        "text": "WaqtSalat uses the method of the Moroccan Ministry of Habous and Islamic Affairs: Fajr angle 19°, Isha angle 17°, and Asr calculated as shadow = 1x object length + shadow at zenith. The astronomical algorithms are based on Jean Meeus' 'Astronomical Algorithms'."
       }
     },
     {
@@ -507,6 +506,14 @@ nav.bottom-bar button:focus-visible{
 .btn-action:hover,.btn-action:focus-visible{background:rgba(255,255,255,0.06)}
 .btn-danger{color:#e74c3c}
 
+/* Experimental badge */
+.badge-experimental{
+  display:inline-block;font-size:0.65rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:0.04em;padding:0.1em 0.5em;border-radius:0.75em;
+  background:rgba(243,156,18,0.15);color:#f0c040;border:1px solid rgba(243,156,18,0.3);
+  vertical-align:middle;margin-inline-start:var(--sp-sm);
+}
+
 /* Notification prayer toggles grid */
 .notif-prayers-grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:var(--sp-sm);
@@ -670,6 +677,56 @@ nav.bottom-bar button:focus-visible{
 }
 [dir="rtl"] .reload-toast{right:auto;left:var(--sp-md)}
 .reload-toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+
+/* Notification tester popup */
+.notif-test-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.5);
+  display:none;align-items:center;justify-content:center;
+  padding:var(--sp-lg);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.notif-test-overlay.show{display:flex}
+.notif-test-popup{
+  background:linear-gradient(180deg,#0d5a2e,#14704c);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--sp-md);
+  max-width:320px;width:100%;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+.notif-test-header{
+  padding:var(--sp-lg);border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:var(--fs-md);font-weight:600;color:#fff;
+}
+.notif-test-body{padding:var(--sp-lg);display:flex;flex-direction:column;gap:var(--sp-md)}
+.notif-test-desc{font-size:var(--fs-xs);color:rgba(255,255,255,0.6);line-height:1.5}
+.notif-test-options{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm)}
+.notif-test-opt{
+  display:flex;align-items:center;justify-content:center;gap:var(--sp-xs);
+  padding:var(--sp-md);
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  border-radius:var(--sp-sm);cursor:pointer;transition:all 0.2s;
+  font-size:var(--fs-sm);color:rgba(255,255,255,0.7);
+}
+.notif-test-opt:hover{background:rgba(255,255,255,0.1)}
+.notif-test-opt.selected{
+  background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);
+}
+.notif-test-opt input{display:none}
+.notif-test-actions{
+  display:flex;gap:var(--sp-sm);padding:0 var(--sp-lg) var(--sp-lg);
+}
+.notif-test-actions button{flex:1;padding:var(--sp-md);border-radius:var(--sp-sm);font-size:var(--fs-sm);font-weight:600;cursor:pointer;transition:all 0.2s}
+.notif-test-send{background:var(--gold);color:#1a1a1a}
+.notif-test-send:hover{filter:brightness(1.1)}
+.notif-test-send:disabled{opacity:0.5;cursor:not-allowed}
+.notif-test-cancel{background:transparent;color:rgba(255,255,255,0.48);border:1px solid rgba(255,255,255,0.1)}
+.notif-test-cancel:hover{background:rgba(255,255,255,0.06)}
+.notif-test-status{
+  font-size:var(--fs-xs);color:var(--gold);text-align:center;
+  min-height:1.2em;transition:opacity 0.3s;
+}
 
 /* Toggle switch */
 .toggle{position:relative;width:2.5rem;height:1.375rem;flex-shrink:0}
@@ -874,6 +931,18 @@ nav.bottom-bar button:focus-visible{
 .help-popup-header .app-info .app-name{font-size:var(--fs-lg);font-weight:700;color:#fff}
 .help-popup-header .app-info .app-version{font-size:var(--fs-xs);color:rgba(255,255,255,0.54)}
 .help-popup-body{padding:var(--sp-lg);display:flex;flex-direction:column;gap:var(--sp-md)}
+.help-popup-features{
+  display:flex;flex-wrap:wrap;gap:var(--sp-sm);
+}
+.help-feature{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,0.08);border-radius:999px;
+  padding:var(--sp-xs) var(--sp-sm);font-size:var(--fs-xs);
+  color:rgba(255,255,255,0.8);
+}
+.help-feature svg{width:0.875rem;height:0.875rem;flex-shrink:0;color:var(--gold)}
+a.help-feature{text-decoration:none;color:rgba(255,255,255,0.8)}
+a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.15)}
 .help-popup-beta{
   background:rgba(243,156,18,0.12);border:1px solid rgba(243,156,18,0.25);
   border-radius:var(--sp-sm);padding:var(--sp-md);
@@ -959,6 +1028,13 @@ nav.bottom-bar button:focus-visible{
       </div>
     </div>
     <div class="help-popup-body">
+      <div class="help-popup-features">
+        <a class="help-feature" id="help-feature-noads" href="https://en.wikipedia.org/wiki/Online_advertising" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/></svg> <span>No ads</span></a>
+        <a class="help-feature" id="help-feature-notracking" href="https://en.wikipedia.org/wiki/Web_tracking" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span>No tracking</span></a>
+        <span class="help-feature" id="help-feature-free"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg> <span>Always free</span></span>
+        <a class="help-feature" id="help-feature-habous" href="https://en.wikipedia.org/wiki/Ministry_of_Endowments_and_Islamic_Affairs_(Morocco)" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span>Habous calculation</span></a>
+        <a class="help-feature" id="help-feature-opensource" href="https://en.wikipedia.org/wiki/Open-source_software" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> <span>Open source</span></a>
+      </div>
       <div class="help-popup-beta">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <span id="help-beta-text">Beta — Prayer times may differ slightly from official schedules. Always verify with your local mosque.</span>
@@ -995,6 +1071,27 @@ nav.bottom-bar button:focus-visible{
 
 <div class="notif-blocked-bar" id="notif-blocked-bar" role="alert">
   <span id="notif-blocked-text"></span>
+</div>
+
+<!-- Notification tester popup -->
+<div class="notif-test-overlay" id="notif-test-overlay">
+  <div class="notif-test-popup" role="dialog" aria-labelledby="notif-test-title">
+    <div class="notif-test-header" id="notif-test-title"></div>
+    <div class="notif-test-body">
+      <div class="notif-test-desc" id="notif-test-desc"></div>
+      <div class="notif-test-options" id="notif-test-options">
+        <label class="notif-test-opt selected"><input type="radio" name="notif-test-delay" value="0" checked><span id="notif-test-now"></span></label>
+        <label class="notif-test-opt"><input type="radio" name="notif-test-delay" value="10"><span id="notif-test-10s"></span></label>
+        <label class="notif-test-opt"><input type="radio" name="notif-test-delay" value="60"><span id="notif-test-1m"></span></label>
+        <label class="notif-test-opt"><input type="radio" name="notif-test-delay" value="300"><span id="notif-test-5m"></span></label>
+      </div>
+      <div class="notif-test-status" id="notif-test-status"></div>
+    </div>
+    <div class="notif-test-actions">
+      <button class="notif-test-send" id="notif-test-send"></button>
+      <button class="notif-test-cancel" id="notif-test-cancel"></button>
+    </div>
+  </div>
 </div>
 
 <div class="update-banner" id="update-banner" role="alert">
@@ -1151,7 +1248,7 @@ nav.bottom-bar button:focus-visible{
     </div>
   </div>
   <div class="settings-section" id="s-notif-section">
-    <h3 id="s-notif-title"></h3>
+    <h3><span id="s-notif-title"></span> <span class="badge-experimental" id="s-notif-badge"></span></h3>
     <div class="setting-row">
       <label id="s-notif-label"></label>
       <span class="notif-perm-badge" id="s-notif-perm-badge"></span>
@@ -1203,6 +1300,11 @@ nav.bottom-bar button:focus-visible{
         <div class="notif-dnd-platform active" id="s-notif-dnd-text"></div>
       </div>
       <div class="notif-credits" id="s-notif-credits"></div>
+      <div class="notif-dnd-hint" id="s-notif-dnd-hint"></div>
+      <div class="notif-sub-row">
+        <label id="s-notif-test-label"></label>
+        <button class="btn-test-sound" id="btn-test-notif"></button>
+      </div>
     </div>
   </div>
   <div class="settings-section" id="s-cap-section">
@@ -1304,7 +1406,7 @@ maghrib:'المغرب',isha:'العشاء',nextPrayer:'الصلاة القادم
 hours:'سا',minutes:'د',seconds:'ث',settings:'الإعدادات',qibla:'القبلة',
 prayerTimes:'أوقات الصلاة',city:'المدينة',language:'اللغة',theme:'المظهر',
 themeLight:'فاتح',themeDark:'داكن',themeSystem:'تلقائي',
-notifications:'الإشعارات',enableNotifications:'تفعيل الإشعارات',
+notifications:'الإشعارات',experimental:'تجريبي',enableNotifications:'تفعيل الإشعارات',
 adjustments:'تعديلات',adjustmentsDesc:'تعديل التوقيت (±15 دقيقة)',
 exportConfig:'تصدير الإعدادات',importConfig:'استيراد الإعدادات',
 resetConfig:'إعادة تعيين',resetConfirm:'هل أنت متأكد؟ سيتم حذف جميع الإعدادات.',
@@ -1324,6 +1426,9 @@ helpInfo:'المساعدة',betaWarning:'نسخة تجريبية — قد تخت
 helpContribute:'المساهمة',helpContributeDesc:'عرض الكود المصدري والمساهمة',
 helpReport:'الإبلاغ عن خطأ',helpReportDesc:'الإبلاغ عن مشاكل أو طلب ميزات',helpClose:'إغلاق',
 helpShare:'مشاركة',helpShareDesc:'شارك وقت الصلاة مع الأهل والأصدقاء',shareCopied:'تم نسخ الرابط',
+helpNoAds:'بدون إعلانات',helpNoTracking:'بدون تتبع',helpFree:'مجاني دائماً',helpHabous:'حساب الأحباس',helpOpenSource:'مفتوح المصدر',
+helpUrlAds:'https://ar.wikipedia.org/wiki/%D8%A5%D8%B9%D9%84%D8%A7%D9%86',helpUrlTracking:'https://ar.wikipedia.org/wiki/%D8%AA%D8%AA%D8%A8%D8%B9_%D8%A7%D9%84%D9%88%D9%8A%D8%A8',helpUrlHabous:'https://ar.wikipedia.org/wiki/%D9%88%D8%B2%D8%A7%D8%B1%D8%A9_%D8%A7%D9%84%D8%A3%D9%88%D9%82%D8%A7%D9%81_%D9%88%D8%A7%D9%84%D8%B4%D8%A4%D9%88%D9%86_%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%D8%A9_(%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8)',helpUrlOpenSource:'https://ar.wikipedia.org/wiki/%D8%A8%D8%B1%D9%85%D8%AC%D9%8A%D8%A7%D8%AA_%D9%85%D9%81%D8%AA%D9%88%D8%AD%D8%A9_%D8%A7%D9%84%D9%85%D8%B5%D8%AF%D8%B1',
+ogTitle:'وقت الصلاة — مواقيت الصلاة في المغرب',ogDescription:'مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.',ogImageAlt:'وقت الصلاة — تطبيق مواقيت الصلاة في المغرب',
 notifPrayers:'صلوات الإشعار',notifSelectPrayers:'اختر الصلوات التي تريد إشعاراً لها',
 notifAdvance:'تنبيه مسبق',notifAdvanceDesc:'تنبيه قبل وقت الصلاة',
 notifAdvance0:'عند الأذان',notifAdvance5:'قبل 5 دقائق',notifAdvance10:'قبل 10 دقائق',notifAdvance15:'قبل 15 دقائق',notifAdvance30:'قبل 30 دقيقة',
@@ -1359,6 +1464,7 @@ capCamera:'الكاميرا',capCameraDesc:'مطلوبة لميزة الواقع
 capPermGranted:'مسموح',capPermDenied:'مرفوض',capPermPrompt:'بانتظار الإذن',
 reloadAssets:'تحديث الملفات',reloadAssetsDesc:'إعادة تحميل التطبيق مع الحفاظ على إعداداتك',
 reloadingAssets:'جارٍ التحديث…',reloadDone:'تم التحديث بنجاح',reloadFail:'فشل التحديث',
+notifTestTitle:'تجربة الإشعار',notifTestDesc:'اختر متى تريد تلقي إشعار تجريبي',notifTestNow:'الآن',notifTest10s:'بعد 10 ثوانٍ',notifTest1m:'بعد دقيقة',notifTest5m:'بعد 5 دقائق',notifTestSend:'إرسال',notifTestCancel:'إلغاء',notifTestLabel:'تجربة الإشعار',notifTestScheduled:'سيصل الإشعار',notifTestSent:'تم إرسال الإشعار',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -1366,7 +1472,7 @@ maghrib:'Maghrib',isha:'Isha',nextPrayer:'Prochaine prière',timeRemaining:'Temp
 hours:'h',minutes:'min',seconds:'s',settings:'Paramètres',qibla:'Qibla',
 prayerTimes:'Horaires',city:'Ville',language:'Langue',theme:'Thème',
 themeLight:'Clair',themeDark:'Sombre',themeSystem:'Auto',
-notifications:'Notifications',enableNotifications:'Activer les notifications',
+notifications:'Notifications',experimental:'Expérimental',enableNotifications:'Activer les notifications',
 adjustments:'Ajustements',adjustmentsDesc:'Ajuster les horaires (±15 min)',
 exportConfig:'Exporter',importConfig:'Importer',
 resetConfig:'Réinitialiser',resetConfirm:'Êtes-vous sûr ? Tous les paramètres seront supprimés.',
@@ -1387,6 +1493,9 @@ helpInfo:'Aide',betaWarning:'Bêta — Les horaires de prière peuvent légèrem
 helpContribute:'Contribuer',helpContributeDesc:'Voir le code source et contribuer',
 helpReport:'Signaler un bug',helpReportDesc:'Signaler un problème ou demander une fonctionnalité',helpClose:'Fermer',
 helpShare:'Partager',helpShareDesc:'Partagez WaqtSalat avec vos proches',shareCopied:'Lien copié',
+helpNoAds:'Sans pub',helpNoTracking:'Sans tracking',helpFree:'Toujours gratuit',helpHabous:'Calcul Habous',helpOpenSource:'Open source',
+helpUrlAds:'https://fr.wikipedia.org/wiki/Publicit%C3%A9_en_ligne',helpUrlTracking:'https://fr.wikipedia.org/wiki/Pistage_web',helpUrlHabous:'https://fr.wikipedia.org/wiki/Minist%C3%A8re_des_Habous_et_des_Affaires_islamiques',helpUrlOpenSource:'https://fr.wikipedia.org/wiki/Logiciel_libre',
+ogTitle:'WaqtSalat — Horaires de prière au Maroc',ogDescription:'Horaires de prière pour le Maroc, méthode officielle des Habous. +35 villes, boussole Qibla. Sans pub, sans tracking, sans paiement, open source.',ogImageAlt:'WaqtSalat — Application d\'horaires de prière au Maroc',
 notifPrayers:'Prières à notifier',notifSelectPrayers:'Choisissez les prières pour les notifications',
 notifAdvance:'Alerte anticipée',notifAdvanceDesc:'Notification avant l\'heure de prière',
 notifAdvance0:'À l\'adhan',notifAdvance5:'5 min avant',notifAdvance10:'10 min avant',notifAdvance15:'15 min avant',notifAdvance30:'30 min avant',
@@ -1422,6 +1531,7 @@ capCamera:'Caméra',capCameraDesc:'Requise pour la réalité augmentée',
 capPermGranted:'Autorisé',capPermDenied:'Refusé',capPermPrompt:'En attente',
 reloadAssets:'Recharger les fichiers',reloadAssetsDesc:'Retélécharger l\'application en conservant vos paramètres',
 reloadingAssets:'Rechargement…',reloadDone:'Mise à jour réussie',reloadFail:'Échec du rechargement',
+notifTestTitle:'Tester la notification',notifTestDesc:'Choisissez quand recevoir une notification de test',notifTestNow:'Maintenant',notifTest10s:'Dans 10 s',notifTest1m:'Dans 1 min',notifTest5m:'Dans 5 min',notifTestSend:'Envoyer',notifTestCancel:'Annuler',notifTestLabel:'Tester la notification',notifTestScheduled:'Notification prévue',notifTestSent:'Notification envoyée',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -1429,7 +1539,7 @@ maghrib:'Maghrib',isha:'Isha',nextPrayer:'Next Prayer',timeRemaining:'Time Remai
 hours:'h',minutes:'min',seconds:'s',settings:'Settings',qibla:'Qibla',
 prayerTimes:'Prayer Times',city:'City',language:'Language',theme:'Theme',
 themeLight:'Light',themeDark:'Dark',themeSystem:'Auto',
-notifications:'Notifications',enableNotifications:'Enable notifications',
+notifications:'Notifications',experimental:'Experimental',enableNotifications:'Enable notifications',
 adjustments:'Adjustments',adjustmentsDesc:'Adjust prayer times (±15 min)',
 exportConfig:'Export',importConfig:'Import',
 resetConfig:'Reset',resetConfirm:'Are you sure? All settings will be deleted.',
@@ -1450,6 +1560,9 @@ helpInfo:'Help & Info',betaWarning:'Beta — Prayer times may differ slightly fr
 helpContribute:'Contribute',helpContributeDesc:'View source code & contribute',
 helpReport:'Report a bug',helpReportDesc:'Report issues or request features',helpClose:'Close',
 helpShare:'Share',helpShareDesc:'Share WaqtSalat with friends & family',shareCopied:'Link copied',
+helpNoAds:'No ads',helpNoTracking:'No tracking',helpFree:'Always free',helpHabous:'Habous calculation',helpOpenSource:'Open source',
+helpUrlAds:'https://en.wikipedia.org/wiki/Online_advertising',helpUrlTracking:'https://en.wikipedia.org/wiki/Web_tracking',helpUrlHabous:'https://en.wikipedia.org/wiki/Ministry_of_Endowments_and_Islamic_Affairs_(Morocco)',helpUrlOpenSource:'https://en.wikipedia.org/wiki/Open-source_software',
+ogTitle:'WaqtSalat — Prayer Times for Morocco',ogDescription:'Prayer times for Morocco using the official Habous method. 35+ cities, Qibla compass. No ads, no tracking, no payment, open source.',ogImageAlt:'WaqtSalat — Prayer times app for Morocco',
 notifPrayers:'Notification Prayers',notifSelectPrayers:'Choose which prayers to be notified for',
 notifAdvance:'Advance Alert',notifAdvanceDesc:'Get notified before prayer time',
 notifAdvance0:'At adhan time',notifAdvance5:'5 min before',notifAdvance10:'10 min before',notifAdvance15:'15 min before',notifAdvance30:'30 min before',
@@ -1485,6 +1598,7 @@ capCamera:'Camera',capCameraDesc:'Required for augmented reality',
 capPermGranted:'Allowed',capPermDenied:'Denied',capPermPrompt:'Pending',
 reloadAssets:'Reload assets',reloadAssetsDesc:'Re-download the app while keeping your settings',
 reloadingAssets:'Reloading…',reloadDone:'Updated successfully',reloadFail:'Reload failed',
+notifTestTitle:'Test Notification',notifTestDesc:'Choose when to receive a test notification',notifTestNow:'Now',notifTest10s:'In 10s',notifTest1m:'In 1 min',notifTest5m:'In 5 min',notifTestSend:'Send',notifTestCancel:'Cancel',notifTestLabel:'Test notification',notifTestScheduled:'Notification scheduled',notifTestSent:'Notification sent',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -1663,9 +1777,20 @@ function applyLocale(){
   const dir=l==='ar'?'rtl':'ltr';
   document.documentElement.lang=l;
   document.documentElement.dir=dir;
-  document.title=t('appName');
+  document.title=t('ogTitle');
   // Skip link
   $('skip-link').textContent=l==='ar'?'تخطي إلى المحتوى':l==='fr'?'Aller au contenu':'Skip to content';
+  // Update OG & meta tags for localized sharing
+  const ogLocaleMap={ar:'ar_MA',fr:'fr_MA',en:'en_US'};
+  const setMeta=(sel,val)=>{const el=document.querySelector(sel);if(el)el.setAttribute('content',val)};
+  setMeta('meta[property="og:title"]',t('ogTitle'));
+  setMeta('meta[property="og:description"]',t('ogDescription'));
+  setMeta('meta[property="og:image:alt"]',t('ogImageAlt'));
+  setMeta('meta[property="og:locale"]',ogLocaleMap[l]||'ar_MA');
+  setMeta('meta[name="twitter:title"]',t('ogTitle'));
+  setMeta('meta[name="twitter:description"]',t('ogDescription'));
+  setMeta('meta[name="twitter:image:alt"]',t('ogImageAlt'));
+  setMeta('meta[name="description"]',t('ogDescription'));
 }
 
 function applyTheme(){
@@ -2658,6 +2783,7 @@ function renderSettings(){
 
   // Notifications
   $('s-notif-title').textContent=t('notifications');
+  $('s-notif-badge').textContent=t('experimental');
   $('s-notif-label').textContent=t('enableNotifications');
   $('s-notif-toggle').checked=state.notifications.enabled;
 
@@ -2745,6 +2871,19 @@ function renderSettings(){
   // Device capabilities
   renderCapabilities();
 
+  // Notification tester
+  $('s-notif-test-label').textContent=t('notifTestLabel');
+  $('btn-test-notif').textContent=t('notifSoundTest');
+  $('notif-test-title').textContent=t('notifTestTitle');
+  $('notif-test-desc').textContent=t('notifTestDesc');
+  $('notif-test-now').textContent=t('notifTestNow');
+  $('notif-test-10s').textContent=t('notifTest10s');
+  $('notif-test-1m').textContent=t('notifTest1m');
+  $('notif-test-5m').textContent=t('notifTest5m');
+  $('notif-test-send').textContent=t('notifTestSend');
+  $('notif-test-cancel').textContent=t('notifTestCancel');
+  $('notif-test-status').textContent='';
+
   // Adjustments
   $('s-adj-title').textContent=t('adjustments');
   const adjRows=$('s-adj-rows');
@@ -2791,6 +2930,16 @@ function renderSettings(){
   $('help-popup-title').textContent=t('appName');
   $('help-label-share').textContent=t('helpShare');
   $('help-desc-share').textContent=t('helpShareDesc');
+  // Help feature badges
+  $('help-feature-noads').querySelector('span').textContent=t('helpNoAds');
+  $('help-feature-noads').href=t('helpUrlAds');
+  $('help-feature-notracking').querySelector('span').textContent=t('helpNoTracking');
+  $('help-feature-notracking').href=t('helpUrlTracking');
+  $('help-feature-free').querySelector('span').textContent=t('helpFree');
+  $('help-feature-habous').querySelector('span').textContent=t('helpHabous');
+  $('help-feature-habous').href=t('helpUrlHabous');
+  $('help-feature-opensource').querySelector('span').textContent=t('helpOpenSource');
+  $('help-feature-opensource').href=t('helpUrlOpenSource');
 }
 
 function populateCitySelect(sel){
@@ -2899,6 +3048,58 @@ function setupEvents(){
 
   // Test notification
   $('btn-test-notif').addEventListener('click',sendTestNotification);
+  // Notification tester popup
+  $('btn-test-notif').addEventListener('click',()=>{
+    $('notif-test-status').textContent='';
+    $('notif-test-send').disabled=false;
+    // Reset selection to "Now"
+    const opts=$('notif-test-options').querySelectorAll('.notif-test-opt');
+    opts.forEach(o=>o.classList.remove('selected'));
+    opts[0].classList.add('selected');
+    opts[0].querySelector('input').checked=true;
+    $('notif-test-overlay').classList.add('show');
+  });
+  $('notif-test-options').addEventListener('change',()=>{
+    const opts=$('notif-test-options').querySelectorAll('.notif-test-opt');
+    opts.forEach(o=>{
+      o.classList.toggle('selected',o.querySelector('input').checked);
+    });
+    $('notif-test-status').textContent='';
+    $('notif-test-send').disabled=false;
+  });
+  $('notif-test-cancel').addEventListener('click',()=>{
+    $('notif-test-overlay').classList.remove('show');
+  });
+  $('notif-test-overlay').addEventListener('click',e=>{
+    if(e.target===$('notif-test-overlay'))$('notif-test-overlay').classList.remove('show');
+  });
+  $('notif-test-send').addEventListener('click',async()=>{
+    const delay=parseInt(document.querySelector('input[name="notif-test-delay"]:checked').value,10);
+    const btn=$('notif-test-send');
+    btn.disabled=true;
+
+    // Request permission if needed
+    if(!('Notification' in window))return;
+    if(Notification.permission==='denied'){
+      $('notif-test-status').textContent=t('notifBlocked');
+      return;
+    }
+    if(Notification.permission!=='granted'){
+      const perm=await Notification.requestPermission();
+      if(perm!=='granted')return;
+    }
+
+    if(delay===0){
+      fireTestNotification();
+      $('notif-test-status').textContent=t('notifTestSent');
+      setTimeout(()=>$('notif-test-overlay').classList.remove('show'),1200);
+    }else{
+      setTimeout(()=>fireTestNotification(),delay*1000);
+      const label=delay<60?t('notifTest10s'):delay<300?t('notifTest1m'):t('notifTest5m');
+      $('notif-test-status').textContent=t('notifTestScheduled')+' ('+label+')';
+      setTimeout(()=>$('notif-test-overlay').classList.remove('show'),1500);
+    }
+  });
 
   // Help popup
   $('help-fab').addEventListener('click',()=>{
@@ -2913,9 +3114,10 @@ function setupEvents(){
 
   // Share
   $('help-link-share').addEventListener('click',async()=>{
-    const url='https://waqtsalat.github.io/waqtsalat/';
-    const title='WaqtSalat — '+t('appName');
-    const text=document.querySelector('meta[name="description"]').content;
+    const base='https://waqtsalat.github.io/waqtsalat/';
+    const url=state.locale==='ar'?base:base+'?lang='+state.locale;
+    const title=t('ogTitle');
+    const text=t('ogDescription');
     if(navigator.share){
       try{await navigator.share({title,text,url})}catch(e){}
     }else{
@@ -3018,6 +3220,18 @@ function setupOnboarding(){
 
   // Populate city select
   populateCitySelect($('ob-city-select'));
+
+  // Sync onboarding UI with current locale (may come from ?lang= param)
+  ob.querySelectorAll('.lang-choices button').forEach(b=>{
+    b.classList.toggle('selected',b.dataset.lang===state.locale);
+  });
+  $('ob-lang-title').textContent=t('onboardingLang');
+  $('ob-lang-next').textContent=t('next');
+  $('ob-city-title').textContent=t('onboardingCity');
+  $('ob-gps-text').textContent=t('gpsLocate');
+  $('ob-city-next').textContent=t('next');
+  $('ob-done-title').textContent=t('onboardingDone');
+  $('ob-done-btn').textContent=t('done');
 
   // Language choice
   ob.querySelectorAll('.lang-choices button').forEach(btn=>{
@@ -3341,6 +3555,14 @@ async function sendTestNotification(){
   // Show notification
   const title=t('notifTestSent');
   const body=t('notifAthanTime')+' '+t('dhuhr')+' — 12:30';
+async function fireTestNotification(){
+  const title=t('notifTestTitle')+' — WaqtSalat';
+  const body=t('notifTestDesc');
+  const snd=state.notifications.sound||'tone';
+  if(snd!=='silent'){try{playNotifSound(snd)}catch(e){}}
+  if(state.notifications.vibrate&&navigator.vibrate){
+    navigator.vibrate([200,100,200]);
+  }
   if(navigator.serviceWorker&&navigator.serviceWorker.controller){
     const reg=await navigator.serviceWorker.ready;
     reg.showNotification(title,{
@@ -3349,6 +3571,9 @@ async function sendTestNotification(){
       vibrate:vibPattern,silent:snd!=='silent',
       data:{prayer:'test',isAdvance:false,sound:snd},
       actions:[{action:'dismiss',title:t('notifDismiss')}]
+      tag:'waqtsalat-test',renotify:true,
+      vibrate:state.notifications.vibrate?[200,100,200]:[0],
+      silent:true
     });
   }else{
     new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-test'});
@@ -3574,8 +3799,18 @@ function showShareToast(msg){
 
 // ─── Boot ─────────────────────────────────────────────────────
 loadState();
-// Detect locale from browser if not saved
-if(!localStorage.getItem('waqt-locale')){
+// URL ?lang= parameter overrides saved locale (for shared links)
+const urlParams=new URLSearchParams(location.search);
+const urlLang=urlParams.get('lang');
+if(urlLang&&TR[urlLang]){
+  state.locale=urlLang;
+  saveState('waqt-locale',urlLang);
+  // Clean ?lang= from URL so it doesn't override future language changes
+  urlParams.delete('lang');
+  const clean=urlParams.toString();
+  history.replaceState(null,'',location.pathname+(clean?'?'+clean:''));
+}else if(!localStorage.getItem('waqt-locale')){
+  // Detect locale from browser if not saved
   const lang=navigator.language?.slice(0,2);
   if(TR[lang])state.locale=lang;
 }
