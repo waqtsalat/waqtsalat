@@ -605,6 +605,72 @@ nav.bottom-bar button:focus-visible{
 .notif-detail.show{display:block;animation:slide-down 0.3s ease}
 @keyframes slide-down{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 
+/* Device capabilities */
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm);padding:var(--sp-sm) 0}
+.cap-item{
+  display:flex;align-items:flex-start;gap:var(--sp-sm);
+  padding:var(--sp-sm) var(--sp-md);
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--sp-sm);transition:border-color 0.2s;
+  min-height:3.2rem;
+}
+.cap-item.available{border-color:rgba(46,204,113,0.2)}
+.cap-item.unavailable{border-color:rgba(231,76,60,0.15);opacity:0.7}
+.cap-item.partial{border-color:rgba(243,156,18,0.2)}
+.cap-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px;
+}
+.cap-dot.available{background:#2ecc71}
+.cap-dot.unavailable{background:#e74c3c}
+.cap-dot.partial{background:#f39c12}
+.cap-info{display:flex;flex-direction:column;gap:1px;min-width:0}
+.cap-name{font-size:var(--fs-xs);font-weight:500;color:rgba(255,255,255,0.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap-desc{font-size:0.65rem;color:rgba(255,255,255,0.45);line-height:1.3}
+.cap-perm{font-size:0.6rem;font-weight:600;letter-spacing:0.02em;margin-top:1px}
+.cap-perm.granted{color:#2ecc71}
+.cap-perm.denied{color:#e74c3c}
+.cap-perm.prompt{color:#f39c12}
+.cap-summary{
+  display:flex;align-items:center;gap:var(--sp-sm);
+  padding:var(--sp-sm) 0;font-size:var(--fs-xs);
+  color:rgba(255,255,255,0.5);
+}
+.cap-summary-count{
+  display:inline-flex;align-items:center;gap:var(--sp-xs);
+}
+.cap-summary-count .cap-dot{width:6px;height:6px}
+@media(max-width:320px){.cap-grid{grid-template-columns:1fr}}
+
+/* Reload assets button */
+.reload-fab{
+  position:fixed;top:calc(var(--safe-t,0px) + var(--sp-sm));right:var(--sp-md);z-index:160;
+  width:2.25rem;height:2.25rem;border-radius:50%;
+  background:rgba(8,40,22,0.92);color:rgba(255,255,255,0.7);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 2px 8px rgba(0,0,0,0.25);
+  transition:transform 0.3s,color 0.2s,border-color 0.2s;
+  cursor:pointer;
+}
+[dir="rtl"] .reload-fab{right:auto;left:var(--sp-md)}
+.reload-fab:hover,.reload-fab:focus-visible{color:#fff;border-color:rgba(255,255,255,0.25);transform:scale(1.08)}
+.reload-fab svg{width:1.1rem;height:1.1rem}
+.reload-fab.spinning svg{animation:spin-reload 0.8s linear infinite}
+.reload-fab.success{color:#2ecc71;border-color:rgba(46,204,113,0.4)}
+.reload-fab.error{color:#e74c3c;border-color:rgba(231,76,60,0.4)}
+@keyframes spin-reload{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.reload-toast{
+  position:fixed;top:calc(var(--safe-t,0px) + 3rem);right:var(--sp-md);z-index:161;
+  background:rgba(8,40,22,0.95);color:#fff;
+  padding:var(--sp-sm) var(--sp-md);border-radius:var(--sp-sm);
+  font-size:var(--fs-xs);border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity 0.3s,transform 0.3s;white-space:nowrap;
+}
+[dir="rtl"] .reload-toast{right:auto;left:var(--sp-md)}
+.reload-toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+
 /* Toggle switch */
 .toggle{position:relative;width:2.5rem;height:1.375rem;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0;position:absolute}
@@ -871,6 +937,12 @@ nav.bottom-bar button:focus-visible{
 <body>
 <a class="skip-link" href="#main-content" id="skip-link">Skip to content</a>
 
+<!-- Reload assets FAB (top-right) -->
+<button class="reload-fab" id="reload-fab" aria-label="Reload assets" title="Reload assets">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+</button>
+<div class="reload-toast" id="reload-toast" role="status" aria-live="polite"></div>
+
 <!-- Help FAB -->
 <button class="help-fab" id="help-fab" aria-label="Help & Info">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -1133,6 +1205,11 @@ nav.bottom-bar button:focus-visible{
       <div class="notif-credits" id="s-notif-credits"></div>
     </div>
   </div>
+  <div class="settings-section" id="s-cap-section">
+    <h3 id="s-cap-title"></h3>
+    <div class="cap-summary" id="s-cap-summary"></div>
+    <div class="cap-grid" id="s-cap-grid"></div>
+  </div>
   <div class="settings-section">
     <h3 id="s-adj-title"></h3>
     <div id="s-adj-rows"></div>
@@ -1266,6 +1343,22 @@ notifDndGeneric:'تحقق من إعدادات عدم الإزعاج في نظا�
 notifBadge:'شارة التطبيق',
 soundCredits:'الأصوات',soundCreditsAdhan:'أذان مكة المكرمة — المسجد الحرام (ملك عام، Archive.org)',
 soundCreditsTone:'نغمة إشعار (CC0، Pixabay)',soundCreditsRepo:'مستودع open-sounds على GitHub',
+capTitle:'إمكانيات الجهاز',capAvailable:'متاح',capUnavailable:'غير متاح',capPartial:'محدود',
+capNotif:'الإشعارات',capNotifDesc:'تنبيهات أوقات الصلاة',
+capGeo:'الموقع الجغرافي',capGeoDesc:'تحديد أقرب مدينة تلقائياً',
+capCompass:'البوصلة',capCompassDesc:'اتجاه القبلة بالبوصلة الرقمية',
+capAR:'الواقع المعزز',capARDesc:'عرض الكعبة ثلاثي الأبعاد',
+capVibrate:'الاهتزاز',capVibrateDesc:'تنبيه بالاهتزاز عند الأذان',
+capWakeLock:'إيقاظ الشاشة',capWakeLockDesc:'إبقاء الشاشة مضاءة أثناء القراءة',
+capSW:'العمل بدون إنترنت',capSWDesc:'التطبيق يعمل بدون اتصال بالإنترنت',
+capBadge:'شارة الأيقونة',capBadgeDesc:'عداد الإشعارات على أيقونة التطبيق',
+capShare:'المشاركة',capShareDesc:'مشاركة التطبيق عبر النظام',
+capInstall:'التثبيت',capInstallDesc:'تثبيت كتطبيق مستقل على الجهاز',
+capBgSync:'المزامنة الخلفية',capBgSyncDesc:'إعادة جدولة الإشعارات تلقائياً',
+capCamera:'الكاميرا',capCameraDesc:'مطلوبة لميزة الواقع المعزز',
+capPermGranted:'مسموح',capPermDenied:'مرفوض',capPermPrompt:'بانتظار الإذن',
+reloadAssets:'تحديث الملفات',reloadAssetsDesc:'إعادة تحميل التطبيق مع الحفاظ على إعداداتك',
+reloadingAssets:'جارٍ التحديث…',reloadDone:'تم التحديث بنجاح',reloadFail:'فشل التحديث',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -1313,6 +1406,22 @@ notifDndGeneric:'Vérifiez les paramètres Ne pas déranger de votre système et
 notifBadge:'Badge de l\'application',
 soundCredits:'Sons',soundCreditsAdhan:'Adhan de La Mecque — Masjid al-Haram (Domaine public, Archive.org)',
 soundCreditsTone:'Tonalité de notification (CC0, Pixabay)',soundCreditsRepo:'Dépôt open-sounds sur GitHub',
+capTitle:'Capacités de l\'appareil',capAvailable:'Disponible',capUnavailable:'Indisponible',capPartial:'Limité',
+capNotif:'Notifications',capNotifDesc:'Alertes aux heures de prière',
+capGeo:'Géolocalisation',capGeoDesc:'Détection automatique de la ville',
+capCompass:'Boussole',capCompassDesc:'Direction de la Qibla par boussole',
+capAR:'Réalité augmentée',capARDesc:'Vue 3D de la Kaaba',
+capVibrate:'Vibration',capVibrateDesc:'Alerte par vibration à l\'adhan',
+capWakeLock:'Écran actif',capWakeLockDesc:'Garder l\'écran allumé pendant la lecture',
+capSW:'Mode hors ligne',capSWDesc:'L\'application fonctionne sans connexion',
+capBadge:'Badge d\'icône',capBadgeDesc:'Compteur de notifications sur l\'icône',
+capShare:'Partage',capShareDesc:'Partage natif via le système',
+capInstall:'Installation',capInstallDesc:'Installer comme application autonome',
+capBgSync:'Synchronisation en arrière-plan',capBgSyncDesc:'Reprogrammation automatique des notifications',
+capCamera:'Caméra',capCameraDesc:'Requise pour la réalité augmentée',
+capPermGranted:'Autorisé',capPermDenied:'Refusé',capPermPrompt:'En attente',
+reloadAssets:'Recharger les fichiers',reloadAssetsDesc:'Retélécharger l\'application en conservant vos paramètres',
+reloadingAssets:'Rechargement…',reloadDone:'Mise à jour réussie',reloadFail:'Échec du rechargement',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -1360,6 +1469,22 @@ notifDndGeneric:'Check your system\'s Do Not Disturb settings and allow WaqtSala
 notifBadge:'App badge',
 soundCredits:'Sounds',soundCreditsAdhan:'Makkah Adhan — Masjid al-Haram (Public Domain, Archive.org)',
 soundCreditsTone:'Notification tone (CC0, Pixabay)',soundCreditsRepo:'open-sounds repository on GitHub',
+capTitle:'Device Capabilities',capAvailable:'Available',capUnavailable:'Unavailable',capPartial:'Limited',
+capNotif:'Notifications',capNotifDesc:'Prayer time alerts',
+capGeo:'Geolocation',capGeoDesc:'Auto-detect nearest city',
+capCompass:'Compass',capCompassDesc:'Digital compass for Qibla direction',
+capAR:'Augmented Reality',capARDesc:'3D Kaaba view',
+capVibrate:'Vibration',capVibrateDesc:'Haptic alert at adhan time',
+capWakeLock:'Screen Wake Lock',capWakeLockDesc:'Keep screen on during reading',
+capSW:'Offline Mode',capSWDesc:'App works without internet',
+capBadge:'Icon Badge',capBadgeDesc:'Notification count on app icon',
+capShare:'Share',capShareDesc:'Native system sharing',
+capInstall:'Install',capInstallDesc:'Install as standalone app',
+capBgSync:'Background Sync',capBgSyncDesc:'Auto-reschedule notifications',
+capCamera:'Camera',capCameraDesc:'Required for augmented reality',
+capPermGranted:'Allowed',capPermDenied:'Denied',capPermPrompt:'Pending',
+reloadAssets:'Reload assets',reloadAssetsDesc:'Re-download the app while keeping your settings',
+reloadingAssets:'Reloading…',reloadDone:'Updated successfully',reloadFail:'Reload failed',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -2344,6 +2469,172 @@ function startCompass(){
   addOrientationListener(handler);
 }
 
+// ─── Device Capabilities ─────────────────────────────────────
+function detectCapabilities(){
+  const caps=[];
+  // Each check is wrapped in try-catch for graceful failure
+
+  // 1. Notifications
+  try{
+    const api='Notification' in window;
+    let status='available';
+    let perm=null;
+    if(api){
+      perm=Notification.permission; // 'granted','denied','default'
+      if(perm==='denied')status='partial';
+    }else{status='unavailable'}
+    caps.push({id:'notif',name:t('capNotif'),desc:t('capNotifDesc'),status,perm});
+  }catch(e){caps.push({id:'notif',name:t('capNotif'),desc:t('capNotifDesc'),status:'unavailable'})}
+
+  // 2. Geolocation
+  try{
+    const api='geolocation' in navigator;
+    caps.push({id:'geo',name:t('capGeo'),desc:t('capGeoDesc'),status:api?'available':'unavailable'});
+  }catch(e){caps.push({id:'geo',name:t('capGeo'),desc:t('capGeoDesc'),status:'unavailable'})}
+
+  // 3. Compass (DeviceOrientationEvent)
+  try{
+    const api='DeviceOrientationEvent' in window;
+    // iOS 13+ requires permission
+    const needsPerm=typeof DeviceOrientationEvent.requestPermission==='function';
+    caps.push({id:'compass',name:t('capCompass'),desc:t('capCompassDesc'),status:api?'available':'unavailable',
+      note:needsPerm?'(requires permission)':null});
+  }catch(e){caps.push({id:'compass',name:t('capCompass'),desc:t('capCompassDesc'),status:'unavailable'})}
+
+  // 4. AR (needs camera + device orientation)
+  try{
+    const hasOrientation='DeviceOrientationEvent' in window;
+    const hasMedia=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+    const status=hasOrientation&&hasMedia?'available':hasOrientation||hasMedia?'partial':'unavailable';
+    caps.push({id:'ar',name:t('capAR'),desc:t('capARDesc'),status});
+  }catch(e){caps.push({id:'ar',name:t('capAR'),desc:t('capARDesc'),status:'unavailable'})}
+
+  // 5. Vibration
+  try{
+    caps.push({id:'vibrate',name:t('capVibrate'),desc:t('capVibrateDesc'),
+      status:'vibrate' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'vibrate',name:t('capVibrate'),desc:t('capVibrateDesc'),status:'unavailable'})}
+
+  // 6. Screen Wake Lock
+  try{
+    caps.push({id:'wakeLock',name:t('capWakeLock'),desc:t('capWakeLockDesc'),
+      status:'wakeLock' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'wakeLock',name:t('capWakeLock'),desc:t('capWakeLockDesc'),status:'unavailable'})}
+
+  // 7. Service Worker (offline)
+  try{
+    caps.push({id:'sw',name:t('capSW'),desc:t('capSWDesc'),
+      status:'serviceWorker' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'sw',name:t('capSW'),desc:t('capSWDesc'),status:'unavailable'})}
+
+  // 8. Badge API
+  try{
+    caps.push({id:'badge',name:t('capBadge'),desc:t('capBadgeDesc'),
+      status:'setAppBadge' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'badge',name:t('capBadge'),desc:t('capBadgeDesc'),status:'unavailable'})}
+
+  // 9. Share API
+  try{
+    caps.push({id:'share',name:t('capShare'),desc:t('capShareDesc'),
+      status:'share' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'share',name:t('capShare'),desc:t('capShareDesc'),status:'unavailable'})}
+
+  // 10. Install (PWA)
+  try{
+    const isStandalone=window.matchMedia('(display-mode:standalone)').matches||navigator.standalone;
+    const canInstall=!!deferredInstallPrompt;
+    const status=isStandalone?'available':canInstall?'available':'partial';
+    caps.push({id:'install',name:t('capInstall'),desc:t('capInstallDesc'),status,
+      note:isStandalone?null:null});
+  }catch(e){caps.push({id:'install',name:t('capInstall'),desc:t('capInstallDesc'),status:'partial'})}
+
+  // 11. Periodic Background Sync
+  try{
+    const api='serviceWorker' in navigator;
+    // Actual periodicSync support is checked async, so we check the registration
+    caps.push({id:'bgSync',name:t('capBgSync'),desc:t('capBgSyncDesc'),
+      status:api?'partial':'unavailable',
+      note:api?null:null});
+  }catch(e){caps.push({id:'bgSync',name:t('capBgSync'),desc:t('capBgSyncDesc'),status:'unavailable'})}
+
+  // 12. Camera
+  try{
+    const api=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+    caps.push({id:'camera',name:t('capCamera'),desc:t('capCameraDesc'),
+      status:api?'available':'unavailable'});
+  }catch(e){caps.push({id:'camera',name:t('capCamera'),desc:t('capCameraDesc'),status:'unavailable'})}
+
+  return caps;
+}
+
+function renderCapabilities(){
+  const caps=detectCapabilities();
+  $('s-cap-title').textContent=t('capTitle');
+
+  // Summary counts
+  const avail=caps.filter(c=>c.status==='available').length;
+  const partial=caps.filter(c=>c.status==='partial').length;
+  const unavail=caps.filter(c=>c.status==='unavailable').length;
+  const summary=$('s-cap-summary');
+  summary.innerHTML=
+    '<span class="cap-summary-count"><span class="cap-dot available"></span>'+avail+' '+t('capAvailable')+'</span>'+
+    (partial?'<span class="cap-summary-count"><span class="cap-dot partial"></span>'+partial+' '+t('capPartial')+'</span>':'')+
+    '<span class="cap-summary-count"><span class="cap-dot unavailable"></span>'+unavail+' '+t('capUnavailable')+'</span>';
+
+  // Grid
+  const grid=$('s-cap-grid');
+  grid.innerHTML='';
+  caps.forEach(cap=>{
+    const item=document.createElement('div');
+    item.className='cap-item '+cap.status;
+    item.setAttribute('role','listitem');
+
+    const dot=document.createElement('span');
+    dot.className='cap-dot '+cap.status;
+
+    const info=document.createElement('div');
+    info.className='cap-info';
+
+    const name=document.createElement('span');
+    name.className='cap-name';
+    name.textContent=cap.name;
+
+    const desc=document.createElement('span');
+    desc.className='cap-desc';
+    desc.textContent=cap.desc;
+
+    info.appendChild(name);
+    info.appendChild(desc);
+
+    // Permission status for notifications
+    if(cap.perm){
+      const permEl=document.createElement('span');
+      permEl.className='cap-perm '+(cap.perm==='granted'?'granted':cap.perm==='denied'?'denied':'prompt');
+      permEl.textContent=t(cap.perm==='granted'?'capPermGranted':cap.perm==='denied'?'capPermDenied':'capPermPrompt');
+      info.appendChild(permEl);
+    }
+
+    item.appendChild(dot);
+    item.appendChild(info);
+    grid.appendChild(item);
+  });
+
+  // Async check: Periodic Background Sync
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.ready.then(reg=>{
+      const bgItem=grid.querySelector('.cap-item:nth-child(11)');
+      if(!bgItem)return;
+      if(reg.periodicSync){
+        bgItem.className='cap-item available';
+        bgItem.querySelector('.cap-dot').className='cap-dot available';
+      }else{
+        bgItem.className='cap-item unavailable';
+        bgItem.querySelector('.cap-dot').className='cap-dot unavailable';
+      }
+    }).catch(()=>{});
+  }
+}
+
 // ─── Settings ─────────────────────────────────────────────────
 function renderSettings(){
   // City
@@ -2451,6 +2742,10 @@ function renderSettings(){
     '<a href="https://github.com/beentheretwice/open-sounds" target="_blank" rel="noopener">'+t('soundCreditsRepo')+'</a>';
 
   // Adjustments
+  // Device capabilities
+  renderCapabilities();
+
+  // Adjustments
   $('s-adj-title').textContent=t('adjustments');
   const adjRows=$('s-adj-rows');
   adjRows.innerHTML='';
@@ -2484,6 +2779,8 @@ function renderSettings(){
   $('btn-hard-refresh').textContent=t('hardRefresh');
   // Help popup i18n
   $('help-fab').setAttribute('aria-label',t('helpInfo'));
+  $('reload-fab').setAttribute('aria-label',t('reloadAssets'));
+  $('reload-fab').title=t('reloadAssets');
   $('help-fab').title=t('helpInfo');
   $('help-beta-text').textContent=t('betaWarning');
   $('help-label-contribute').textContent=t('helpContribute');
@@ -2691,6 +2988,9 @@ function setupEvents(){
 
   // Hard refresh
   $('btn-hard-refresh').addEventListener('click',hardRefresh);
+
+  // Reload assets button
+  $('reload-fab').addEventListener('click',reloadAssets);
 
   // Visibility change: recalculate and reschedule notifications
   document.addEventListener('visibilitychange',()=>{
@@ -3106,6 +3406,60 @@ function checkNotifBlocked(){
     bar.classList.add('show');
   }else{
     bar.classList.remove('show');
+  }
+}
+
+// ─── Reload Assets (keep settings) ───────────────────────────
+async function reloadAssets(){
+  const fab=$('reload-fab');
+  const toast=$('reload-toast');
+  if(fab.classList.contains('spinning'))return; // prevent double-click
+
+  fab.classList.add('spinning');
+  fab.classList.remove('success','error');
+  toast.textContent=t('reloadingAssets');
+  toast.classList.add('show');
+
+  try{
+    // 1. Clear all caches (app + sounds)
+    if('caches' in window){
+      const keys=await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)));
+    }
+
+    // 2. Tell SW to skip waiting and re-cache
+    if('serviceWorker' in navigator){
+      const registrations=await navigator.serviceWorker.getRegistrations();
+      for(const reg of registrations){
+        await reg.unregister();
+      }
+      // Re-register SW (will re-cache all ASSETS on install)
+      await navigator.serviceWorker.register('sw.js');
+    }
+
+    // 3. Re-cache sounds if notifications enabled
+    if(state.notifications.enabled){
+      await preCacheSounds();
+    }
+
+    // 4. Fetch fresh index.html to update the page
+    fab.classList.remove('spinning');
+    fab.classList.add('success');
+    toast.textContent=t('reloadDone');
+
+    // Reload from network after a brief success feedback
+    setTimeout(()=>{
+      toast.classList.remove('show');
+      location.reload();
+    },1200);
+  }catch(e){
+    fab.classList.remove('spinning');
+    fab.classList.add('error');
+    toast.textContent=t('reloadFail');
+    setTimeout(()=>{
+      toast.classList.remove('show');
+      fab.classList.remove('error');
+    },3000);
   }
 }
 
