@@ -557,13 +557,126 @@ nav.bottom-bar button:focus-visible{
   white-space:nowrap;
 }
 .btn-test-sound:hover{background:rgba(201,168,76,0.15)}
-.notif-dnd-hint{
-  padding:var(--sp-sm) var(--sp-lg);font-size:var(--fs-xs);
-  color:rgba(255,255,255,0.5);line-height:1.5;
+.notif-perm-badge{
+  display:inline-flex;align-items:center;gap:var(--sp-xs);
+  padding:2px var(--sp-sm);border-radius:1rem;font-size:0.65rem;
+  font-weight:600;letter-spacing:0.03em;text-transform:uppercase;
+}
+.notif-perm-badge.granted{background:rgba(46,204,113,0.2);color:#2ecc71}
+.notif-perm-badge.denied{background:rgba(231,76,60,0.2);color:#e74c3c}
+.notif-perm-badge.default{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)}
+.notif-dnd-panel{
+  padding:var(--sp-md) var(--sp-lg);
+  background:rgba(255,255,255,0.03);border-radius:var(--sp-sm);
+  margin:var(--sp-sm) var(--sp-lg) var(--sp-md);
+}
+.notif-dnd-panel h4{font-size:var(--fs-xs);color:var(--gold);margin-bottom:var(--sp-sm);font-weight:600}
+.notif-dnd-platform{
+  font-size:var(--fs-xs);color:rgba(255,255,255,0.65);line-height:1.6;
+  padding:var(--sp-xs) 0;
+}
+.notif-dnd-platform.active{display:block}
+.notif-dnd-platform:not(.active){display:none}
+.notif-test-row{
+  display:flex;gap:var(--sp-sm);padding:var(--sp-sm) var(--sp-lg) var(--sp-md);
+}
+.btn-test-notif{
+  flex:1;padding:var(--sp-md);font-size:var(--fs-xs);font-weight:600;
+  background:rgba(201,168,76,0.12);color:var(--gold);
+  border:1px solid rgba(201,168,76,0.25);border-radius:var(--sp-sm);
+  cursor:pointer;transition:all 0.2s;display:flex;align-items:center;
+  justify-content:center;gap:var(--sp-sm);
+}
+.btn-test-notif:hover{background:rgba(201,168,76,0.2)}
+.btn-test-notif:active{transform:scale(0.98)}
+.btn-test-notif svg{width:1rem;height:1rem}
+.notif-sound-status{
+  font-size:var(--fs-xs);color:rgba(255,255,255,0.4);
+  padding:0 var(--sp-lg) var(--sp-sm);
+  display:flex;align-items:center;gap:var(--sp-xs);
+}
+.notif-sound-status .status-dot{
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3);
+}
+.notif-sound-status .status-dot.ready{background:#2ecc71}
+.notif-sound-status .status-dot.loading{background:#f39c12;animation:pulse-dot 1s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.3}}
+.notif-credits{
+  padding:var(--sp-sm) var(--sp-lg);font-size:0.65rem;
+  color:rgba(255,255,255,0.35);line-height:1.5;
   border-top:1px solid rgba(255,255,255,0.05);
 }
-.notif-detail{display:none}
-.notif-detail.show{display:block}
+.notif-credits a{color:rgba(201,168,76,0.6);text-decoration:none}
+.notif-credits a:hover{color:var(--gold)}
+.notif-detail{display:none;overflow:hidden}
+.notif-detail.show{display:block;animation:slide-down 0.3s ease}
+@keyframes slide-down{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Device capabilities */
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm);padding:var(--sp-sm) 0}
+.cap-item{
+  display:flex;align-items:flex-start;gap:var(--sp-sm);
+  padding:var(--sp-sm) var(--sp-md);
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--sp-sm);transition:border-color 0.2s;
+  min-height:3.2rem;
+}
+.cap-item.available{border-color:rgba(46,204,113,0.2)}
+.cap-item.unavailable{border-color:rgba(231,76,60,0.15);opacity:0.7}
+.cap-item.partial{border-color:rgba(243,156,18,0.2)}
+.cap-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px;
+}
+.cap-dot.available{background:#2ecc71}
+.cap-dot.unavailable{background:#e74c3c}
+.cap-dot.partial{background:#f39c12}
+.cap-info{display:flex;flex-direction:column;gap:1px;min-width:0}
+.cap-name{font-size:var(--fs-xs);font-weight:500;color:rgba(255,255,255,0.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap-desc{font-size:0.65rem;color:rgba(255,255,255,0.45);line-height:1.3}
+.cap-perm{font-size:0.6rem;font-weight:600;letter-spacing:0.02em;margin-top:1px}
+.cap-perm.granted{color:#2ecc71}
+.cap-perm.denied{color:#e74c3c}
+.cap-perm.prompt{color:#f39c12}
+.cap-summary{
+  display:flex;align-items:center;gap:var(--sp-sm);
+  padding:var(--sp-sm) 0;font-size:var(--fs-xs);
+  color:rgba(255,255,255,0.5);
+}
+.cap-summary-count{
+  display:inline-flex;align-items:center;gap:var(--sp-xs);
+}
+.cap-summary-count .cap-dot{width:6px;height:6px}
+@media(max-width:320px){.cap-grid{grid-template-columns:1fr}}
+
+/* Reload assets button */
+.reload-fab{
+  position:fixed;top:calc(var(--safe-t,0px) + var(--sp-sm));right:var(--sp-md);z-index:160;
+  width:2.25rem;height:2.25rem;border-radius:50%;
+  background:rgba(8,40,22,0.92);color:rgba(255,255,255,0.7);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 2px 8px rgba(0,0,0,0.25);
+  transition:transform 0.3s,color 0.2s,border-color 0.2s;
+  cursor:pointer;
+}
+[dir="rtl"] .reload-fab{right:auto;left:var(--sp-md)}
+.reload-fab:hover,.reload-fab:focus-visible{color:#fff;border-color:rgba(255,255,255,0.25);transform:scale(1.08)}
+.reload-fab svg{width:1.1rem;height:1.1rem}
+.reload-fab.spinning svg{animation:spin-reload 0.8s linear infinite}
+.reload-fab.success{color:#2ecc71;border-color:rgba(46,204,113,0.4)}
+.reload-fab.error{color:#e74c3c;border-color:rgba(231,76,60,0.4)}
+@keyframes spin-reload{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.reload-toast{
+  position:fixed;top:calc(var(--safe-t,0px) + 3rem);right:var(--sp-md);z-index:161;
+  background:rgba(8,40,22,0.95);color:#fff;
+  padding:var(--sp-sm) var(--sp-md);border-radius:var(--sp-sm);
+  font-size:var(--fs-xs);border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity 0.3s,transform 0.3s;white-space:nowrap;
+}
+[dir="rtl"] .reload-toast{right:auto;left:var(--sp-md)}
+.reload-toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
 
 /* Notification tester popup */
 .notif-test-overlay{
@@ -893,6 +1006,12 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
 <body>
 <a class="skip-link" href="#main-content" id="skip-link">Skip to content</a>
 
+<!-- Reload assets FAB (top-right) -->
+<button class="reload-fab" id="reload-fab" aria-label="Reload assets" title="Reload assets">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+</button>
+<div class="reload-toast" id="reload-toast" role="status" aria-live="polite"></div>
+
 <!-- Help FAB -->
 <button class="help-fab" id="help-fab" aria-label="Help & Info">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -1132,6 +1251,7 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
     <h3><span id="s-notif-title"></span> <span class="badge-experimental" id="s-notif-badge"></span></h3>
     <div class="setting-row">
       <label id="s-notif-label"></label>
+      <span class="notif-perm-badge" id="s-notif-perm-badge"></span>
       <label class="toggle"><input type="checkbox" id="s-notif-toggle"><span></span></label>
     </div>
     <div class="notif-detail" id="s-notif-detail">
@@ -1157,16 +1277,40 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
           <button class="btn-test-sound" id="btn-test-sound"></button>
         </div>
       </div>
+      <div class="notif-sound-status" id="s-notif-sound-status">
+        <span class="status-dot" id="s-sound-status-dot"></span>
+        <span id="s-sound-status-text"></span>
+      </div>
       <div class="notif-sub-row">
         <label id="s-notif-vibrate-label"></label>
         <label class="toggle"><input type="checkbox" id="s-notif-vibrate"><span></span></label>
       </div>
+      <div class="notif-sub-row">
+        <label id="s-notif-badge-label"></label>
+        <label class="toggle"><input type="checkbox" id="s-notif-badge"><span></span></label>
+      </div>
+      <div class="notif-test-row">
+        <button class="btn-test-notif" id="btn-test-notif">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span id="btn-test-notif-text"></span>
+        </button>
+      </div>
+      <div class="notif-dnd-panel" id="s-notif-dnd-panel">
+        <h4 id="s-notif-dnd-title"></h4>
+        <div class="notif-dnd-platform active" id="s-notif-dnd-text"></div>
+      </div>
+      <div class="notif-credits" id="s-notif-credits"></div>
       <div class="notif-dnd-hint" id="s-notif-dnd-hint"></div>
       <div class="notif-sub-row">
         <label id="s-notif-test-label"></label>
         <button class="btn-test-sound" id="btn-test-notif"></button>
       </div>
     </div>
+  </div>
+  <div class="settings-section" id="s-cap-section">
+    <h3 id="s-cap-title"></h3>
+    <div class="cap-summary" id="s-cap-summary"></div>
+    <div class="cap-grid" id="s-cap-grid"></div>
   </div>
   <div class="settings-section">
     <h3 id="s-adj-title"></h3>
@@ -1292,6 +1436,34 @@ notifSound:'صوت الإشعار',notifSoundSilent:'صامت',notifSoundTone:'�
 notifSoundTest:'تجربة',notifAthanTime:'حان وقت صلاة',notifMinBefore:'دقائق قبل',
 notifSnooze:'تأجيل 5 دقائق',notifDismiss:'إغلاق',notifDndHint:'لتلقي الإشعارات أثناء وضع عدم الإزعاج، فعّل «الإشعارات ذات الأولوية» من إعدادات هاتفك',
 notifVibrate:'اهتزاز',notifWakeScreen:'إيقاظ الشاشة',
+notifTestBtn:'إرسال إشعار تجريبي',notifTestSent:'تم إرسال إشعار تجريبي',
+notifPermGranted:'مُفعّلة',notifPermDenied:'محظورة',notifPermDefault:'غير مُفعّلة',
+notifLoading:'جارٍ تحميل الأصوات…',notifSoundsReady:'الأصوات جاهزة',
+notifDndTitle:'وضع عدم الإزعاج',
+notifDndAndroid:'Android: الإعدادات ← الإشعارات ← عدم الإزعاج ← السماح بالاستثناءات ← أضف WaqtSalat',
+notifDndIos:'iOS: الإعدادات ← التركيز ← السماح بالإشعارات ← أضف WaqtSalat كإشعار حساس للوقت',
+notifDndWindows:'Windows: الإعدادات ← النظام ← المساعدة على التركيز ← الأولوية فقط ← أضف WaqtSalat',
+notifDndMac:'macOS: تفضيلات النظام ← الإشعارات ← التركيز ← السماح بالإشعارات من WaqtSalat',
+notifDndGeneric:'تحقق من إعدادات عدم الإزعاج في نظامك واسمح بإشعارات WaqtSalat',
+notifBadge:'شارة التطبيق',
+soundCredits:'الأصوات',soundCreditsAdhan:'أذان مكة المكرمة — المسجد الحرام (ملك عام، Archive.org)',
+soundCreditsTone:'نغمة إشعار (CC0، Pixabay)',soundCreditsRepo:'مستودع open-sounds على GitHub',
+capTitle:'إمكانيات الجهاز',capAvailable:'متاح',capUnavailable:'غير متاح',capPartial:'محدود',
+capNotif:'الإشعارات',capNotifDesc:'تنبيهات أوقات الصلاة',
+capGeo:'الموقع الجغرافي',capGeoDesc:'تحديد أقرب مدينة تلقائياً',
+capCompass:'البوصلة',capCompassDesc:'اتجاه القبلة بالبوصلة الرقمية',
+capAR:'الواقع المعزز',capARDesc:'عرض الكعبة ثلاثي الأبعاد',
+capVibrate:'الاهتزاز',capVibrateDesc:'تنبيه بالاهتزاز عند الأذان',
+capWakeLock:'إيقاظ الشاشة',capWakeLockDesc:'إبقاء الشاشة مضاءة أثناء القراءة',
+capSW:'العمل بدون إنترنت',capSWDesc:'التطبيق يعمل بدون اتصال بالإنترنت',
+capBadge:'شارة الأيقونة',capBadgeDesc:'عداد الإشعارات على أيقونة التطبيق',
+capShare:'المشاركة',capShareDesc:'مشاركة التطبيق عبر النظام',
+capInstall:'التثبيت',capInstallDesc:'تثبيت كتطبيق مستقل على الجهاز',
+capBgSync:'المزامنة الخلفية',capBgSyncDesc:'إعادة جدولة الإشعارات تلقائياً',
+capCamera:'الكاميرا',capCameraDesc:'مطلوبة لميزة الواقع المعزز',
+capPermGranted:'مسموح',capPermDenied:'مرفوض',capPermPrompt:'بانتظار الإذن',
+reloadAssets:'تحديث الملفات',reloadAssetsDesc:'إعادة تحميل التطبيق مع الحفاظ على إعداداتك',
+reloadingAssets:'جارٍ التحديث…',reloadDone:'تم التحديث بنجاح',reloadFail:'فشل التحديث',
 notifTestTitle:'تجربة الإشعار',notifTestDesc:'اختر متى تريد تلقي إشعار تجريبي',notifTestNow:'الآن',notifTest10s:'بعد 10 ثوانٍ',notifTest1m:'بعد دقيقة',notifTest5m:'بعد 5 دقائق',notifTestSend:'إرسال',notifTestCancel:'إلغاء',notifTestLabel:'تجربة الإشعار',notifTestScheduled:'سيصل الإشعار',notifTestSent:'تم إرسال الإشعار',
 },
 fr:{
@@ -1331,6 +1503,34 @@ notifSound:'Son de notification',notifSoundSilent:'Silencieux',notifSoundTone:'T
 notifSoundTest:'Tester',notifAthanTime:'C\'est l\'heure de la prière',notifMinBefore:'min avant',
 notifSnooze:'Reporter 5 min',notifDismiss:'Fermer',notifDndHint:'Pour recevoir les notifications en mode Ne pas déranger, activez les « Notifications prioritaires » dans les paramètres de votre téléphone',
 notifVibrate:'Vibration',notifWakeScreen:'Réveiller l\'écran',
+notifTestBtn:'Envoyer une notification test',notifTestSent:'Notification test envoyée',
+notifPermGranted:'Activées',notifPermDenied:'Bloquées',notifPermDefault:'Non activées',
+notifLoading:'Chargement des sons…',notifSoundsReady:'Sons prêts',
+notifDndTitle:'Mode Ne pas déranger',
+notifDndAndroid:'Android : Paramètres → Notifications → Ne pas déranger → Exceptions → Ajoutez WaqtSalat',
+notifDndIos:'iOS : Réglages → Concentration → Autoriser les notifications → Ajoutez WaqtSalat comme notification urgente',
+notifDndWindows:'Windows : Paramètres → Système → Aide à la concentration → Priorité uniquement → Ajoutez WaqtSalat',
+notifDndMac:'macOS : Préférences Système → Notifications → Concentration → Autoriser WaqtSalat',
+notifDndGeneric:'Vérifiez les paramètres Ne pas déranger de votre système et autorisez les notifications de WaqtSalat',
+notifBadge:'Badge de l\'application',
+soundCredits:'Sons',soundCreditsAdhan:'Adhan de La Mecque — Masjid al-Haram (Domaine public, Archive.org)',
+soundCreditsTone:'Tonalité de notification (CC0, Pixabay)',soundCreditsRepo:'Dépôt open-sounds sur GitHub',
+capTitle:'Capacités de l\'appareil',capAvailable:'Disponible',capUnavailable:'Indisponible',capPartial:'Limité',
+capNotif:'Notifications',capNotifDesc:'Alertes aux heures de prière',
+capGeo:'Géolocalisation',capGeoDesc:'Détection automatique de la ville',
+capCompass:'Boussole',capCompassDesc:'Direction de la Qibla par boussole',
+capAR:'Réalité augmentée',capARDesc:'Vue 3D de la Kaaba',
+capVibrate:'Vibration',capVibrateDesc:'Alerte par vibration à l\'adhan',
+capWakeLock:'Écran actif',capWakeLockDesc:'Garder l\'écran allumé pendant la lecture',
+capSW:'Mode hors ligne',capSWDesc:'L\'application fonctionne sans connexion',
+capBadge:'Badge d\'icône',capBadgeDesc:'Compteur de notifications sur l\'icône',
+capShare:'Partage',capShareDesc:'Partage natif via le système',
+capInstall:'Installation',capInstallDesc:'Installer comme application autonome',
+capBgSync:'Synchronisation en arrière-plan',capBgSyncDesc:'Reprogrammation automatique des notifications',
+capCamera:'Caméra',capCameraDesc:'Requise pour la réalité augmentée',
+capPermGranted:'Autorisé',capPermDenied:'Refusé',capPermPrompt:'En attente',
+reloadAssets:'Recharger les fichiers',reloadAssetsDesc:'Retélécharger l\'application en conservant vos paramètres',
+reloadingAssets:'Rechargement…',reloadDone:'Mise à jour réussie',reloadFail:'Échec du rechargement',
 notifTestTitle:'Tester la notification',notifTestDesc:'Choisissez quand recevoir une notification de test',notifTestNow:'Maintenant',notifTest10s:'Dans 10 s',notifTest1m:'Dans 1 min',notifTest5m:'Dans 5 min',notifTestSend:'Envoyer',notifTestCancel:'Annuler',notifTestLabel:'Tester la notification',notifTestScheduled:'Notification prévue',notifTestSent:'Notification envoyée',
 },
 en:{
@@ -1370,6 +1570,34 @@ notifSound:'Notification Sound',notifSoundSilent:'Silent',notifSoundTone:'Tone',
 notifSoundTest:'Test',notifAthanTime:'It\'s time for',notifMinBefore:'min before',
 notifSnooze:'Snooze 5 min',notifDismiss:'Dismiss',notifDndHint:'To receive notifications during Do Not Disturb, enable "Priority notifications" in your phone settings',
 notifVibrate:'Vibration',notifWakeScreen:'Wake screen',
+notifTestBtn:'Send test notification',notifTestSent:'Test notification sent',
+notifPermGranted:'Enabled',notifPermDenied:'Blocked',notifPermDefault:'Not enabled',
+notifLoading:'Loading sounds…',notifSoundsReady:'Sounds ready',
+notifDndTitle:'Do Not Disturb',
+notifDndAndroid:'Android: Settings → Notifications → Do Not Disturb → Exceptions → Add WaqtSalat',
+notifDndIos:'iOS: Settings → Focus → Allow Notifications → Add WaqtSalat as Time Sensitive',
+notifDndWindows:'Windows: Settings → System → Focus Assist → Priority Only → Add WaqtSalat',
+notifDndMac:'macOS: System Settings → Notifications → Focus → Allow WaqtSalat notifications',
+notifDndGeneric:'Check your system\'s Do Not Disturb settings and allow WaqtSalat notifications',
+notifBadge:'App badge',
+soundCredits:'Sounds',soundCreditsAdhan:'Makkah Adhan — Masjid al-Haram (Public Domain, Archive.org)',
+soundCreditsTone:'Notification tone (CC0, Pixabay)',soundCreditsRepo:'open-sounds repository on GitHub',
+capTitle:'Device Capabilities',capAvailable:'Available',capUnavailable:'Unavailable',capPartial:'Limited',
+capNotif:'Notifications',capNotifDesc:'Prayer time alerts',
+capGeo:'Geolocation',capGeoDesc:'Auto-detect nearest city',
+capCompass:'Compass',capCompassDesc:'Digital compass for Qibla direction',
+capAR:'Augmented Reality',capARDesc:'3D Kaaba view',
+capVibrate:'Vibration',capVibrateDesc:'Haptic alert at adhan time',
+capWakeLock:'Screen Wake Lock',capWakeLockDesc:'Keep screen on during reading',
+capSW:'Offline Mode',capSWDesc:'App works without internet',
+capBadge:'Icon Badge',capBadgeDesc:'Notification count on app icon',
+capShare:'Share',capShareDesc:'Native system sharing',
+capInstall:'Install',capInstallDesc:'Install as standalone app',
+capBgSync:'Background Sync',capBgSyncDesc:'Auto-reschedule notifications',
+capCamera:'Camera',capCameraDesc:'Required for augmented reality',
+capPermGranted:'Allowed',capPermDenied:'Denied',capPermPrompt:'Pending',
+reloadAssets:'Reload assets',reloadAssetsDesc:'Re-download the app while keeping your settings',
+reloadingAssets:'Reloading…',reloadDone:'Updated successfully',reloadFail:'Reload failed',
 notifTestTitle:'Test Notification',notifTestDesc:'Choose when to receive a test notification',notifTestNow:'Now',notifTest10s:'In 10s',notifTest1m:'In 1 min',notifTest5m:'In 5 min',notifTestSend:'Send',notifTestCancel:'Cancel',notifTestLabel:'Test notification',notifTestScheduled:'Notification scheduled',notifTestSent:'Notification sent',
 }};
 
@@ -1380,7 +1608,7 @@ const state={
   locale:'ar',theme:'system',
   position:null,// {lat,lng,cityId,cityName}
   adjustments:{fajr:0,sunrise:0,dhuhr:0,asr:0,maghrib:0,isha:0},
-  notifications:{enabled:false,prayers:{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},advance:0,sound:'adhan',vibrate:true},
+  notifications:{enabled:false,prayers:{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},advance:0,sound:'adhan',vibrate:true,badge:true},
   onboarded:false,
   currentView:'prayers',
 };
@@ -2366,6 +2594,172 @@ function startCompass(){
   addOrientationListener(handler);
 }
 
+// ─── Device Capabilities ─────────────────────────────────────
+function detectCapabilities(){
+  const caps=[];
+  // Each check is wrapped in try-catch for graceful failure
+
+  // 1. Notifications
+  try{
+    const api='Notification' in window;
+    let status='available';
+    let perm=null;
+    if(api){
+      perm=Notification.permission; // 'granted','denied','default'
+      if(perm==='denied')status='partial';
+    }else{status='unavailable'}
+    caps.push({id:'notif',name:t('capNotif'),desc:t('capNotifDesc'),status,perm});
+  }catch(e){caps.push({id:'notif',name:t('capNotif'),desc:t('capNotifDesc'),status:'unavailable'})}
+
+  // 2. Geolocation
+  try{
+    const api='geolocation' in navigator;
+    caps.push({id:'geo',name:t('capGeo'),desc:t('capGeoDesc'),status:api?'available':'unavailable'});
+  }catch(e){caps.push({id:'geo',name:t('capGeo'),desc:t('capGeoDesc'),status:'unavailable'})}
+
+  // 3. Compass (DeviceOrientationEvent)
+  try{
+    const api='DeviceOrientationEvent' in window;
+    // iOS 13+ requires permission
+    const needsPerm=typeof DeviceOrientationEvent.requestPermission==='function';
+    caps.push({id:'compass',name:t('capCompass'),desc:t('capCompassDesc'),status:api?'available':'unavailable',
+      note:needsPerm?'(requires permission)':null});
+  }catch(e){caps.push({id:'compass',name:t('capCompass'),desc:t('capCompassDesc'),status:'unavailable'})}
+
+  // 4. AR (needs camera + device orientation)
+  try{
+    const hasOrientation='DeviceOrientationEvent' in window;
+    const hasMedia=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+    const status=hasOrientation&&hasMedia?'available':hasOrientation||hasMedia?'partial':'unavailable';
+    caps.push({id:'ar',name:t('capAR'),desc:t('capARDesc'),status});
+  }catch(e){caps.push({id:'ar',name:t('capAR'),desc:t('capARDesc'),status:'unavailable'})}
+
+  // 5. Vibration
+  try{
+    caps.push({id:'vibrate',name:t('capVibrate'),desc:t('capVibrateDesc'),
+      status:'vibrate' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'vibrate',name:t('capVibrate'),desc:t('capVibrateDesc'),status:'unavailable'})}
+
+  // 6. Screen Wake Lock
+  try{
+    caps.push({id:'wakeLock',name:t('capWakeLock'),desc:t('capWakeLockDesc'),
+      status:'wakeLock' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'wakeLock',name:t('capWakeLock'),desc:t('capWakeLockDesc'),status:'unavailable'})}
+
+  // 7. Service Worker (offline)
+  try{
+    caps.push({id:'sw',name:t('capSW'),desc:t('capSWDesc'),
+      status:'serviceWorker' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'sw',name:t('capSW'),desc:t('capSWDesc'),status:'unavailable'})}
+
+  // 8. Badge API
+  try{
+    caps.push({id:'badge',name:t('capBadge'),desc:t('capBadgeDesc'),
+      status:'setAppBadge' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'badge',name:t('capBadge'),desc:t('capBadgeDesc'),status:'unavailable'})}
+
+  // 9. Share API
+  try{
+    caps.push({id:'share',name:t('capShare'),desc:t('capShareDesc'),
+      status:'share' in navigator?'available':'unavailable'});
+  }catch(e){caps.push({id:'share',name:t('capShare'),desc:t('capShareDesc'),status:'unavailable'})}
+
+  // 10. Install (PWA)
+  try{
+    const isStandalone=window.matchMedia('(display-mode:standalone)').matches||navigator.standalone;
+    const canInstall=!!deferredInstallPrompt;
+    const status=isStandalone?'available':canInstall?'available':'partial';
+    caps.push({id:'install',name:t('capInstall'),desc:t('capInstallDesc'),status,
+      note:isStandalone?null:null});
+  }catch(e){caps.push({id:'install',name:t('capInstall'),desc:t('capInstallDesc'),status:'partial'})}
+
+  // 11. Periodic Background Sync
+  try{
+    const api='serviceWorker' in navigator;
+    // Actual periodicSync support is checked async, so we check the registration
+    caps.push({id:'bgSync',name:t('capBgSync'),desc:t('capBgSyncDesc'),
+      status:api?'partial':'unavailable',
+      note:api?null:null});
+  }catch(e){caps.push({id:'bgSync',name:t('capBgSync'),desc:t('capBgSyncDesc'),status:'unavailable'})}
+
+  // 12. Camera
+  try{
+    const api=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+    caps.push({id:'camera',name:t('capCamera'),desc:t('capCameraDesc'),
+      status:api?'available':'unavailable'});
+  }catch(e){caps.push({id:'camera',name:t('capCamera'),desc:t('capCameraDesc'),status:'unavailable'})}
+
+  return caps;
+}
+
+function renderCapabilities(){
+  const caps=detectCapabilities();
+  $('s-cap-title').textContent=t('capTitle');
+
+  // Summary counts
+  const avail=caps.filter(c=>c.status==='available').length;
+  const partial=caps.filter(c=>c.status==='partial').length;
+  const unavail=caps.filter(c=>c.status==='unavailable').length;
+  const summary=$('s-cap-summary');
+  summary.innerHTML=
+    '<span class="cap-summary-count"><span class="cap-dot available"></span>'+avail+' '+t('capAvailable')+'</span>'+
+    (partial?'<span class="cap-summary-count"><span class="cap-dot partial"></span>'+partial+' '+t('capPartial')+'</span>':'')+
+    '<span class="cap-summary-count"><span class="cap-dot unavailable"></span>'+unavail+' '+t('capUnavailable')+'</span>';
+
+  // Grid
+  const grid=$('s-cap-grid');
+  grid.innerHTML='';
+  caps.forEach(cap=>{
+    const item=document.createElement('div');
+    item.className='cap-item '+cap.status;
+    item.setAttribute('role','listitem');
+
+    const dot=document.createElement('span');
+    dot.className='cap-dot '+cap.status;
+
+    const info=document.createElement('div');
+    info.className='cap-info';
+
+    const name=document.createElement('span');
+    name.className='cap-name';
+    name.textContent=cap.name;
+
+    const desc=document.createElement('span');
+    desc.className='cap-desc';
+    desc.textContent=cap.desc;
+
+    info.appendChild(name);
+    info.appendChild(desc);
+
+    // Permission status for notifications
+    if(cap.perm){
+      const permEl=document.createElement('span');
+      permEl.className='cap-perm '+(cap.perm==='granted'?'granted':cap.perm==='denied'?'denied':'prompt');
+      permEl.textContent=t(cap.perm==='granted'?'capPermGranted':cap.perm==='denied'?'capPermDenied':'capPermPrompt');
+      info.appendChild(permEl);
+    }
+
+    item.appendChild(dot);
+    item.appendChild(info);
+    grid.appendChild(item);
+  });
+
+  // Async check: Periodic Background Sync
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.ready.then(reg=>{
+      const bgItem=grid.querySelector('.cap-item:nth-child(11)');
+      if(!bgItem)return;
+      if(reg.periodicSync){
+        bgItem.className='cap-item available';
+        bgItem.querySelector('.cap-dot').className='cap-dot available';
+      }else{
+        bgItem.className='cap-item unavailable';
+        bgItem.querySelector('.cap-dot').className='cap-dot unavailable';
+      }
+    }).catch(()=>{});
+  }
+}
+
 // ─── Settings ─────────────────────────────────────────────────
 function renderSettings(){
   // City
@@ -2442,8 +2836,40 @@ function renderSettings(){
   $('s-notif-vibrate-label').textContent=t('notifVibrate');
   $('s-notif-vibrate').checked=state.notifications.vibrate!==false;
 
-  // DND hint
-  $('s-notif-dnd-hint').textContent=t('notifDndHint');
+  // Badge
+  $('s-notif-badge-label').textContent=t('notifBadge');
+  $('s-notif-badge').checked=state.notifications.badge!==false;
+
+  // Permission badge
+  const permBadge=$('s-notif-perm-badge');
+  if('Notification' in window){
+    const p=Notification.permission;
+    permBadge.textContent=t(p==='granted'?'notifPermGranted':p==='denied'?'notifPermDenied':'notifPermDefault');
+    permBadge.className='notif-perm-badge '+p;
+  }else{
+    permBadge.style.display='none';
+  }
+
+  // Sound loading status
+  updateSoundStatus();
+
+  // Test button
+  $('btn-test-notif-text').textContent=t('notifTestBtn');
+
+  // DND panel with platform-specific instructions
+  $('s-notif-dnd-title').textContent=t('notifDndTitle');
+  $('s-notif-dnd-text').textContent=getDndInstructions();
+
+  // Attribution / credits
+  $('s-notif-credits').innerHTML=
+    '<strong>'+t('soundCredits')+'</strong><br>'+
+    t('soundCreditsAdhan')+'<br>'+
+    t('soundCreditsTone')+'<br>'+
+    '<a href="https://github.com/beentheretwice/open-sounds" target="_blank" rel="noopener">'+t('soundCreditsRepo')+'</a>';
+
+  // Adjustments
+  // Device capabilities
+  renderCapabilities();
 
   // Notification tester
   $('s-notif-test-label').textContent=t('notifTestLabel');
@@ -2492,6 +2918,8 @@ function renderSettings(){
   $('btn-hard-refresh').textContent=t('hardRefresh');
   // Help popup i18n
   $('help-fab').setAttribute('aria-label',t('helpInfo'));
+  $('reload-fab').setAttribute('aria-label',t('reloadAssets'));
+  $('reload-fab').title=t('reloadAssets');
   $('help-fab').title=t('helpInfo');
   $('help-beta-text').textContent=t('betaWarning');
   $('help-label-contribute').textContent=t('helpContribute');
@@ -2563,13 +2991,24 @@ function setupEvents(){
     saveState('waqt-notifications',state.notifications);
     if(e.target.checked){
       requestNotifPermission();
+      preCacheSounds();
       $('s-notif-detail').classList.add('show');
     }else{
       $('s-notif-detail').classList.remove('show');
       notifTimeouts.forEach(clearTimeout);
       notifTimeouts=[];
+      clearAppBadge();
     }
     checkNotifBlocked();
+    // Update permission badge
+    const permBadge=$('s-notif-perm-badge');
+    if('Notification' in window){
+      setTimeout(()=>{
+        const p=Notification.permission;
+        permBadge.textContent=t(p==='granted'?'notifPermGranted':p==='denied'?'notifPermDenied':'notifPermDefault');
+        permBadge.className='notif-perm-badge '+p;
+      },500);
+    }
   });
 
   // Notification advance
@@ -2600,6 +3039,15 @@ function setupEvents(){
     saveState('waqt-notifications',state.notifications);
   });
 
+  // Badge toggle
+  $('s-notif-badge').addEventListener('change',e=>{
+    state.notifications.badge=e.target.checked;
+    saveState('waqt-notifications',state.notifications);
+    if(!e.target.checked)clearAppBadge();
+  });
+
+  // Test notification
+  $('btn-test-notif').addEventListener('click',sendTestNotification);
   // Notification tester popup
   $('btn-test-notif').addEventListener('click',()=>{
     $('notif-test-status').textContent='';
@@ -2743,6 +3191,9 @@ function setupEvents(){
   // Hard refresh
   $('btn-hard-refresh').addEventListener('click',hardRefresh);
 
+  // Reload assets button
+  $('reload-fab').addEventListener('click',reloadAssets);
+
   // Visibility change: recalculate and reschedule notifications
   document.addEventListener('visibilitychange',()=>{
     if(!document.hidden&&state.position){
@@ -2844,94 +3295,125 @@ function setupOnboarding(){
   });
 }
 
-// ─── Audio Synthesis (Web Audio API) ─────────────────────────
-let audioCtx=null;
-function getAudioCtx(){
-  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  if(audioCtx.state==='suspended')audioCtx.resume();
-  return audioCtx;
+// ─── Audio — open-sounds repository (CC0 / Public Domain) ───
+// Sounds from: https://github.com/beentheretwice/open-sounds
+// Adhan: Makkah (Masjid al-Haram) — Public Domain, Archive.org
+// Tone: Soft beep notification — CC0, Pixabay
+const SOUND_URLS={
+  adhan:'https://raw.githubusercontent.com/beentheretwice/open-sounds/master/adhan/athan_makkah_official.mp3',
+  tone:'https://raw.githubusercontent.com/beentheretwice/open-sounds/master/notifications/notification_soft_beep.mp3'
+};
+const SOUND_CACHE_NAME='waqtsalat-sounds-v1';
+let soundsReady=false;
+let currentAudio=null;
+
+async function preCacheSounds(){
+  if(!('caches' in window))return;
+  try{
+    const cache=await caches.open(SOUND_CACHE_NAME);
+    const keys=await cache.keys();
+    const cached=keys.map(k=>k.url);
+    const toFetch=Object.values(SOUND_URLS).filter(u=>!cached.some(c=>c.endsWith(new URL(u).pathname)));
+    if(toFetch.length===0){soundsReady=true;updateSoundStatus();return}
+    updateSoundStatus('loading');
+    await Promise.all(toFetch.map(async u=>{
+      try{
+        const resp=await fetch(u,{mode:'cors'});
+        if(resp.ok)await cache.put(u,resp);
+      }catch(e){}
+    }));
+    soundsReady=true;
+    updateSoundStatus();
+  }catch(e){soundsReady=false}
 }
 
-// Islamic-scale tone generator — pentatonic Hijaz-inspired melody
-function playTone(){
-  const ctx=getAudioCtx();
-  const now=ctx.currentTime;
-  // Hijaz scale notes (D4-based): D4, Eb4, F#4, G4, A4, Bb4, C#5, D5
-  const freqs=[293.66,311.13,369.99,392.00,440.00,466.16,554.37,587.33];
-  const melody=[0,4,3,2,1,0,2,4,7,4]; // indices into freqs
-  const durations=[0.4,0.3,0.3,0.5,0.3,0.3,0.4,0.3,0.6,0.8];
-  const gain=ctx.createGain();
-  gain.gain.setValueAtTime(0.3,now);
-  gain.connect(ctx.destination);
-
-  let t0=now;
-  melody.forEach((ni,i)=>{
-    const osc=ctx.createOscillator();
-    const noteGain=ctx.createGain();
-    osc.type='sine';
-    osc.frequency.setValueAtTime(freqs[ni],t0);
-    noteGain.gain.setValueAtTime(0,t0);
-    noteGain.gain.linearRampToValueAtTime(0.3,t0+0.05);
-    noteGain.gain.setValueAtTime(0.3,t0+durations[i]*0.7);
-    noteGain.gain.linearRampToValueAtTime(0,t0+durations[i]);
-    osc.connect(noteGain);noteGain.connect(gain);
-    osc.start(t0);osc.stop(t0+durations[i]+0.05);
-    t0+=durations[i];
-  });
-  return t0-now; // total duration
+function updateSoundStatus(status){
+  const dot=$('s-sound-status-dot');
+  const txt=$('s-sound-status-text');
+  if(!dot||!txt)return;
+  if(status==='loading'){
+    dot.className='status-dot loading';
+    txt.textContent=t('notifLoading');
+  }else if(soundsReady){
+    dot.className='status-dot ready';
+    txt.textContent=t('notifSoundsReady');
+  }else{
+    dot.className='status-dot';
+    txt.textContent='';
+  }
 }
 
-// Full adhan melody — longer, more elaborate sequence
-function playAdhan(){
-  const ctx=getAudioCtx();
-  const now=ctx.currentTime;
-  // Adhan-inspired melodic phrases using Hijaz maqam
-  const freqs=[220.00,233.08,277.18,293.66,329.63,349.23,415.30,440.00,466.16,554.37,587.33];
-  // Allahu Akbar phrase pattern (melodic contour)
-  const phrases=[
-    {notes:[3,7,7,5,3],durs:[0.5,0.6,0.6,0.5,0.8],gap:0.4},
-    {notes:[3,7,7,5,3],durs:[0.5,0.6,0.6,0.5,0.8],gap:0.4},
-    {notes:[3,5,7,8,7,5],durs:[0.4,0.4,0.5,0.6,0.4,0.7],gap:0.5},
-    {notes:[3,5,7,8,7,5],durs:[0.4,0.4,0.5,0.6,0.4,0.7],gap:0.5},
-    {notes:[7,8,7,5,3,5,3],durs:[0.5,0.4,0.4,0.5,0.4,0.4,0.9],gap:0.5},
-    {notes:[3,5,7,5,3],durs:[0.4,0.5,0.6,0.5,1.0],gap:0.3},
-  ];
-  const master=ctx.createGain();
-  master.gain.setValueAtTime(0.25,now);
-  master.connect(ctx.destination);
-
-  let t0=now;
-  phrases.forEach(phrase=>{
-    phrase.notes.forEach((ni,i)=>{
-      const osc=ctx.createOscillator();
-      const noteGain=ctx.createGain();
-      osc.type='sine';
-      osc.frequency.setValueAtTime(freqs[ni],t0);
-      // Add slight vibrato for vocal quality
-      const vibrato=ctx.createOscillator();
-      const vibratoGain=ctx.createGain();
-      vibrato.frequency.setValueAtTime(5,t0);
-      vibratoGain.gain.setValueAtTime(3,t0);
-      vibrato.connect(vibratoGain);vibratoGain.connect(osc.frequency);
-      vibrato.start(t0);vibrato.stop(t0+phrase.durs[i]+0.05);
-
-      noteGain.gain.setValueAtTime(0,t0);
-      noteGain.gain.linearRampToValueAtTime(0.3,t0+0.06);
-      noteGain.gain.setValueAtTime(0.3,t0+phrase.durs[i]*0.75);
-      noteGain.gain.linearRampToValueAtTime(0,t0+phrase.durs[i]);
-      osc.connect(noteGain);noteGain.connect(master);
-      osc.start(t0);osc.stop(t0+phrase.durs[i]+0.05);
-      t0+=phrase.durs[i];
-    });
-    t0+=phrase.gap;
-  });
-  return t0-now;
+async function playNotifSound(type){
+  if(type==='silent')return;
+  stopNotifSound();
+  const url=SOUND_URLS[type];
+  if(!url)return;
+  try{
+    // Try loading from cache first
+    let audioUrl=url;
+    if('caches' in window){
+      const cache=await caches.open(SOUND_CACHE_NAME);
+      const cached=await cache.match(url);
+      if(cached){
+        const blob=await cached.clone().blob();
+        audioUrl=URL.createObjectURL(blob);
+      }
+    }
+    currentAudio=new Audio(audioUrl);
+    currentAudio.volume=1.0;
+    await currentAudio.play();
+  }catch(e){
+    // Final fallback: try direct URL
+    try{
+      currentAudio=new Audio(url);
+      await currentAudio.play();
+    }catch(e2){}
+  }
 }
 
-function playNotifSound(type){
-  if(type==='tone')return playTone();
-  if(type==='adhan')return playAdhan();
-  return 0;
+function stopNotifSound(){
+  if(currentAudio){
+    currentAudio.pause();
+    currentAudio.currentTime=0;
+    if(currentAudio.src.startsWith('blob:'))URL.revokeObjectURL(currentAudio.src);
+    currentAudio=null;
+  }
+}
+
+// ─── Platform Detection ──────────────────────────────────────
+function detectPlatform(){
+  const ua=navigator.userAgent||'';
+  const platform=navigator.platform||'';
+  if(/iPad|iPhone|iPod/.test(ua)||(/Mac/.test(platform)&&navigator.maxTouchPoints>1))return 'ios';
+  if(/Android/.test(ua))return 'android';
+  if(/Win/.test(platform))return 'windows';
+  if(/Mac/.test(platform))return 'mac';
+  if(/Linux/.test(platform))return 'linux';
+  return 'unknown';
+}
+
+function getDndInstructions(){
+  const p=detectPlatform();
+  if(p==='android')return t('notifDndAndroid');
+  if(p==='ios')return t('notifDndIos');
+  if(p==='windows')return t('notifDndWindows');
+  if(p==='mac')return t('notifDndMac');
+  return t('notifDndGeneric');
+}
+
+// ─── Badge API ───────────────────────────────────────────────
+async function setAppBadge(count){
+  if(!state.notifications.badge)return;
+  try{
+    if(navigator.setAppBadge)await navigator.setAppBadge(count||1);
+  }catch(e){}
+}
+
+async function clearAppBadge(){
+  try{
+    if(navigator.clearAppBadge)await navigator.clearAppBadge();
+    else if(navigator.setAppBadge)await navigator.setAppBadge(0);
+  }catch(e){}
 }
 
 // ─── Screen Wake Lock ────────────────────────────────────────
@@ -2992,7 +3474,7 @@ function scheduleNotifications(){
 
 async function fireNotification(prayerKey,isAdvance){
   if(Notification.permission!=='granted')return;
-  const snd=state.notifications.sound||'tone';
+  const snd=state.notifications.sound||'adhan';
   const advMin=state.notifications.advance||0;
 
   // Build notification content
@@ -3000,13 +3482,17 @@ async function fireNotification(prayerKey,isAdvance){
     ?(advMin+' '+t('notifMinBefore')+' '+t(prayerKey))
     :(t('notifAthanTime')+' '+t(prayerKey));
   const body=t('prayerTimes')+' — '+prayerTimes[prayerKey];
-  const vibPattern=state.notifications.vibrate?[200,100,200,100,300,100,200]:[0];
+  const vibPattern=state.notifications.vibrate?[200,100,200,100,300,100,200]:[];
 
-  // Play sound via Web Audio API (works even when page in background briefly)
-  if(snd!=='silent'&&!isAdvance){
-    try{playNotifSound(snd)}catch(e){}
-  }else if(snd!=='silent'&&isAdvance){
-    try{playTone()}catch(e){}
+  // Play sound from open-sounds audio files
+  if(snd!=='silent'){
+    try{
+      if(!isAdvance){
+        await playNotifSound(snd); // Full adhan or tone
+      }else{
+        await playNotifSound('tone'); // Always short tone for advance
+      }
+    }catch(e){}
   }
 
   // Vibrate
@@ -3016,6 +3502,9 @@ async function fireNotification(prayerKey,isAdvance){
 
   // Wake screen
   wakeScreen();
+
+  // Set app badge
+  setAppBadge(1);
 
   // Show notification via Service Worker for persistence & actions
   if(navigator.serviceWorker&&navigator.serviceWorker.controller){
@@ -3028,8 +3517,8 @@ async function fireNotification(prayerKey,isAdvance){
       renotify:true,
       requireInteraction:!isAdvance,
       vibrate:vibPattern,
-      silent:true, // we handle sound ourselves via Web Audio
-      data:{prayer:prayerKey,isAdvance,sound:snd},
+      silent:snd!=='silent', // silent=true when we play our own audio; false for OS sound
+      data:{prayer:prayerKey,isAdvance,sound:snd,soundUrl:SOUND_URLS[snd]||null},
       actions:[
         {action:'dismiss',title:t('notifDismiss')},
         ...(!isAdvance?[{action:'snooze',title:t('notifSnooze')}]:[])
@@ -3041,6 +3530,31 @@ async function fireNotification(prayerKey,isAdvance){
   }
 }
 
+// Test notification — verifies DND bypass, sound, vibration, badge
+async function sendTestNotification(){
+  if(!('Notification' in window))return;
+  if(Notification.permission!=='granted'){
+    const perm=await Notification.requestPermission();
+    if(perm!=='granted')return;
+  }
+  const snd=state.notifications.sound||'adhan';
+  const vibPattern=state.notifications.vibrate?[200,100,200,100,300,100,200]:[];
+
+  // Play sound
+  if(snd!=='silent'){try{await playNotifSound(snd)}catch(e){}}
+
+  // Vibrate
+  if(state.notifications.vibrate&&navigator.vibrate)navigator.vibrate(vibPattern);
+
+  // Badge
+  setAppBadge(1);
+
+  // Wake screen
+  wakeScreen();
+
+  // Show notification
+  const title=t('notifTestSent');
+  const body=t('notifAthanTime')+' '+t('dhuhr')+' — 12:30';
 async function fireTestNotification(){
   const title=t('notifTestTitle')+' — WaqtSalat';
   const body=t('notifTestDesc');
@@ -3053,6 +3567,10 @@ async function fireTestNotification(){
     const reg=await navigator.serviceWorker.ready;
     reg.showNotification(title,{
       body,icon:'icons/icon.svg',badge:'icons/icon.svg',
+      tag:'waqtsalat-test',renotify:true,requireInteraction:true,
+      vibrate:vibPattern,silent:snd!=='silent',
+      data:{prayer:'test',isAdvance:false,sound:snd},
+      actions:[{action:'dismiss',title:t('notifDismiss')}]
       tag:'waqtsalat-test',renotify:true,
       vibrate:state.notifications.vibrate?[200,100,200]:[0],
       silent:true
@@ -3060,6 +3578,9 @@ async function fireTestNotification(){
   }else{
     new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-test'});
   }
+
+  // Clear badge after 10s
+  setTimeout(()=>clearAppBadge(),10000);
 }
 
 // ─── PWA Install Prompt ──────────────────────────────────────
@@ -3110,6 +3631,60 @@ function checkNotifBlocked(){
     bar.classList.add('show');
   }else{
     bar.classList.remove('show');
+  }
+}
+
+// ─── Reload Assets (keep settings) ───────────────────────────
+async function reloadAssets(){
+  const fab=$('reload-fab');
+  const toast=$('reload-toast');
+  if(fab.classList.contains('spinning'))return; // prevent double-click
+
+  fab.classList.add('spinning');
+  fab.classList.remove('success','error');
+  toast.textContent=t('reloadingAssets');
+  toast.classList.add('show');
+
+  try{
+    // 1. Clear all caches (app + sounds)
+    if('caches' in window){
+      const keys=await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)));
+    }
+
+    // 2. Tell SW to skip waiting and re-cache
+    if('serviceWorker' in navigator){
+      const registrations=await navigator.serviceWorker.getRegistrations();
+      for(const reg of registrations){
+        await reg.unregister();
+      }
+      // Re-register SW (will re-cache all ASSETS on install)
+      await navigator.serviceWorker.register('sw.js');
+    }
+
+    // 3. Re-cache sounds if notifications enabled
+    if(state.notifications.enabled){
+      await preCacheSounds();
+    }
+
+    // 4. Fetch fresh index.html to update the page
+    fab.classList.remove('spinning');
+    fab.classList.add('success');
+    toast.textContent=t('reloadDone');
+
+    // Reload from network after a brief success feedback
+    setTimeout(()=>{
+      toast.classList.remove('show');
+      location.reload();
+    },1200);
+  }catch(e){
+    fab.classList.remove('spinning');
+    fab.classList.add('error');
+    toast.textContent=t('reloadFail');
+    setTimeout(()=>{
+      toast.classList.remove('show');
+      fab.classList.remove('error');
+    },3000);
   }
 }
 
@@ -3184,6 +3759,11 @@ function registerSW(){
     // Check when coming back online
     window.addEventListener('online',()=>reg.update());
   });
+  // Listen for messages from SW
+  navigator.serviceWorker.addEventListener('message',event=>{
+    if(event.data?.type==='STOP_SOUND')stopNotifSound();
+    if(event.data?.type==='RESCHEDULE_NOTIFICATIONS')scheduleNotifications();
+  });
   // Reload once new SW takes control
   let refreshing=false;
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
@@ -3241,6 +3821,17 @@ if(state.onboarded&&state.position)renderAll();
 registerSW();
 setupInstallPrompt();
 checkNotifBlocked();
+// Pre-cache sounds and clear badge on app focus
+if(state.notifications.enabled)preCacheSounds();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)clearAppBadge()});
+// Register Periodic Background Sync for notification rescheduling
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.ready.then(reg=>{
+    if(reg.periodicSync){
+      reg.periodicSync.register('reschedule-notifications',{minInterval:60*60*1000}).catch(()=>{});
+    }
+  });
+}
 
 })();
 </script>

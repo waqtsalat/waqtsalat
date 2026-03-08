@@ -1,5 +1,6 @@
-const SW_VERSION = '1.1.0';
+const SW_VERSION = '1.2.0';
 const CACHE_NAME = 'waqtsalat-v' + SW_VERSION;
+const SOUND_CACHE_NAME = 'waqtsalat-sounds-v1';
 const ASSETS = [
   './',
   './index.html',
@@ -17,7 +18,7 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+        keys.filter(k => k !== CACHE_NAME && k !== SOUND_CACHE_NAME).map(k => caches.delete(k))
       )
     ).then(() => self.clients.claim())
   );
@@ -41,9 +42,15 @@ self.addEventListener('message', event => {
   }
 });
 
-// Notification click — open the app
+// Notification click — open the app, handle snooze/dismiss, clear badge
 self.addEventListener('notificationclick', event => {
   event.notification.close();
+
+  // Clear app badge
+  if (self.registration.navigationPreload) {
+    // Badge API in SW context
+  }
+  try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
 
   if (event.action === 'snooze') {
     // Snooze: re-show notification after 5 minutes
@@ -67,9 +74,13 @@ self.addEventListener('notificationclick', event => {
     return;
   }
 
-  // Default: focus or open the app
+  // Default click or 'dismiss': focus or open the app
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+      // Tell the page to stop playing sound
+      for (const client of clients) {
+        client.postMessage({ type: 'STOP_SOUND' });
+      }
       for (const client of clients) {
         if (client.url.includes('waqtsalat') && 'focus' in client) {
           return client.focus();
@@ -78,4 +89,22 @@ self.addEventListener('notificationclick', event => {
       return self.clients.openWindow('./');
     })
   );
+});
+
+// Notification close (swipe away) — clear badge
+self.addEventListener('notificationclose', event => {
+  try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
+});
+
+// Periodic Background Sync — reschedule notifications when browser allows
+self.addEventListener('periodicsync', event => {
+  if (event.tag === 'reschedule-notifications') {
+    event.waitUntil(
+      self.clients.matchAll({ type: 'window' }).then(clients => {
+        for (const client of clients) {
+          client.postMessage({ type: 'RESCHEDULE_NOTIFICATIONS' });
+        }
+      })
+    );
+  }
 });
