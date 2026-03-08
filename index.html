@@ -565,6 +565,56 @@ nav.bottom-bar button:focus-visible{
 .notif-detail{display:none}
 .notif-detail.show{display:block}
 
+/* Notification tester popup */
+.notif-test-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.5);
+  display:none;align-items:center;justify-content:center;
+  padding:var(--sp-lg);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.notif-test-overlay.show{display:flex}
+.notif-test-popup{
+  background:linear-gradient(180deg,#0d5a2e,#14704c);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--sp-md);
+  max-width:320px;width:100%;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+.notif-test-header{
+  padding:var(--sp-lg);border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:var(--fs-md);font-weight:600;color:#fff;
+}
+.notif-test-body{padding:var(--sp-lg);display:flex;flex-direction:column;gap:var(--sp-md)}
+.notif-test-desc{font-size:var(--fs-xs);color:rgba(255,255,255,0.6);line-height:1.5}
+.notif-test-options{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm)}
+.notif-test-opt{
+  display:flex;align-items:center;justify-content:center;gap:var(--sp-xs);
+  padding:var(--sp-md);
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  border-radius:var(--sp-sm);cursor:pointer;transition:all 0.2s;
+  font-size:var(--fs-sm);color:rgba(255,255,255,0.7);
+}
+.notif-test-opt:hover{background:rgba(255,255,255,0.1)}
+.notif-test-opt.selected{
+  background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);
+}
+.notif-test-opt input{display:none}
+.notif-test-actions{
+  display:flex;gap:var(--sp-sm);padding:0 var(--sp-lg) var(--sp-lg);
+}
+.notif-test-actions button{flex:1;padding:var(--sp-md);border-radius:var(--sp-sm);font-size:var(--fs-sm);font-weight:600;cursor:pointer;transition:all 0.2s}
+.notif-test-send{background:var(--gold);color:#1a1a1a}
+.notif-test-send:hover{filter:brightness(1.1)}
+.notif-test-send:disabled{opacity:0.5;cursor:not-allowed}
+.notif-test-cancel{background:transparent;color:rgba(255,255,255,0.48);border:1px solid rgba(255,255,255,0.1)}
+.notif-test-cancel:hover{background:rgba(255,255,255,0.06)}
+.notif-test-status{
+  font-size:var(--fs-xs);color:var(--gold);text-align:center;
+  min-height:1.2em;transition:opacity 0.3s;
+}
+
 /* Toggle switch */
 .toggle{position:relative;width:2.5rem;height:1.375rem;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0;position:absolute}
@@ -904,6 +954,27 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
   <span id="notif-blocked-text"></span>
 </div>
 
+<!-- Notification tester popup -->
+<div class="notif-test-overlay" id="notif-test-overlay">
+  <div class="notif-test-popup" role="dialog" aria-labelledby="notif-test-title">
+    <div class="notif-test-header" id="notif-test-title"></div>
+    <div class="notif-test-body">
+      <div class="notif-test-desc" id="notif-test-desc"></div>
+      <div class="notif-test-options" id="notif-test-options">
+        <label class="notif-test-opt selected"><input type="radio" name="notif-test-delay" value="0" checked><span id="notif-test-now"></span></label>
+        <label class="notif-test-opt"><input type="radio" name="notif-test-delay" value="10"><span id="notif-test-10s"></span></label>
+        <label class="notif-test-opt"><input type="radio" name="notif-test-delay" value="60"><span id="notif-test-1m"></span></label>
+        <label class="notif-test-opt"><input type="radio" name="notif-test-delay" value="300"><span id="notif-test-5m"></span></label>
+      </div>
+      <div class="notif-test-status" id="notif-test-status"></div>
+    </div>
+    <div class="notif-test-actions">
+      <button class="notif-test-send" id="notif-test-send"></button>
+      <button class="notif-test-cancel" id="notif-test-cancel"></button>
+    </div>
+  </div>
+</div>
+
 <div class="update-banner" id="update-banner" role="alert">
   <span id="update-text"></span>
   <button class="btn-update" id="btn-update-now"></button>
@@ -1091,6 +1162,10 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
         <label class="toggle"><input type="checkbox" id="s-notif-vibrate"><span></span></label>
       </div>
       <div class="notif-dnd-hint" id="s-notif-dnd-hint"></div>
+      <div class="notif-sub-row">
+        <label id="s-notif-test-label"></label>
+        <button class="btn-test-sound" id="btn-test-notif"></button>
+      </div>
     </div>
   </div>
   <div class="settings-section">
@@ -1217,6 +1292,7 @@ notifSound:'صوت الإشعار',notifSoundSilent:'صامت',notifSoundTone:'�
 notifSoundTest:'تجربة',notifAthanTime:'حان وقت صلاة',notifMinBefore:'دقائق قبل',
 notifSnooze:'تأجيل 5 دقائق',notifDismiss:'إغلاق',notifDndHint:'لتلقي الإشعارات أثناء وضع عدم الإزعاج، فعّل «الإشعارات ذات الأولوية» من إعدادات هاتفك',
 notifVibrate:'اهتزاز',notifWakeScreen:'إيقاظ الشاشة',
+notifTestTitle:'تجربة الإشعار',notifTestDesc:'اختر متى تريد تلقي إشعار تجريبي',notifTestNow:'الآن',notifTest10s:'بعد 10 ثوانٍ',notifTest1m:'بعد دقيقة',notifTest5m:'بعد 5 دقائق',notifTestSend:'إرسال',notifTestCancel:'إلغاء',notifTestLabel:'تجربة الإشعار',notifTestScheduled:'سيصل الإشعار',notifTestSent:'تم إرسال الإشعار',
 },
 fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
@@ -1255,6 +1331,7 @@ notifSound:'Son de notification',notifSoundSilent:'Silencieux',notifSoundTone:'T
 notifSoundTest:'Tester',notifAthanTime:'C\'est l\'heure de la prière',notifMinBefore:'min avant',
 notifSnooze:'Reporter 5 min',notifDismiss:'Fermer',notifDndHint:'Pour recevoir les notifications en mode Ne pas déranger, activez les « Notifications prioritaires » dans les paramètres de votre téléphone',
 notifVibrate:'Vibration',notifWakeScreen:'Réveiller l\'écran',
+notifTestTitle:'Tester la notification',notifTestDesc:'Choisissez quand recevoir une notification de test',notifTestNow:'Maintenant',notifTest10s:'Dans 10 s',notifTest1m:'Dans 1 min',notifTest5m:'Dans 5 min',notifTestSend:'Envoyer',notifTestCancel:'Annuler',notifTestLabel:'Tester la notification',notifTestScheduled:'Notification prévue',notifTestSent:'Notification envoyée',
 },
 en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
@@ -1293,6 +1370,7 @@ notifSound:'Notification Sound',notifSoundSilent:'Silent',notifSoundTone:'Tone',
 notifSoundTest:'Test',notifAthanTime:'It\'s time for',notifMinBefore:'min before',
 notifSnooze:'Snooze 5 min',notifDismiss:'Dismiss',notifDndHint:'To receive notifications during Do Not Disturb, enable "Priority notifications" in your phone settings',
 notifVibrate:'Vibration',notifWakeScreen:'Wake screen',
+notifTestTitle:'Test Notification',notifTestDesc:'Choose when to receive a test notification',notifTestNow:'Now',notifTest10s:'In 10s',notifTest1m:'In 1 min',notifTest5m:'In 5 min',notifTestSend:'Send',notifTestCancel:'Cancel',notifTestLabel:'Test notification',notifTestScheduled:'Notification scheduled',notifTestSent:'Notification sent',
 }};
 
 function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
@@ -2367,6 +2445,19 @@ function renderSettings(){
   // DND hint
   $('s-notif-dnd-hint').textContent=t('notifDndHint');
 
+  // Notification tester
+  $('s-notif-test-label').textContent=t('notifTestLabel');
+  $('btn-test-notif').textContent=t('notifSoundTest');
+  $('notif-test-title').textContent=t('notifTestTitle');
+  $('notif-test-desc').textContent=t('notifTestDesc');
+  $('notif-test-now').textContent=t('notifTestNow');
+  $('notif-test-10s').textContent=t('notifTest10s');
+  $('notif-test-1m').textContent=t('notifTest1m');
+  $('notif-test-5m').textContent=t('notifTest5m');
+  $('notif-test-send').textContent=t('notifTestSend');
+  $('notif-test-cancel').textContent=t('notifTestCancel');
+  $('notif-test-status').textContent='';
+
   // Adjustments
   $('s-adj-title').textContent=t('adjustments');
   const adjRows=$('s-adj-rows');
@@ -2507,6 +2598,59 @@ function setupEvents(){
   $('s-notif-vibrate').addEventListener('change',e=>{
     state.notifications.vibrate=e.target.checked;
     saveState('waqt-notifications',state.notifications);
+  });
+
+  // Notification tester popup
+  $('btn-test-notif').addEventListener('click',()=>{
+    $('notif-test-status').textContent='';
+    $('notif-test-send').disabled=false;
+    // Reset selection to "Now"
+    const opts=$('notif-test-options').querySelectorAll('.notif-test-opt');
+    opts.forEach(o=>o.classList.remove('selected'));
+    opts[0].classList.add('selected');
+    opts[0].querySelector('input').checked=true;
+    $('notif-test-overlay').classList.add('show');
+  });
+  $('notif-test-options').addEventListener('change',()=>{
+    const opts=$('notif-test-options').querySelectorAll('.notif-test-opt');
+    opts.forEach(o=>{
+      o.classList.toggle('selected',o.querySelector('input').checked);
+    });
+    $('notif-test-status').textContent='';
+    $('notif-test-send').disabled=false;
+  });
+  $('notif-test-cancel').addEventListener('click',()=>{
+    $('notif-test-overlay').classList.remove('show');
+  });
+  $('notif-test-overlay').addEventListener('click',e=>{
+    if(e.target===$('notif-test-overlay'))$('notif-test-overlay').classList.remove('show');
+  });
+  $('notif-test-send').addEventListener('click',async()=>{
+    const delay=parseInt(document.querySelector('input[name="notif-test-delay"]:checked').value,10);
+    const btn=$('notif-test-send');
+    btn.disabled=true;
+
+    // Request permission if needed
+    if(!('Notification' in window))return;
+    if(Notification.permission==='denied'){
+      $('notif-test-status').textContent=t('notifBlocked');
+      return;
+    }
+    if(Notification.permission!=='granted'){
+      const perm=await Notification.requestPermission();
+      if(perm!=='granted')return;
+    }
+
+    if(delay===0){
+      fireTestNotification();
+      $('notif-test-status').textContent=t('notifTestSent');
+      setTimeout(()=>$('notif-test-overlay').classList.remove('show'),1200);
+    }else{
+      setTimeout(()=>fireTestNotification(),delay*1000);
+      const label=delay<60?t('notifTest10s'):delay<300?t('notifTest1m'):t('notifTest5m');
+      $('notif-test-status').textContent=t('notifTestScheduled')+' ('+label+')';
+      setTimeout(()=>$('notif-test-overlay').classList.remove('show'),1500);
+    }
   });
 
   // Help popup
@@ -2894,6 +3038,27 @@ async function fireNotification(prayerKey,isAdvance){
   }else{
     // Fallback: basic Notification API
     new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-'+prayerKey,requireInteraction:!isAdvance});
+  }
+}
+
+async function fireTestNotification(){
+  const title=t('notifTestTitle')+' — WaqtSalat';
+  const body=t('notifTestDesc');
+  const snd=state.notifications.sound||'tone';
+  if(snd!=='silent'){try{playNotifSound(snd)}catch(e){}}
+  if(state.notifications.vibrate&&navigator.vibrate){
+    navigator.vibrate([200,100,200]);
+  }
+  if(navigator.serviceWorker&&navigator.serviceWorker.controller){
+    const reg=await navigator.serviceWorker.ready;
+    reg.showNotification(title,{
+      body,icon:'icons/icon.svg',badge:'icons/icon.svg',
+      tag:'waqtsalat-test',renotify:true,
+      vibrate:state.notifications.vibrate?[200,100,200]:[0],
+      silent:true
+    });
+  }else{
+    new Notification(title,{body,icon:'icons/icon.svg',tag:'waqtsalat-test'});
   }
 }
 
