@@ -1273,7 +1273,7 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
     </div>
   </div>
   <div class="settings-section" id="s-notif-section">
-    <h3><span id="s-notif-title"></span> <span class="badge-experimental" id="s-notif-badge"></span></h3>
+    <h3><span id="s-notif-title"></span> <span class="badge-experimental" id="s-notif-exp-badge"></span></h3>
     <div class="setting-row">
       <label id="s-notif-label"></label>
       <span class="notif-perm-badge" id="s-notif-perm-badge"></span>
@@ -2820,7 +2820,7 @@ function renderSettings(){
 
   // Notifications
   $('s-notif-title').textContent=t('notifications');
-  $('s-notif-badge').textContent=t('experimental');
+  $('s-notif-exp-badge').textContent=t('experimental');
   $('s-notif-label').textContent=t('enableNotifications');
   $('s-notif-toggle').checked=state.notifications.enabled;
 
@@ -3958,6 +3958,9 @@ if(state.onboarded&&state.position)renderAll();
 registerSW();
 setupInstallPrompt();
 checkNotifBar();
+// Resume notification scheduling after reload (scheduleNotifications is not
+// called by renderPrayers on first render because dayChanged is false)
+if(state.notifications.enabled&&state.position)scheduleNotifications();
 // Pre-cache sounds and clear badge on app focus
 if(state.notifications.enabled)preCacheSounds();
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)clearAppBadge()});
