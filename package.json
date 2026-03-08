@@ -2,7 +2,7 @@
   "name": "waqtsalat",
   "version": "1.0.0",
   "private": true,
-  "description": "PWA horaires de prière — Maroc uniquement — Rite Malikite — Méthode Habous",
+  "description": "PWA horaires de prière — Maroc uniquement — Méthode Habous",
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",

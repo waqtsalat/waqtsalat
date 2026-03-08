@@ -9,8 +9,8 @@
 <title>وقت الصلاة — مواقيت الصلاة في المغرب</title>
 
 <!-- SEO Meta Tags -->
-<meta name="description" content="مواقيت صلاة دقيقة للمغرب بطريقة الأحباس (المذهب المالكي). +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
-<meta name="keywords" content="prayer times, Morocco, salat, horaires prière, أوقات الصلاة, المغرب, Habous, Malikite, Fajr, Dhuhr, Asr, Maghrib, Isha, Qibla, PWA, offline, مواقيت الصلاة">
+<meta name="description" content="مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
+<meta name="keywords" content="prayer times, Morocco, salat, horaires prière, أوقات الصلاة, المغرب, Habous, Fajr, Dhuhr, Asr, Maghrib, Isha, Qibla, PWA, offline, مواقيت الصلاة">
 <meta name="author" content="WaqtSalat">
 <meta name="robots" content="index, follow">
 <meta name="language" content="Arabic">
@@ -22,7 +22,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://waqtsalat.github.io/waqtsalat/">
 <meta property="og:title" content="وقت الصلاة — مواقيت الصلاة في المغرب">
-<meta property="og:description" content="مواقيت صلاة دقيقة للمغرب بطريقة الأحباس (المذهب المالكي). +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
+<meta property="og:description" content="مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
 <meta property="og:image" content="https://waqtsalat.github.io/waqtsalat/icons/og-image.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -37,7 +37,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://waqtsalat.github.io/waqtsalat/">
 <meta name="twitter:title" content="وقت الصلاة — مواقيت الصلاة في المغرب">
-<meta name="twitter:description" content="مواقيت صلاة دقيقة للمغرب بطريقة الأحباس (المذهب المالكي). +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
+<meta name="twitter:description" content="مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.">
 <meta name="twitter:image" content="https://waqtsalat.github.io/waqtsalat/icons/og-image.png">
 <meta name="twitter:image:alt" content="وقت الصلاة — تطبيق مواقيت الصلاة في المغرب">
 
@@ -60,7 +60,7 @@
   "name": "WaqtSalat",
   "alternateName": "وقت الصلاة",
   "url": "https://waqtsalat.github.io/waqtsalat/",
-  "description": "Accurate prayer times for Morocco. Offline-first PWA using the official Habous method (Malikite rite). Covers 35+ Moroccan cities with Qibla compass, trilingual interface, and local notifications. Zero tracking, zero cookies.",
+  "description": "Prayer times for Morocco. Offline-first PWA using the official Habous method. Covers 35+ Moroccan cities with Qibla compass, trilingual interface, and local notifications. Zero tracking, zero cookies.",
   "applicationCategory": "LifestyleApplication",
   "operatingSystem": "Any",
   "browserRequirements": "Requires a modern browser with JavaScript and Service Worker support",
@@ -70,13 +70,12 @@
     "priceCurrency": "MAD"
   },
   "featureList": [
-    "Accurate prayer times using the official Moroccan Habous method",
+    "Prayer times using the official Moroccan Habous method",
     "6 daily prayers: Fajr, Chourouk, Dhuhr, Asr, Maghrib, Isha",
     "35+ Moroccan cities with GPS auto-detection",
     "Qibla compass with device orientation and AR mode",
     "Trilingual interface: Arabic, French, English",
     "Full RTL support for Arabic",
-    "Analog clock with prayer time arcs",
     "Local push notifications with Do Not Disturb mode",
     "Pre-prayer notifications (5/10/15/30 minutes)",
     "Manual time adjustments per prayer (±15 min)",
@@ -130,10 +129,10 @@
     },
     {
       "@type": "Question",
-      "name": "How accurate are the prayer times?",
+      "name": "How close are the prayer times to the official schedule?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "WaqtSalat calculates prayer times within ±1 minute of the official Habous (Ministry of Islamic Affairs) times. The app uses the same astronomical parameters: Fajr at 19°, Isha at 17°, and the Malikite method for Asr."
+        "text": "WaqtSalat calculates prayer times within ±1 minute of the official Habous (Ministry of Islamic Affairs) times. The app uses the same astronomical parameters: Fajr at 19°, Isha at 17°."
       }
     },
     {
@@ -165,7 +164,7 @@
       "name": "What calculation method does WaqtSalat use?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "WaqtSalat uses the method of the Moroccan Ministry of Habous and Islamic Affairs: Fajr angle 19°, Isha angle 17°, and Asr calculated as shadow = 1x object length + shadow at zenith (Malikite school). The astronomical algorithms are based on Jean Meeus' 'Astronomical Algorithms'."
+        "text": "WaqtSalat uses the method of the Moroccan Ministry of Habous and Islamic Affairs: Fajr angle 19°, Isha angle 17°, and Asr calculated as shadow = 1x object length + shadow at zenith. The astronomical algorithms are based on Jean Meeus' 'Astronomical Algorithms'."
       }
     },
     {
@@ -761,6 +760,16 @@ nav.bottom-bar button:focus-visible{
 .help-popup-header .app-info .app-name{font-size:var(--fs-lg);font-weight:700;color:#fff}
 .help-popup-header .app-info .app-version{font-size:var(--fs-xs);color:rgba(255,255,255,0.54)}
 .help-popup-body{padding:var(--sp-lg);display:flex;flex-direction:column;gap:var(--sp-md)}
+.help-popup-features{
+  display:flex;flex-wrap:wrap;gap:var(--sp-sm);
+}
+.help-feature{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,0.08);border-radius:999px;
+  padding:var(--sp-xs) var(--sp-sm);font-size:var(--fs-xs);
+  color:rgba(255,255,255,0.8);
+}
+.help-feature svg{width:0.875rem;height:0.875rem;flex-shrink:0;color:var(--gold)}
 .help-popup-beta{
   background:rgba(243,156,18,0.12);border:1px solid rgba(243,156,18,0.25);
   border-radius:var(--sp-sm);padding:var(--sp-md);
@@ -840,6 +849,13 @@ nav.bottom-bar button:focus-visible{
       </div>
     </div>
     <div class="help-popup-body">
+      <div class="help-popup-features">
+        <span class="help-feature" id="help-feature-noads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/></svg> <span>No ads</span></span>
+        <span class="help-feature" id="help-feature-notracking"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span>No tracking</span></span>
+        <span class="help-feature" id="help-feature-free"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg> <span>Always free</span></span>
+        <span class="help-feature" id="help-feature-habous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span>Habous calculation</span></span>
+        <span class="help-feature" id="help-feature-opensource"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> <span>Open source</span></span>
+      </div>
       <div class="help-popup-beta">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <span id="help-beta-text">Beta — Prayer times may differ slightly from official schedules. Always verify with your local mosque.</span>
@@ -1181,7 +1197,8 @@ helpInfo:'المساعدة',betaWarning:'نسخة تجريبية — قد تخت
 helpContribute:'المساهمة',helpContributeDesc:'عرض الكود المصدري والمساهمة',
 helpReport:'الإبلاغ عن خطأ',helpReportDesc:'الإبلاغ عن مشاكل أو طلب ميزات',helpClose:'إغلاق',
 helpShare:'مشاركة',helpShareDesc:'شارك وقت الصلاة مع الأهل والأصدقاء',shareCopied:'تم نسخ الرابط',
-ogTitle:'وقت الصلاة — مواقيت الصلاة في المغرب',ogDescription:'مواقيت صلاة دقيقة للمغرب بطريقة الأحباس (المذهب المالكي). +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.',ogImageAlt:'وقت الصلاة — تطبيق مواقيت الصلاة في المغرب',
+helpNoAds:'بدون إعلانات',helpNoTracking:'بدون تتبع',helpFree:'مجاني دائماً',helpHabous:'حساب الأحباس',helpOpenSource:'مفتوح المصدر',
+ogTitle:'وقت الصلاة — مواقيت الصلاة في المغرب',ogDescription:'مواقيت الصلاة في المغرب بطريقة الأحباس. +35 مدينة، بوصلة القبلة. بدون إعلانات، بدون تتبع، بدون دفع، مفتوح المصدر.',ogImageAlt:'وقت الصلاة — تطبيق مواقيت الصلاة في المغرب',
 notifPrayers:'صلوات الإشعار',notifSelectPrayers:'اختر الصلوات التي تريد إشعاراً لها',
 notifAdvance:'تنبيه مسبق',notifAdvanceDesc:'تنبيه قبل وقت الصلاة',
 notifAdvance0:'عند الأذان',notifAdvance5:'قبل 5 دقائق',notifAdvance10:'قبل 10 دقائق',notifAdvance15:'قبل 15 دقائق',notifAdvance30:'قبل 30 دقيقة',
@@ -1217,7 +1234,8 @@ helpInfo:'Aide',betaWarning:'Bêta — Les horaires de prière peuvent légèrem
 helpContribute:'Contribuer',helpContributeDesc:'Voir le code source et contribuer',
 helpReport:'Signaler un bug',helpReportDesc:'Signaler un problème ou demander une fonctionnalité',helpClose:'Fermer',
 helpShare:'Partager',helpShareDesc:'Partagez WaqtSalat avec vos proches',shareCopied:'Lien copié',
-ogTitle:'WaqtSalat — Horaires de prière au Maroc',ogDescription:'Horaires de prière précis pour le Maroc, méthode officielle des Habous (rite Malékite). +35 villes, boussole Qibla. Sans pub, sans tracking, sans paiement, open source.',ogImageAlt:'WaqtSalat — Application d\'horaires de prière au Maroc',
+helpNoAds:'Sans pub',helpNoTracking:'Sans tracking',helpFree:'Toujours gratuit',helpHabous:'Calcul Habous',helpOpenSource:'Open source',
+ogTitle:'WaqtSalat — Horaires de prière au Maroc',ogDescription:'Horaires de prière pour le Maroc, méthode officielle des Habous. +35 villes, boussole Qibla. Sans pub, sans tracking, sans paiement, open source.',ogImageAlt:'WaqtSalat — Application d\'horaires de prière au Maroc',
 notifPrayers:'Prières à notifier',notifSelectPrayers:'Choisissez les prières pour les notifications',
 notifAdvance:'Alerte anticipée',notifAdvanceDesc:'Notification avant l\'heure de prière',
 notifAdvance0:'À l\'adhan',notifAdvance5:'5 min avant',notifAdvance10:'10 min avant',notifAdvance15:'15 min avant',notifAdvance30:'30 min avant',
@@ -1253,7 +1271,8 @@ helpInfo:'Help & Info',betaWarning:'Beta — Prayer times may differ slightly fr
 helpContribute:'Contribute',helpContributeDesc:'View source code & contribute',
 helpReport:'Report a bug',helpReportDesc:'Report issues or request features',helpClose:'Close',
 helpShare:'Share',helpShareDesc:'Share WaqtSalat with friends & family',shareCopied:'Link copied',
-ogTitle:'WaqtSalat — Prayer Times for Morocco',ogDescription:'Accurate prayer times for Morocco using the official Habous method (Malikite rite). 35+ cities, Qibla compass. No ads, no tracking, no payment, open source.',ogImageAlt:'WaqtSalat — Prayer times app for Morocco',
+helpNoAds:'No ads',helpNoTracking:'No tracking',helpFree:'Always free',helpHabous:'Habous calculation',helpOpenSource:'Open source',
+ogTitle:'WaqtSalat — Prayer Times for Morocco',ogDescription:'Prayer times for Morocco using the official Habous method. 35+ cities, Qibla compass. No ads, no tracking, no payment, open source.',ogImageAlt:'WaqtSalat — Prayer times app for Morocco',
 notifPrayers:'Notification Prayers',notifSelectPrayers:'Choose which prayers to be notified for',
 notifAdvance:'Advance Alert',notifAdvanceDesc:'Get notified before prayer time',
 notifAdvance0:'At adhan time',notifAdvance5:'5 min before',notifAdvance10:'10 min before',notifAdvance15:'15 min before',notifAdvance30:'30 min before',
@@ -2378,6 +2397,12 @@ function renderSettings(){
   $('help-popup-title').textContent=t('appName');
   $('help-label-share').textContent=t('helpShare');
   $('help-desc-share').textContent=t('helpShareDesc');
+  // Help feature badges
+  $('help-feature-noads').querySelector('span').textContent=t('helpNoAds');
+  $('help-feature-notracking').querySelector('span').textContent=t('helpNoTracking');
+  $('help-feature-free').querySelector('span').textContent=t('helpFree');
+  $('help-feature-habous').querySelector('span').textContent=t('helpHabous');
+  $('help-feature-opensource').querySelector('span').textContent=t('helpOpenSource');
 }
 
 function populateCitySelect(sel){

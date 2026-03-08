@@ -1,6 +1,6 @@
 # PRD — وقت الصلاة WaqtSalat
 
-> PWA horaires de prière — Maroc uniquement — Rite Malikite — Méthode Habous
+> PWA horaires de prière — Maroc uniquement — Méthode Habous
 
 ---
 
@@ -15,7 +15,7 @@ Application marocaine de horaires de prière. Un seul fichier HTML compilé, aut
 | Axe | Décision | Conséquence |
 |-----|----------|-------------|
 | Pays | Maroc exclusif | Villes marocaines, un seul timezone |
-| Rite | Malikite uniquement | Asr = ombre 1× longueur, pas de sélecteur |
+| Rite | Habous | Asr = ombre 1× longueur, pas de sélecteur |
 | Méthode | Ministère des Habous | Fajr 19°, Isha 17°, pas de sélecteur |
 | Timezone | `Africa/Casablanca` | Pas de détection complexe |
 | Architecture | Single-file HTML | Tout inliné : CSS, JS, SVG, données |
@@ -58,7 +58,7 @@ Ministère des Habous et des Affaires Islamiques — Maroc. Non paramétrable.
 
 - Fajr : angle 19°
 - Isha : angle 17°
-- Asr : ombre = 1× longueur + ombre au zénith (Malikite)
+- Asr : ombre = 1× longueur + ombre au zénith
 
 ### Prières affichées
 
