@@ -506,6 +506,14 @@ nav.bottom-bar button:focus-visible{
 .btn-action:hover,.btn-action:focus-visible{background:rgba(255,255,255,0.06)}
 .btn-danger{color:#e74c3c}
 
+/* Experimental badge */
+.badge-experimental{
+  display:inline-block;font-size:0.65rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:0.04em;padding:0.1em 0.5em;border-radius:0.75em;
+  background:rgba(243,156,18,0.15);color:#f0c040;border:1px solid rgba(243,156,18,0.3);
+  vertical-align:middle;margin-inline-start:var(--sp-sm);
+}
+
 /* Notification prayer toggles grid */
 .notif-prayers-grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:var(--sp-sm);
@@ -1050,7 +1058,7 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
     </div>
   </div>
   <div class="settings-section" id="s-notif-section">
-    <h3 id="s-notif-title"></h3>
+    <h3><span id="s-notif-title"></span> <span class="badge-experimental" id="s-notif-badge"></span></h3>
     <div class="setting-row">
       <label id="s-notif-label"></label>
       <label class="toggle"><input type="checkbox" id="s-notif-toggle"><span></span></label>
@@ -1179,7 +1187,7 @@ maghrib:'المغرب',isha:'العشاء',nextPrayer:'الصلاة القادم
 hours:'سا',minutes:'د',seconds:'ث',settings:'الإعدادات',qibla:'القبلة',
 prayerTimes:'أوقات الصلاة',city:'المدينة',language:'اللغة',theme:'المظهر',
 themeLight:'فاتح',themeDark:'داكن',themeSystem:'تلقائي',
-notifications:'الإشعارات',enableNotifications:'تفعيل الإشعارات',
+notifications:'الإشعارات',experimental:'تجريبي',enableNotifications:'تفعيل الإشعارات',
 adjustments:'تعديلات',adjustmentsDesc:'تعديل التوقيت (±15 دقيقة)',
 exportConfig:'تصدير الإعدادات',importConfig:'استيراد الإعدادات',
 resetConfig:'إعادة تعيين',resetConfirm:'هل أنت متأكد؟ سيتم حذف جميع الإعدادات.',
@@ -1216,7 +1224,7 @@ maghrib:'Maghrib',isha:'Isha',nextPrayer:'Prochaine prière',timeRemaining:'Temp
 hours:'h',minutes:'min',seconds:'s',settings:'Paramètres',qibla:'Qibla',
 prayerTimes:'Horaires',city:'Ville',language:'Langue',theme:'Thème',
 themeLight:'Clair',themeDark:'Sombre',themeSystem:'Auto',
-notifications:'Notifications',enableNotifications:'Activer les notifications',
+notifications:'Notifications',experimental:'Expérimental',enableNotifications:'Activer les notifications',
 adjustments:'Ajustements',adjustmentsDesc:'Ajuster les horaires (±15 min)',
 exportConfig:'Exporter',importConfig:'Importer',
 resetConfig:'Réinitialiser',resetConfirm:'Êtes-vous sûr ? Tous les paramètres seront supprimés.',
@@ -1254,7 +1262,7 @@ maghrib:'Maghrib',isha:'Isha',nextPrayer:'Next Prayer',timeRemaining:'Time Remai
 hours:'h',minutes:'min',seconds:'s',settings:'Settings',qibla:'Qibla',
 prayerTimes:'Prayer Times',city:'City',language:'Language',theme:'Theme',
 themeLight:'Light',themeDark:'Dark',themeSystem:'Auto',
-notifications:'Notifications',enableNotifications:'Enable notifications',
+notifications:'Notifications',experimental:'Experimental',enableNotifications:'Enable notifications',
 adjustments:'Adjustments',adjustmentsDesc:'Adjust prayer times (±15 min)',
 exportConfig:'Export',importConfig:'Import',
 resetConfig:'Reset',resetConfirm:'Are you sure? All settings will be deleted.',
@@ -2303,6 +2311,7 @@ function renderSettings(){
 
   // Notifications
   $('s-notif-title').textContent=t('notifications');
+  $('s-notif-badge').textContent=t('experimental');
   $('s-notif-label').textContent=t('enableNotifications');
   $('s-notif-toggle').checked=state.notifications.enabled;
 
