@@ -27,6 +27,8 @@ export default [
         Request: 'readonly',
         Response: 'readonly',
         Headers: 'readonly',
+        // Service Worker / Push APIs
+        TimestampTrigger: 'readonly',
         // Node globals (for scripts)
         process: 'readonly',
       }

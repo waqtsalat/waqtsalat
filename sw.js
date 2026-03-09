@@ -1,4 +1,4 @@
-const SW_VERSION = '1.4.0';
+const SW_VERSION = '1.5.0';
 const CACHE_NAME = 'waqtsalat-v' + SW_VERSION;
 const SOUND_CACHE_NAME = 'waqtsalat-sounds-v1';
 const NOTIF_CACHE_NAME = 'waqtsalat-notif-v1';
@@ -158,6 +158,93 @@ function throttledCheck() {
   return swCheckNotifications();
 }
 
+// ─── Notification Triggers API ────────────────────────────────
+// Planifie des notifications à des timestamps exacts.
+// L'OS réveille le SW lui-même — pas besoin que l'app soit ouverte.
+// Support : Chrome 80+ Android. Détection via self.registration.showTrigger.
+
+function casaTimestampFromHHMM(timeStr) {
+  // Convertit "HH:MM" (heure locale Casablanca) en timestamp UTC
+  const [localH, localM] = timeStr.split(':').map(Number);
+  const now = new Date();
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Africa/Casablanca',
+    timeZoneName: 'shortOffset'
+  });
+  const tzStr = fmt.formatToParts(now).find(p => p.type === 'timeZoneName')?.value || 'GMT+1';
+  const match = tzStr.match(/GMT([+-]?\d+)?/);
+  const offsetH = parseInt(match?.[1] || '1', 10);
+  const d = new Date();
+  d.setHours(localH - offsetH, localM, 0, 0);
+  return d.getTime();
+}
+
+async function scheduleTriggeredNotifications(prayerTimes, settings, i18n) {
+  // Vérifier le support de l'API
+  if (!self.registration.showTrigger) return false;
+
+  // Nettoyer les notifications déjà planifiées pour aujourd'hui
+  const existing = await self.registration.getNotifications({ includeTriggered: true });
+  for (const n of existing) {
+    if (n.tag?.startsWith('waqtsalat-trigger-')) n.close();
+  }
+
+  const prayers = settings.prayers || { fajr: true, dhuhr: true, asr: true, maghrib: true, isha: true };
+  const advance = settings.advance || 0;
+  const now = Date.now();
+  let count = 0;
+
+  for (const k of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
+    if (!prayers[k] || !prayerTimes[k]) continue;
+    const prayerTs = casaTimestampFromHHMM(prayerTimes[k]);
+
+    // Notification avancée (si configurée)
+    if (advance > 0) {
+      const advTs = prayerTs - advance * 60 * 1000;
+      if (advTs > now + 30000) {
+        const title = `${advance} ${i18n.minBefore || 'min'} → ${i18n[k] || k}`;
+        await self.registration.showNotification(title, {
+          body: `${i18n.prayerTimes || ''} — ${prayerTimes[k]}`,
+          icon: 'icons/icon.svg',
+          badge: 'icons/icon.svg',
+          tag: `waqtsalat-trigger-${k}-advance`,
+          showTrigger: new TimestampTrigger(advTs),
+          requireInteraction: true,
+          silent: false,
+          vibrate: [200, 100, 200],
+          data: { prayer: k, isAdvance: true, sound: settings.soundPre || 'tone' },
+          actions: [{ action: 'dismiss', title: i18n.dismiss || '✕' }]
+        });
+        count++;
+      }
+    }
+
+    // Notification à l'heure exacte
+    if (prayerTs > now + 30000) {
+      const title = `${i18n.athanTime || 'Prayer time'} ${i18n[k] || k}`;
+      await self.registration.showNotification(title, {
+        body: `${i18n.prayerTimes || ''} — ${prayerTimes[k]}`,
+        icon: 'icons/icon.svg',
+        badge: 'icons/icon.svg',
+        tag: `waqtsalat-trigger-${k}-atime`,
+        showTrigger: new TimestampTrigger(prayerTs),
+        requireInteraction: true,
+        silent: false,
+        vibrate: [200, 100, 200, 100, 300, 100, 200],
+        data: { prayer: k, isAdvance: false, sound: settings.soundAt || 'adhan' },
+        actions: [
+          { action: 'dismiss', title: i18n.dismiss || '✕' },
+          { action: 'snooze', title: i18n.snooze || '⏰ 5min' }
+        ]
+      });
+      count++;
+    }
+  }
+
+  console.log(`[SW] Scheduled ${count} triggered notifications`);
+  return count > 0;
+}
+
 // ─── Service Worker Lifecycle ───────────────────────────────
 
 self.addEventListener('install', event => {
@@ -208,9 +295,68 @@ self.addEventListener('message', event => {
         firedKeys: existing.date === casa.todayStr ? (existing.firedKeys || []) : []
       };
       await saveNotifData(newData);
-      await swCheckNotifications();
+      if (event.data.settings?.enabled && event.data.prayerTimes) {
+        // Couche 1 : Notification Triggers (Chrome Android) — le plus fiable
+        const triggered = await scheduleTriggeredNotifications(
+          event.data.prayerTimes,
+          event.data.settings,
+          event.data.i18n || {}
+        ).catch(() => false);
+
+        // Couche 2 : Polling SW existant — fallback si Triggers non disponible
+        if (!triggered) await swCheckNotifications();
+      } else {
+        // Notifications désactivées — annuler les triggers planifiés
+        if (self.registration.getNotifications) {
+          const pending = await self.registration.getNotifications({ includeTriggered: true });
+          for (const n of pending) {
+            if (n.tag?.startsWith('waqtsalat-trigger-')) n.close();
+          }
+        }
+        await swCheckNotifications();
+      }
     })());
   }
+});
+
+// ─── VAPID Push (Couche 3) ────────────────────────────────────
+// Reçoit les pushes envoyés par le GitHub Action.
+// Se réveille même app complètement fermée sur iOS 16.4+ et Android.
+
+self.addEventListener('push', event => {
+  if (!event.data) return;
+
+  let payload;
+  try { payload = event.data.json(); }
+  catch { payload = { title: 'WaqtSalat', body: event.data.text() }; }
+
+  const { title, body, prayer, isAdvance, sound } = payload;
+
+  event.waitUntil((async () => {
+    // Signaler aux pages ouvertes de jouer le son (le SW ne peut pas)
+    const clients = await self.clients.matchAll({ type: 'window' });
+    for (const client of clients) {
+      client.postMessage({ type: 'PLAY_SOUND', sound: sound || 'adhan', prayer, isAdvance });
+    }
+
+    await self.registration.showNotification(title, {
+      body,
+      icon: 'icons/icon.svg',
+      badge: 'icons/icon.svg',
+      tag: `waqtsalat-v2-${prayer}${isAdvance ? '-advance' : ''}`,
+      renotify: true,
+      requireInteraction: true,
+      vibrate: [200, 100, 200, 100, 300, 100, 200],
+      silent: false,
+      data: { prayer, isAdvance, sound },
+      actions: [
+        { action: 'dismiss', title: '✕' },
+        ...(!isAdvance ? [{ action: 'snooze', title: '⏰ 5min' }] : [])
+      ]
+    });
+
+    try { navigator.setAppBadge && navigator.setAppBadge(1); } catch {}
+  })());
 });
 
 // Notification click — open the app, handle snooze/dismiss, clear badge
