@@ -1,4 +1,4 @@
-const SW_VERSION = '1.5.0';
+const SW_VERSION = '1.6.0';
 const CACHE_NAME = 'waqtsalat-v' + SW_VERSION;
 const SOUND_CACHE_NAME = 'waqtsalat-sounds-v1';
 const NOTIF_CACHE_NAME = 'waqtsalat-notif-v1';
@@ -8,6 +8,11 @@ const ASSETS = [
   './index.html',
   './manifest.webmanifest',
   './icons/icon.svg',
+  './src/styles.css',
+  './src/locales/ar.js',
+  './src/locales/fr.js',
+  './src/locales/en.js',
+  './src/cities-data.js',
 ];
 
 // ─── Notification Data Persistence (Cache API) ──────────────
