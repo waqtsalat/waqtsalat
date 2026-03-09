@@ -3111,6 +3111,7 @@ function setupEvents(){
     checkNotifBar();
     // Mettre à jour la subscription VAPID selon l'état
     if (e.target.checked && VAPID_PUBLIC_KEY) {
+      pushLog('Notification toggle ON → triggering subscribeToPush');
       subscribeToPush().catch(() => {});
     } else if (!e.target.checked) {
       unsubscribeFromPush().catch(() => {});
@@ -3582,46 +3583,99 @@ function urlBase64ToUint8Array(base64) {
 }
 
 // ─── Abonnement Push VAPID ───────────────────────────────────
-const PUSH_MAX_RETRIES = 3;
-const PUSH_RETRY_BASE_MS = 2000;
+// Cooldown: don't re-attempt push subscribe for 24h after a permanent failure
+const PUSH_COOLDOWN_KEY = 'waqt-push-fail';
+const PUSH_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
-async function subscribeToPush(retryCount = 0) {
-  if (!('PushManager' in window)) return null;
-  if (!VAPID_PUBLIC_KEY) return null;
-  if (Notification.permission !== 'granted') return null;
+function pushLog(...args) { console.log('[Push]', ...args); }
+function pushWarn(...args) { console.warn('[Push]', ...args); }
+
+function isPushOnCooldown() {
+  try {
+    const ts = localStorage.getItem(PUSH_COOLDOWN_KEY);
+    if (!ts) return false;
+    const elapsed = Date.now() - Number(ts);
+    if (elapsed < PUSH_COOLDOWN_MS) {
+      pushLog('On cooldown, skipping subscribe (' + Math.round((PUSH_COOLDOWN_MS - elapsed) / 60000) + ' min remaining)');
+      return true;
+    }
+    localStorage.removeItem(PUSH_COOLDOWN_KEY);
+  } catch {}
+  return false;
+}
+
+function setPushCooldown() {
+  try { localStorage.setItem(PUSH_COOLDOWN_KEY, String(Date.now())); } catch {}
+}
+
+async function subscribeToPush() {
+  pushLog('subscribeToPush called');
+
+  if (!('PushManager' in window)) { pushLog('PushManager not available in window'); return null; }
+  if (!VAPID_PUBLIC_KEY) { pushLog('No VAPID_PUBLIC_KEY configured'); return null; }
+  if (Notification.permission !== 'granted') { pushLog('Notification permission:', Notification.permission); return null; }
+  if (isPushOnCooldown()) return null;
 
   try {
+    pushLog('Waiting for serviceWorker.ready…');
     const reg = await navigator.serviceWorker.ready;
-    // Wait for the service worker to be fully active
+    pushLog('SW ready — active:', reg.active?.state, '| installing:', reg.installing?.state, '| waiting:', reg.waiting?.state);
+
+    // Wait for the service worker to be fully activated
     if (reg.active?.state !== 'activated') {
+      pushLog('Waiting for SW activation…');
       await new Promise(resolve => {
         const sw = reg.active || reg.installing || reg.waiting;
-        if (!sw) { resolve(); return; }
+        if (!sw) { pushWarn('No SW instance found on registration'); resolve(); return; }
         if (sw.state === 'activated') { resolve(); return; }
         sw.addEventListener('statechange', function handler() {
+          pushLog('SW statechange →', sw.state);
           if (sw.state === 'activated') {
             sw.removeEventListener('statechange', handler);
             resolve();
           }
         });
       });
+      pushLog('SW activated');
     }
+
+    // Check permission state via pushManager
+    if (reg.pushManager.permissionState) {
+      const permState = await reg.pushManager.permissionState({ userVisibleOnly: true });
+      pushLog('pushManager.permissionState:', permState);
+      if (permState === 'denied') { pushLog('Push permission denied by browser'); return null; }
+    }
+
+    pushLog('Checking existing subscription…');
     let sub = await reg.pushManager.getSubscription();
-    if (!sub) {
+
+    if (sub) {
+      pushLog('Existing subscription found:', sub.endpoint.slice(0, 60) + '…');
+    } else {
+      pushLog('No existing subscription, subscribing with VAPID key (' + VAPID_PUBLIC_KEY.slice(0, 12) + '…)');
+      const appServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+      pushLog('applicationServerKey length:', appServerKey.length, '(expected 65 for P-256)');
       sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+        applicationServerKey: appServerKey
       });
+      pushLog('Subscribe succeeded:', sub.endpoint.slice(0, 60) + '…');
     }
+
     await storeSubscriptionInGist(sub);
     return sub;
   } catch (e) {
-    if (retryCount < PUSH_MAX_RETRIES) {
-      const delay = PUSH_RETRY_BASE_MS * Math.pow(2, retryCount);
-      await new Promise(r => setTimeout(r, delay));
-      return subscribeToPush(retryCount + 1);
+    pushWarn('Subscribe failed:', e.name, '–', e.message);
+    // Permanent push service errors — don't retry, set cooldown
+    if (e.message && (
+      e.message.includes('push service') ||
+      e.message.includes('Registration failed') ||
+      e.name === 'NotAllowedError' ||
+      e.name === 'AbortError'
+    )) {
+      pushWarn('Permanent failure detected, setting 24h cooldown. Local notifications still work.');
+      setPushCooldown();
     }
-    console.warn('[Push] Subscribe failed after retries:', e.message);
     return null;
   }
 }
@@ -3738,7 +3792,12 @@ function scheduleNotifications(){
   // Couche 3 : VAPID push — iOS + garantie Android app fermée
   // S'active seulement si les clés sont configurées
   if (state.notifications.enabled && VAPID_PUBLIC_KEY) {
-    subscribeToPush().catch(() => {});
+    pushLog('scheduleNotifications → triggering subscribeToPush');
+    subscribeToPush().then(sub => {
+      pushLog('subscribeToPush resolved:', sub ? 'subscribed' : 'skipped/failed (local notifs still active)');
+    }).catch(err => {
+      pushWarn('subscribeToPush unexpected rejection:', err.message);
+    });
   } else if (!state.notifications.enabled) {
     // Désabonner si notifications désactivées
     unsubscribeFromPush().catch(() => {});
