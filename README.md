@@ -90,44 +90,38 @@ npm run test:e2e     # Run Playwright e2e tests
 
 ```
 waqtsalat/
-├── index.html               # HTML markup + SVG only (zero inline JS/CSS)
-├── src/                     # ES modules — the full application source
-│   ├── app.mjs              # Entry point, boot sequence, event wiring
-│   ├── state.mjs            # Shared state, localStorage
-│   ├── constants.mjs        # Prayer keys, timezone, Kaaba coordinates
-│   ├── utils.mjs            # $() DOM accessor, nowInCasa()
-│   ├── prayer.mjs           # Prayer calculation engine (Habous method)
-│   ├── cities.mjs           # Moroccan cities database
-│   ├── i18n.mjs             # Trilingual dictionaries (AR/FR/EN)
-│   ├── compass.mjs          # Heading engine, orientation sensors
-│   ├── ar.mjs               # AR Qibla finder (Three.js, lazy-loaded)
-│   ├── sounds.mjs           # Audio playback, sound caching
-│   ├── notifications.mjs    # Local notification scheduling
-│   ├── push.mjs             # VAPID push subscription
-│   ├── install.mjs          # PWA install prompt
-│   ├── capabilities.mjs     # Device capability detection
-│   ├── styles.css           # All CSS (logical properties, theming)
-│   └── ui/                  # UI rendering modules
-│       ├── prayers.mjs      # Prayer list, countdown, dates
-│       ├── qibla.mjs        # Qibla compass view
-│       ├── settings.mjs     # Settings view
-│       ├── nav.mjs          # Navigation, view switching
-│       ├── onboarding.mjs   # Onboarding wizard
-│       └── update.mjs       # Update banner, SW registration
+├── index.html              # HTML shell (JS/CSS bundled by Vite at build time)
 ├── public/
-│   ├── sw.js                # Service Worker (standalone, cache-first)
-│   ├── manifest.webmanifest # PWA manifest
-│   └── icons/               # App icons (SVG/PNG)
-├── tests/
-│   ├── prayer.test.mjs      # Prayer calculation tests
-│   └── data/
-│       └── rabat-reference.json  # Golden master dataset
+│   ├── sw.js               # Service Worker (cache-first, versioned)
+│   ├── manifest.webmanifest
+│   └── icons/
+├── src/
+│   ├── app.mjs             # Entry point
+│   ├── state.mjs           # State management
+│   ├── prayer.mjs          # Prayer calculation engine
+│   ├── cities.mjs          # Moroccan cities database
+│   ├── i18n.mjs            # Trilingual dictionaries
+│   ├── constants.mjs       # Shared constants
+│   ├── utils.mjs           # DOM helpers, timezone utilities
+│   ├── compass.mjs         # Compass heading engine
+│   ├── ar.mjs              # AR mode (lazy-loaded)
+│   ├── sounds.mjs          # Audio playback
+│   ├── notifications.mjs   # Notification system
+│   ├── push.mjs            # VAPID push subscription
+│   ├── install.mjs         # PWA install prompt
+│   ├── capabilities.mjs    # Device capability detection
+│   ├── styles.css          # All CSS
+│   └── ui/                 # UI renderers
 ├── scripts/
-│   └── fetch-dataset.mjs    # Reference data fetcher (Al Adhan API)
-├── .github/workflows/
-│   └── deploy.yml           # GitHub Pages deployment
-├── vite.config.mjs          # Vite + vite-plugin-singlefile config
-├── CLAUDE.md                # Claude Code development guide
+│   ├── send-push.mjs       # Push notification sender (GitHub Action)
+│   └── fetch-dataset.mjs   # Reference data fetcher
+├── tests/
+├── e2e/
+├── docs/
+│   ├── notifications.md    # Notification architecture
+│   └── modules.md          # Module dependency graph
+├── vite.config.mjs         # Build configuration
+├── CLAUDE.md               # Claude Code development guide
 └── LICENSE                  # GPL-3.0
 ```
 
@@ -203,7 +197,7 @@ A: Within ±1 minute of the official Habous times. The app uses the same astrono
 A: Yes. In Settings, you can adjust each prayer time by ±15 minutes in 1-minute increments.
 
 **Q: How do notifications work without a server?**
-A: The Service Worker schedules notifications locally using `setTimeout`. No push server, no VAPID keys, no external service.
+A: WaqtSalat uses three layers: (1) Notification Triggers API for Chrome Android, (2) Service Worker polling as a fallback, and (3) VAPID web push via a GitHub Action running every 5 minutes for maximum reliability across platforms. See `docs/notifications.md` for details.
 
 ## License
 
