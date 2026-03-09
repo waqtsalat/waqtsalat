@@ -84,6 +84,16 @@ jobs:
           cp index.html sw.js manifest.webmanifest _site/
           cp -r icons src _site/
 
+      - name: Inject VAPID config into index.html
+        env:
+          VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+        run: |
+          sed -i "s|const VAPID_PUBLIC_KEY = '';|const VAPID_PUBLIC_KEY = '${VAPID_PUBLIC_KEY}';|" _site/index.html
+          sed -i "s|const GIST_ID = '';|const GIST_ID = '${GIST_ID}';|" _site/index.html
+          sed -i "s|const GIST_TOKEN = '';|const GIST_TOKEN = '${GIST_TOKEN}';|" _site/index.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
