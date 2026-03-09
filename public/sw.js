@@ -1,4 +1,4 @@
-const SW_VERSION = '1.6.0';
+const SW_VERSION = '1.7.0';
 const CACHE_NAME = 'waqtsalat-v' + SW_VERSION;
 const SOUND_CACHE_NAME = 'waqtsalat-sounds-v1';
 const NOTIF_CACHE_NAME = 'waqtsalat-notif-v1';
@@ -159,91 +159,49 @@ function throttledCheck() {
   return swCheckNotifications();
 }
 
-// ─── Notification Triggers API ────────────────────────────────
-// Planifie des notifications à des timestamps exacts.
-// L'OS réveille le SW lui-même — pas besoin que l'app soit ouverte.
-// Support : Chrome 80+ Android. Détection via self.registration.showTrigger.
+// ─── SW Self-Scheduling ──────────────────────────────────────
+// Keeps SW alive via chained waitUntil+setTimeout to catch prayers
+// between periodicsync/push events. Browser may kill after ~5 min,
+// so we cap each sleep at 4 min. Complementary to VAPID push.
 
-function casaTimestampFromHHMM(timeStr) {
-  // Convertit "HH:MM" (heure locale Casablanca) en timestamp UTC
-  const [localH, localM] = timeStr.split(':').map(Number);
-  const now = new Date();
-  const fmt = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Africa/Casablanca',
-    timeZoneName: 'shortOffset'
+let wakeupScheduled = false;
+
+function scheduleNextWakeup() {
+  if (wakeupScheduled) return Promise.resolve();
+  return loadNotifData().then(data => {
+    if (!data?.settings?.enabled || !data?.prayerTimes) return;
+
+    const casa = nowInCasablanca();
+    const nowMin = casa.h * 60 + casa.m;
+    const advance = data.settings.advance || 0;
+    const prayers = data.settings.prayers || { fajr: true, dhuhr: true, asr: true, maghrib: true, isha: true };
+    let nextMin = Infinity;
+
+    for (const k of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
+      if (!prayers[k] || !data.prayerTimes[k]) continue;
+      const [ph, pm] = data.prayerTimes[k].split(':').map(Number);
+      const pMin = ph * 60 + pm;
+      if (advance > 0 && (pMin - advance) > nowMin) nextMin = Math.min(nextMin, pMin - advance);
+      if (pMin > nowMin) nextMin = Math.min(nextMin, pMin);
+    }
+
+    if (nextMin === Infinity || nextMin <= nowMin) return;
+
+    const delayMs = (nextMin - nowMin) * 60000;
+    if (delayMs <= 0 || delayMs > 18 * 3600000) return;
+
+    wakeupScheduled = true;
+    // Cap at 4 min to avoid browser killing the SW (~5 min limit)
+    const sleepMs = Math.min(delayMs, 4 * 60000);
+    return new Promise(resolve => {
+      setTimeout(() => {
+        wakeupScheduled = false;
+        swCheckNotifications()
+          .then(() => scheduleNextWakeup())
+          .then(resolve, resolve);
+      }, sleepMs);
+    });
   });
-  const tzStr = fmt.formatToParts(now).find(p => p.type === 'timeZoneName')?.value || 'GMT+1';
-  const match = tzStr.match(/GMT([+-]?\d+)?/);
-  const offsetH = parseInt(match?.[1] || '1', 10);
-  const d = new Date();
-  d.setHours(localH - offsetH, localM, 0, 0);
-  return d.getTime();
-}
-
-async function scheduleTriggeredNotifications(prayerTimes, settings, i18n) {
-  // Vérifier le support de l'API
-  if (!self.registration.showTrigger) return false;
-
-  // Nettoyer les notifications déjà planifiées pour aujourd'hui
-  const existing = await self.registration.getNotifications({ includeTriggered: true });
-  for (const n of existing) {
-    if (n.tag?.startsWith('waqtsalat-trigger-')) n.close();
-  }
-
-  const prayers = settings.prayers || { fajr: true, dhuhr: true, asr: true, maghrib: true, isha: true };
-  const advance = settings.advance || 0;
-  const now = Date.now();
-  let count = 0;
-
-  for (const k of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
-    if (!prayers[k] || !prayerTimes[k]) continue;
-    const prayerTs = casaTimestampFromHHMM(prayerTimes[k]);
-
-    // Notification avancée (si configurée)
-    if (advance > 0) {
-      const advTs = prayerTs - advance * 60 * 1000;
-      if (advTs > now + 30000) {
-        const title = `${advance} ${i18n.minBefore || 'min'} → ${i18n[k] || k}`;
-        await self.registration.showNotification(title, {
-          body: `${i18n.prayerTimes || ''} — ${prayerTimes[k]}`,
-          icon: 'icons/icon.svg',
-          badge: 'icons/icon.svg',
-          tag: `waqtsalat-trigger-${k}-advance`,
-          showTrigger: new TimestampTrigger(advTs),
-          requireInteraction: true,
-          silent: false,
-          vibrate: [200, 100, 200],
-          data: { prayer: k, isAdvance: true, sound: settings.soundPre || 'tone' },
-          actions: [{ action: 'dismiss', title: i18n.dismiss || '✕' }]
-        });
-        count++;
-      }
-    }
-
-    // Notification à l'heure exacte
-    if (prayerTs > now + 30000) {
-      const title = `${i18n.athanTime || 'Prayer time'} ${i18n[k] || k}`;
-      await self.registration.showNotification(title, {
-        body: `${i18n.prayerTimes || ''} — ${prayerTimes[k]}`,
-        icon: 'icons/icon.svg',
-        badge: 'icons/icon.svg',
-        tag: `waqtsalat-trigger-${k}-atime`,
-        showTrigger: new TimestampTrigger(prayerTs),
-        requireInteraction: true,
-        silent: false,
-        vibrate: [200, 100, 200, 100, 300, 100, 200],
-        data: { prayer: k, isAdvance: false, sound: settings.soundAt || 'adhan' },
-        actions: [
-          { action: 'dismiss', title: i18n.dismiss || '✕' },
-          { action: 'snooze', title: i18n.snooze || '⏰ 5min' }
-        ]
-      });
-      count++;
-    }
-  }
-
-  console.log(`[SW] Scheduled ${count} triggered notifications`);
-  return count > 0;
 }
 
 // ─── Service Worker Lifecycle ───────────────────────────────
@@ -296,25 +254,9 @@ self.addEventListener('message', event => {
         firedKeys: existing.date === casa.todayStr ? (existing.firedKeys || []) : []
       };
       await saveNotifData(newData);
+      await swCheckNotifications();
       if (event.data.settings?.enabled && event.data.prayerTimes) {
-        // Couche 1 : Notification Triggers (Chrome Android) — le plus fiable
-        const triggered = await scheduleTriggeredNotifications(
-          event.data.prayerTimes,
-          event.data.settings,
-          event.data.i18n || {}
-        ).catch(() => false);
-
-        // Couche 2 : Polling SW existant — fallback si Triggers non disponible
-        if (!triggered) await swCheckNotifications();
-      } else {
-        // Notifications désactivées — annuler les triggers planifiés
-        if (self.registration.getNotifications) {
-          const pending = await self.registration.getNotifications({ includeTriggered: true });
-          for (const n of pending) {
-            if (n.tag?.startsWith('waqtsalat-trigger-')) n.close();
-          }
-        }
-        await swCheckNotifications();
+        await scheduleNextWakeup();
       }
     })());
   }
@@ -334,6 +276,26 @@ self.addEventListener('push', event => {
   const { title, body, prayer, isAdvance, sound } = payload;
 
   event.waitUntil((async () => {
+    // Dedup: skip if this prayer was already shown today (by SW polling or earlier push)
+    const notifData = await loadNotifData();
+    const casa = nowInCasablanca();
+    const dedupKey = `${prayer}-${isAdvance ? 'advance' : 'atime'}`;
+
+    if (notifData?.firedKeys?.includes(dedupKey) && notifData.date === casa.todayStr) {
+      return; // already shown by SW polling or previous push
+    }
+
+    // Mark as fired to prevent duplicates from subsequent pushes or SW polling
+    if (notifData) {
+      if (!notifData.firedKeys) notifData.firedKeys = [];
+      if (notifData.date !== casa.todayStr) {
+        notifData.firedKeys = [];
+        notifData.date = casa.todayStr;
+      }
+      notifData.firedKeys.push(dedupKey);
+      await saveNotifData(notifData);
+    }
+
     // Signaler aux pages ouvertes de jouer le son (le SW ne peut pas)
     const clients = await self.clients.matchAll({ type: 'window' });
     for (const client of clients) {
@@ -357,6 +319,9 @@ self.addEventListener('push', event => {
     });
 
     try { navigator.setAppBadge && navigator.setAppBadge(1); } catch {}
+
+    // Schedule next wakeup to keep SW alive for remaining prayers
+    await scheduleNextWakeup();
   })());
 });
 
@@ -421,6 +386,8 @@ self.addEventListener('periodicsync', event => {
       for (const client of clients) {
         client.postMessage({ type: 'RESCHEDULE_NOTIFICATIONS' });
       }
+      // Keep SW alive for next prayer
+      await scheduleNextWakeup();
     })());
   }
 });
