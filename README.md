@@ -58,7 +58,7 @@
 - **Dark/Light/Auto theme** — Respects system preference, manually overridable
 - **Zero tracking** — No cookies, no analytics, no external requests. Data stays in localStorage
 - **Accessible** — WCAG 2.1 AA compliant: keyboard navigation, screen reader support, high contrast
-- **Tiny footprint** — Single HTML file < 100 KB gzipped
+- **Tiny footprint** — Single HTML file < 100 KB gzipped (built from modular ES modules via Vite)
 
 ## Demo
 
@@ -90,29 +90,48 @@ npm run test:e2e     # Run Playwright e2e tests
 
 ```
 waqtsalat/
-├── index.html              # The entire app (HTML + CSS + JS + SVG + data)
+├── index.html               # HTML markup + SVG only (zero inline JS/CSS)
+├── src/                     # ES modules — the full application source
+│   ├── app.mjs              # Entry point, boot sequence, event wiring
+│   ├── state.mjs            # Shared state, localStorage
+│   ├── constants.mjs        # Prayer keys, timezone, Kaaba coordinates
+│   ├── utils.mjs            # $() DOM accessor, nowInCasa()
+│   ├── prayer.mjs           # Prayer calculation engine (Habous method)
+│   ├── cities.mjs           # Moroccan cities database
+│   ├── i18n.mjs             # Trilingual dictionaries (AR/FR/EN)
+│   ├── compass.mjs          # Heading engine, orientation sensors
+│   ├── ar.mjs               # AR Qibla finder (Three.js, lazy-loaded)
+│   ├── sounds.mjs           # Audio playback, sound caching
+│   ├── notifications.mjs    # Local notification scheduling
+│   ├── push.mjs             # VAPID push subscription
+│   ├── install.mjs          # PWA install prompt
+│   ├── capabilities.mjs     # Device capability detection
+│   ├── styles.css           # All CSS (logical properties, theming)
+│   └── ui/                  # UI rendering modules
+│       ├── prayers.mjs      # Prayer list, countdown, dates
+│       ├── qibla.mjs        # Qibla compass view
+│       ├── settings.mjs     # Settings view
+│       ├── nav.mjs          # Navigation, view switching
+│       ├── onboarding.mjs   # Onboarding wizard
+│       └── update.mjs       # Update banner, SW registration
 ├── public/
-│   ├── sw.js               # Service Worker (cache-first, versioned)
+│   ├── sw.js                # Service Worker (standalone, cache-first)
 │   ├── manifest.webmanifest # PWA manifest
-│   └── icons/
-│       ├── icon.svg         # App icon
-│       └── icon-maskable.svg # Maskable icon for Android
-├── src/                    # Source modules (dev/test, inlined at build)
-│   ├── prayer.mjs          # Prayer calculation engine
-│   ├── cities.mjs          # Moroccan cities database
-│   └── i18n.mjs            # Trilingual dictionaries
+│   └── icons/               # App icons (SVG/PNG)
 ├── tests/
-│   ├── prayer.test.mjs     # Prayer calculation tests
+│   ├── prayer.test.mjs      # Prayer calculation tests
 │   └── data/
 │       └── rabat-reference.json  # Golden master dataset
 ├── scripts/
-│   └── fetch-dataset.mjs   # Reference data fetcher (Al Adhan API)
+│   └── fetch-dataset.mjs    # Reference data fetcher (Al Adhan API)
 ├── .github/workflows/
-│   └── deploy.yml          # GitHub Pages deployment
-├── vite.config.mjs         # Vite build configuration
-├── CLAUDE.md               # Claude Code development guide
-└── LICENSE                 # GPL-3.0
+│   └── deploy.yml           # GitHub Pages deployment
+├── vite.config.mjs          # Vite + vite-plugin-singlefile config
+├── CLAUDE.md                # Claude Code development guide
+└── LICENSE                  # GPL-3.0
 ```
+
+> **Build output:** `npm run build` produces `dist/index.html` — a single self-contained file with all JS, CSS, and SVG inlined via Vite.
 
 ## How It Works
 
@@ -138,9 +157,11 @@ Contributions are welcome. Please note:
 
 1. **Morocco only** — Do not add support for other countries. This is by design.
 2. **Minimum dependencies** — The production app uses Three.js for AR mode (loaded on demand). Core functionality has no external dependencies.
-3. **Test first** — All prayer calculation changes must include tests validated against the Al Adhan API (method MOROCCO, id=21). Tolerance: ±1 minute.
-4. **Accessibility** — Maintain WCAG 2.1 AA compliance. Test with screen readers.
-5. **Single-file** — The final `index.html` must remain self-contained.
+3. **Modular architecture** — All JS lives in ES modules under `src/`. Do NOT add inline `<script>` or `<style>` blocks to `index.html`. Vite handles bundling.
+4. **Canonical modules** — `src/prayer.mjs`, `src/cities.mjs`, `src/i18n.mjs` are the single source of truth. Never duplicate their logic.
+5. **Test first** — All prayer calculation changes must include tests validated against the Al Adhan API (method MOROCCO, id=21). Tolerance: ±1 minute.
+6. **Accessibility** — Maintain WCAG 2.1 AA compliance. Test with screen readers.
+7. **Single-file output** — `npm run build` produces a single self-contained `dist/index.html`. Source files are modular; production output is monolithic.
 
 ### Steps
 
