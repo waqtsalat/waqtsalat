@@ -18,6 +18,29 @@ function nowCasablancaMinutes() {
   return h * 60 + m;
 }
 
+// ── Safe gaps: time ranges when no push notifications are needed ─────────
+// Based on Casablanca prayer times (full year min/max with 30min advance + 4min buffer)
+// These are Casablanca local time, so DST is handled automatically
+const SAFE_GAPS = [
+  [22 * 60 + 30, 3 * 60 + 55],  // 22:30 - 03:55 (overnight, ~5h 25m)
+  [7 * 60 + 15, 12 * 60],       // 07:15 - 12:00 (morning, ~4h 45m)
+  [14 * 60, 15 * 60 + 20],      // 14:00 - 15:20 (midday, ~1h 20m)
+];
+
+function isInSafeGap(nowMinutes) {
+  // Handle overnight gap that crosses midnight
+  for (const [start, end] of SAFE_GAPS) {
+    if (start > end) {
+      // Gap crosses midnight (e.g., 22:30 - 03:55)
+      if (nowMinutes >= start || nowMinutes < end) return true;
+    } else {
+      // Normal gap within same day
+      if (nowMinutes >= start && nowMinutes < end) return true;
+    }
+  }
+  return false;
+}
+
 // ── Find prayers matching current time ────────────────────────
 const NAMES = { fajr: 'Fajr', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Maghrib', isha: 'Isha' };
 
@@ -38,6 +61,13 @@ export function findMatchingPrayers(prayerTimes, nowMinutes, prayers, advance) {
 
 // ── Main push notification sender ─────────────────────────────
 async function main() {
+  // Early exit if we're in a safe gap (no notifications needed)
+  const nowMin = nowCasablancaMinutes();
+  if (isInSafeGap(nowMin)) {
+    console.log(`Safe gap (${Math.floor(nowMin/60)}:${String(nowMin%60).padStart(2,'0')} Casa), skipping push notifications`);
+    return;
+  }
+
   // Dynamic import for web-push (installed at runtime in CI)
   const webpush = (await import('web-push')).default;
 
@@ -71,7 +101,6 @@ async function main() {
 
   // Current Casablanca date string for dedup key
   const now = new Date();
-  const nowMin = nowCasablancaMinutes();
   const casaH = Math.floor(nowMin / 60);
   const casaM = nowMin % 60;
   const casaParts = new Intl.DateTimeFormat('en-US', {
