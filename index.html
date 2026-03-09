@@ -3582,13 +3582,30 @@ function urlBase64ToUint8Array(base64) {
 }
 
 // ─── Abonnement Push VAPID ───────────────────────────────────
-async function subscribeToPush() {
+const PUSH_MAX_RETRIES = 3;
+const PUSH_RETRY_BASE_MS = 2000;
+
+async function subscribeToPush(retryCount = 0) {
   if (!('PushManager' in window)) return null;
   if (!VAPID_PUBLIC_KEY) return null;
   if (Notification.permission !== 'granted') return null;
 
   try {
     const reg = await navigator.serviceWorker.ready;
+    // Wait for the service worker to be fully active
+    if (reg.active?.state !== 'activated') {
+      await new Promise(resolve => {
+        const sw = reg.active || reg.installing || reg.waiting;
+        if (!sw) { resolve(); return; }
+        if (sw.state === 'activated') { resolve(); return; }
+        sw.addEventListener('statechange', function handler() {
+          if (sw.state === 'activated') {
+            sw.removeEventListener('statechange', handler);
+            resolve();
+          }
+        });
+      });
+    }
     let sub = await reg.pushManager.getSubscription();
     if (!sub) {
       sub = await reg.pushManager.subscribe({
@@ -3599,7 +3616,12 @@ async function subscribeToPush() {
     await storeSubscriptionInGist(sub);
     return sub;
   } catch (e) {
-    console.warn('[Push] Subscribe failed:', e.message);
+    if (retryCount < PUSH_MAX_RETRIES) {
+      const delay = PUSH_RETRY_BASE_MS * Math.pow(2, retryCount);
+      await new Promise(r => setTimeout(r, delay));
+      return subscribeToPush(retryCount + 1);
+    }
+    console.warn('[Push] Subscribe failed after retries:', e.message);
     return null;
   }
 }
