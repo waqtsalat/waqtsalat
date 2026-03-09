@@ -13,16 +13,16 @@ describe('Push notification prayer matching', () => {
     expect(matches[0].type).toBe('at-time');
   });
 
-  it('matches within +/- 2 minute tolerance', () => {
+  it('matches within +/- 4 minute tolerance', () => {
     const times = { fajr: '06:00', dhuhr: '13:05', asr: '16:30', maghrib: '19:00', isha: '20:30' };
-    const matches = findMatchingPrayers(times, 13 * 60 + 7, allPrayers, 0);
+    const matches = findMatchingPrayers(times, 13 * 60 + 9, allPrayers, 0);
     expect(matches).toHaveLength(1);
     expect(matches[0].prayer).toBe('dhuhr');
   });
 
   it('does not match outside tolerance', () => {
     const times = { fajr: '06:00', dhuhr: '13:05', asr: '16:30', maghrib: '19:00', isha: '20:30' };
-    const matches = findMatchingPrayers(times, 13 * 60 + 8, allPrayers, 0);
+    const matches = findMatchingPrayers(times, 13 * 60 + 10, allPrayers, 0);
     expect(matches).toHaveLength(0);
   });
 

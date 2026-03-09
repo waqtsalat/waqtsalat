@@ -2,7 +2,7 @@ name: Prayer Time Push Notifications
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/3 * * * *'
   workflow_dispatch:
 
 permissions: {}

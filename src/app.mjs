@@ -340,7 +340,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) clea
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.ready.then(reg => {
     if (reg.periodicSync) {
-      reg.periodicSync.register('reschedule-notifications', { minInterval: 60 * 60 * 1000 }).catch(() => { /* ignore */ });
+      reg.periodicSync.register('reschedule-notifications', { minInterval: 15 * 60 * 1000 }).catch(() => { /* ignore */ });
     }
   });
 }
