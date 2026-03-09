@@ -326,6 +326,7 @@ if (urlLang && TRANSLATIONS[urlLang]) {
 }
 
 applyLocale();
+$('help-popup-version').textContent = `v1.0.0 · ${__BUILD_TIMESTAMP__}`;
 setupOnboarding(applyLocale, renderAll);
 setupEvents();
 setupSoundStopListeners();
