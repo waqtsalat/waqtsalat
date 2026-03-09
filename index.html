@@ -80,7 +80,6 @@
     "Pre-prayer notifications (5/10/15/30 minutes)",
     "Manual time adjustments per prayer (±15 min)",
     "Hijri and Gregorian calendar",
-    "Dark, light, and auto themes",
     "100% offline after first visit",
     "Installable as PWA on Android and iOS",
     "WCAG 2.1 AA accessible",
@@ -140,7 +139,7 @@
       "name": "Does WaqtSalat collect any personal data?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. WaqtSalat has zero cookies, zero analytics, and zero tracking. Your settings (city, language, theme) are stored locally on your device in localStorage. No data is ever sent to any server."
+        "text": "No. WaqtSalat has zero cookies, zero analytics, and zero tracking. Your settings (city, language) are stored locally on your device in localStorage. No data is ever sent to any server."
       }
     },
     {
@@ -297,16 +296,6 @@
   --sp-xl:1.618rem;  /* ~26px */
   --sp-2xl:2.618rem; /* ~42px */
 }
-@media(prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --surface:rgba(0,0,0,0.2);--surface2:rgba(0,0,0,0.15);--border:rgba(255,255,255,0.15);
-    --muted:rgba(255,255,255,0.72);--passed:rgba(255,255,255,0.36);
-  }
-}
-[data-theme="dark"]{
-  --surface:rgba(0,0,0,0.2);--surface2:rgba(0,0,0,0.15);--border:rgba(255,255,255,0.15);
-  --muted:rgba(255,255,255,0.72);--passed:rgba(255,255,255,0.36);
-}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-text-size-adjust:100%}
 body{
@@ -423,14 +412,6 @@ nav.bottom-bar button:focus-visible{
 .prayer-list li.next-prayer .prayer-time{font-size:var(--fs-lg)}
 .prayer-list li .prayer-name{font-size:var(--fs-base);font-weight:400}
 .prayer-list li .prayer-time{font-size:var(--fs-base);font-variant-numeric:tabular-nums;font-weight:400}
-@media(prefers-color-scheme:light){
-  :root:not([data-theme="dark"]) .prayer-list li.current-prayer{
-    text-shadow:0 1px 10px rgba(255,255,255,0.5);
-  }
-}
-[data-theme="light"] .prayer-list li.current-prayer{
-  text-shadow:0 1px 10px rgba(255,255,255,0.5);
-}
 .prayer-list li.tomorrow-fajr{
   border-top:1px solid rgba(201,168,76,0.2);
   border-bottom:none;
@@ -492,7 +473,13 @@ nav.bottom-bar button:focus-visible{
   background:rgba(255,255,255,0.08);color:#fff;
   border:1px solid rgba(255,255,255,0.12);border-radius:var(--sp-sm);
 }
-.setting-row select{min-width:7rem}
+.setting-row select{
+  min-width:7rem;appearance:none;-webkit-appearance:none;cursor:pointer;
+  padding-inline-end:1.5rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:left var(--sp-sm) center;
+}
+[dir="ltr"] .setting-row select{background-position:right var(--sp-sm) center}
 .setting-row input[type="range"]{width:5rem}
 .adj-val{font-size:var(--fs-xs);min-width:2.5rem;text-align:center;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.6)}
 
@@ -547,8 +534,12 @@ nav.bottom-bar button:focus-visible{
   font-size:var(--fs-xs);padding:var(--sp-xs) var(--sp-sm);
   background:rgba(255,255,255,0.08);color:#fff;
   border:1px solid rgba(255,255,255,0.12);border-radius:var(--sp-xs);
-  min-width:6rem;
+  min-width:6rem;appearance:none;-webkit-appearance:none;cursor:pointer;
+  padding-inline-end:1.5rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:left var(--sp-xs) center;
 }
+[dir="ltr"] .notif-sub-row select{background-position:right var(--sp-xs) center}
 .notif-sound-row{display:flex;align-items:center;gap:var(--sp-sm)}
 .btn-test-sound{
   padding:var(--sp-xs) var(--sp-sm);font-size:var(--fs-xs);
@@ -730,7 +721,7 @@ nav.bottom-bar button:focus-visible{
 }
 
 /* Toggle switch */
-.toggle{position:relative;width:2.5rem;height:1.375rem;flex-shrink:0}
+.toggle{position:relative;width:2.5rem;min-width:2.5rem;max-width:2.5rem;height:1.375rem;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0;position:absolute}
 .toggle span{
   position:absolute;inset:0;cursor:pointer;
@@ -769,7 +760,11 @@ nav.bottom-bar button:focus-visible{
   width:100%;padding:var(--sp-md);font-size:var(--fs-sm);
   background:rgba(255,255,255,0.08);color:#fff;
   border:1px solid rgba(255,255,255,0.12);border-radius:var(--sp-sm);
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:left var(--sp-md) center;cursor:pointer;
 }
+[dir="ltr"] .city-select{background-position:right var(--sp-md) center}
 .btn-primary{
   padding:var(--sp-md) var(--sp-xl);background:var(--gold);color:#1a1a1a;
   border-radius:var(--sp-sm);font-weight:600;font-size:var(--fs-sm);
@@ -1262,17 +1257,6 @@ a.help-feature:hover,a.help-feature:focus-visible{background:rgba(255,255,255,0.
       </select>
     </div>
   </div>
-  <div class="settings-section">
-    <h3 id="s-theme-title"></h3>
-    <div class="setting-row">
-      <label for="s-theme-select" id="s-theme-label"></label>
-      <select id="s-theme-select">
-        <option value="system" id="opt-theme-system"></option>
-        <option value="light" id="opt-theme-light"></option>
-        <option value="dark" id="opt-theme-dark"></option>
-      </select>
-    </div>
-  </div>
   <div class="settings-section" id="s-notif-section">
     <h3><span id="s-notif-title"></span> <span class="badge-experimental" id="s-notif-exp-badge"></span></h3>
     <div class="setting-row">
@@ -1450,8 +1434,7 @@ ar:{
 appName:'وقت الصلاة',fajr:'الفجر',sunrise:'الشروق',dhuhr:'الظهر',asr:'العصر',
 maghrib:'المغرب',isha:'العشاء',nextPrayer:'الصلاة القادمة',timeRemaining:'الوقت المتبقي',
 hours:'سا',minutes:'د',seconds:'ث',settings:'الإعدادات',qibla:'القبلة',
-prayerTimes:'أوقات الصلاة',city:'المدينة',language:'اللغة',theme:'المظهر',
-themeLight:'فاتح',themeDark:'داكن',themeSystem:'تلقائي',
+prayerTimes:'أوقات الصلاة',city:'المدينة',language:'اللغة',
 notifications:'الإشعارات',experimental:'تجريبي',enableNotifications:'تفعيل الإشعارات',
 adjustments:'تعديلات',adjustmentsDesc:'تعديل التوقيت (±15 دقيقة)',
 exportConfig:'تصدير الإعدادات',importConfig:'استيراد الإعدادات',
@@ -1521,8 +1504,7 @@ fr:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:'Asr',
 maghrib:'Maghrib',isha:'Isha',nextPrayer:'Prochaine prière',timeRemaining:'Temps restant',
 hours:'h',minutes:'min',seconds:'s',settings:'Paramètres',qibla:'Qibla',
-prayerTimes:'Horaires',city:'Ville',language:'Langue',theme:'Thème',
-themeLight:'Clair',themeDark:'Sombre',themeSystem:'Auto',
+prayerTimes:'Horaires',city:'Ville',language:'Langue',
 notifications:'Notifications',experimental:'Expérimental',enableNotifications:'Activer les notifications',
 adjustments:'Ajustements',adjustmentsDesc:'Ajuster les horaires (±15 min)',
 exportConfig:'Exporter',importConfig:'Importer',
@@ -1593,8 +1575,7 @@ en:{
 appName:'WaqtSalat',fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',
 maghrib:'Maghrib',isha:'Isha',nextPrayer:'Next Prayer',timeRemaining:'Time Remaining',
 hours:'h',minutes:'min',seconds:'s',settings:'Settings',qibla:'Qibla',
-prayerTimes:'Prayer Times',city:'City',language:'Language',theme:'Theme',
-themeLight:'Light',themeDark:'Dark',themeSystem:'Auto',
+prayerTimes:'Prayer Times',city:'City',language:'Language',
 notifications:'Notifications',experimental:'Experimental',enableNotifications:'Enable notifications',
 adjustments:'Adjustments',adjustmentsDesc:'Adjust prayer times (±15 min)',
 exportConfig:'Export',importConfig:'Import',
@@ -1666,7 +1647,7 @@ function t(key){return TR[state.locale]?.[key]||TR.ar[key]||key}
 
 // ─── State ────────────────────────────────────────────────────
 const state={
-  locale:'ar',theme:'system',
+  locale:'ar',
   position:null,// {lat,lng,cityId,cityName}
   adjustments:{fajr:0,sunrise:0,dhuhr:0,asr:0,maghrib:0,isha:0},
   notifications:{enabled:false,prayers:{fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},advance:0,soundPre:'tone',soundAt:'adhan',vibrate:true,badge:true},
@@ -1678,8 +1659,6 @@ function loadState(){
   try{
     const loc=localStorage.getItem('waqt-locale');
     if(loc&&TR[loc])state.locale=loc;
-    const th=localStorage.getItem('waqt-theme');
-    if(th)state.theme=th;
     const pos=localStorage.getItem('waqt-position');
     if(pos)state.position=JSON.parse(pos);
     const adj=localStorage.getItem('waqt-adjustments');
@@ -1833,7 +1812,7 @@ let countdownInterval=null;
 let lastRenderDate=null; // track current day for day-change detection
 
 function renderAll(){
-  applyTheme();applyLocale();
+  applyLocale();
   renderPrayers();renderQibla();renderSettings();
   renderNav();
 }
@@ -1859,16 +1838,6 @@ function applyLocale(){
   setMeta('meta[name="description"]',t('ogDescription'));
 }
 
-function applyTheme(){
-  const th=state.theme;
-  if(th==='system'){
-    document.documentElement.removeAttribute('data-theme');
-  }else{
-    document.documentElement.setAttribute('data-theme',th);
-  }
-  // Update theme-color meta
-  document.querySelector('meta[name="theme-color"]').content='#0d5a2e';
-}
 
 function renderNav(){
   $('nav-prayers-text').textContent=t('prayerTimes');
@@ -2870,14 +2839,6 @@ function renderSettings(){
   $('s-lang-label').textContent=t('language');
   $('s-lang-select').value=state.locale;
 
-  // Theme
-  $('s-theme-title').textContent=t('theme');
-  $('s-theme-label').textContent=t('theme');
-  $('opt-theme-system').textContent=t('themeSystem');
-  $('opt-theme-light').textContent=t('themeLight');
-  $('opt-theme-dark').textContent=t('themeDark');
-  $('s-theme-select').value=state.theme;
-
   // Notifications
   $('s-notif-title').textContent=t('notifications');
   $('s-notif-exp-badge').textContent=t('experimental');
@@ -3081,13 +3042,6 @@ function setupEvents(){
     state.locale=e.target.value;
     saveState('waqt-locale',state.locale);
     renderAll();
-  });
-
-  // Settings: theme
-  $('s-theme-select').addEventListener('change',e=>{
-    state.theme=e.target.value;
-    saveState('waqt-theme',state.theme);
-    applyTheme();
   });
 
   // Settings: notifications
@@ -3330,10 +3284,6 @@ function setupEvents(){
     }
   });
 
-  // System theme change
-  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{
-    if(state.theme==='system')applyTheme();
-  });
 }
 
 // ─── Onboarding ───────────────────────────────────────────────
@@ -4190,8 +4140,7 @@ if(urlLang&&TR[urlLang]){
   const lang=navigator.language?.slice(0,2);
   if(TR[lang])state.locale=lang;
 }
-applyLocale();applyTheme();
-setupOnboarding();
+applyLocale();setupOnboarding();
 setupEvents();
 if(state.onboarded&&state.position)renderAll();
 registerSW();

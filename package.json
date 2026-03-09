@@ -9,9 +9,12 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . && node scripts/check-syntax.mjs",
     "fetch-dataset": "node scripts/fetch-dataset.mjs",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@vitest/coverage-v8": "^3.0.0",
     "eslint": "^10.0.3",
     "vitest": "^3.0.0"

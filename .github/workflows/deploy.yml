@@ -36,37 +36,19 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Verify page loads
-        run: |
-          # Serve index.html and check it returns 200 with expected content
-          npx -y serve -l 8080 -s . &
-          SERVER_PID=$!
-          # Wait for server to be ready (up to 15 seconds)
-          for i in $(seq 1 15); do
-            if curl -s -o /dev/null http://localhost:8080/ 2>/dev/null; then
-              echo "Server ready after ${i}s"
-              break
-            fi
-            if [ "$i" = "15" ]; then
-              echo "Server failed to start within 15 seconds"
-              kill $SERVER_PID 2>/dev/null || true
-              exit 1
-            fi
-            sleep 1
-          done
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
-          if [ "$STATUS" != "200" ]; then
-            echo "Page load failed with status $STATUS"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
-          fi
-          # Verify critical page elements exist
-          BODY=$(curl -s http://localhost:8080/)
-          echo "$BODY" | grep -q 'id="onboarding"' || { echo "Missing onboarding wizard"; kill $SERVER_PID 2>/dev/null || true; exit 1; }
-          echo "$BODY" | grep -q 'id="app"' || { echo "Missing app container"; kill $SERVER_PID 2>/dev/null || true; exit 1; }
-          echo "$BODY" | grep -q '<script>' || { echo "Missing inline script"; kill $SERVER_PID 2>/dev/null || true; exit 1; }
-          echo "Page load verification passed"
-          kill $SERVER_PID 2>/dev/null || true
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright e2e tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
 
   build:
     needs: lint-and-test
