@@ -66,6 +66,11 @@ jobs:
           cp index.html sw.js manifest.webmanifest _site/
           cp -r icons src _site/
 
+      - name: Inject commit hash into version
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          sed -i "s|>v1.0.0<|>v1.0.0-${SHORT_SHA}<|" _site/index.html
+
       - name: Inject VAPID config into index.html
         env:
           VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
