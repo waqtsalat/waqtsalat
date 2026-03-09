@@ -9,10 +9,6 @@ const ASSETS = [
   './manifest.webmanifest',
   './icons/icon.svg',
   './src/styles.css',
-  './src/locales/ar.js',
-  './src/locales/fr.js',
-  './src/locales/en.js',
-  './src/cities-data.js',
 ];
 
 // ─── Notification Data Persistence (Cache API) ──────────────
