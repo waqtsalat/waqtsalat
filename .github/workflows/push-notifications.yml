@@ -1,0 +1,180 @@
+name: Prayer Time Push Notifications
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # toutes les 5 minutes
+  workflow_dispatch:         # déclenchement manuel pour tests
+
+permissions: {}  # zéro permission sur le repo
+
+jobs:
+  send-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Send prayer push notifications
+        uses: actions/github-script@v7
+        env:
+          VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_EMAIL: ${{ secrets.VAPID_EMAIL }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            execSync('npm install web-push --no-save --silent');
+            const webpush = require('web-push');
+
+            webpush.setVapidDetails(
+              `mailto:${process.env.VAPID_EMAIL}`,
+              process.env.VAPID_PUBLIC_KEY,
+              process.env.VAPID_PRIVATE_KEY
+            );
+
+            // ── Lire les subscriptions ────────────────────────────────
+            const gistResp = await fetch(
+              `https://api.github.com/gists/${process.env.GIST_ID}`,
+              { headers: { 'Authorization': `token ${process.env.GIST_TOKEN}` } }
+            );
+            if (!gistResp.ok) { console.log('Gist fetch failed:', gistResp.status); return; }
+
+            const gist = await gistResp.json();
+            const content = gist.files?.['subscriptions.json']?.content;
+            if (!content) { console.log('No subscriptions.'); return; }
+
+            const subscriptions = JSON.parse(content);
+            const entries = Object.entries(subscriptions);
+            console.log(`Found ${entries.length} subscription(s)`);
+
+            // ── Calcul des prières (algorithme Habous identique à prayer.mjs) ─
+            const DEG = Math.PI / 180, RAD = 180 / Math.PI;
+            function mod360(x) { return ((x % 360) + 360) % 360; }
+
+            function getCasaOffset(date) {
+              const parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'Africa/Casablanca', timeZoneName: 'shortOffset'
+              }).formatToParts(date);
+              const tz = parts.find(p => p.type === 'timeZoneName')?.value || 'GMT+1';
+              return parseInt((tz.match(/GMT([+-]?\d+)?/) || [])[1] || '1', 10) * 60;
+            }
+
+            function calcPrayers(date, lat, lng) {
+              const toJD = (y, m, d) => {
+                if (m <= 2) { y--; m += 12; }
+                const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4);
+                return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
+              };
+              const jd = toJD(date.getFullYear(), date.getMonth() + 1, date.getDate());
+              const T = (jd + 0.5 - 2451545) / 36525;
+              const L0 = mod360(280.46646 + 36000.76983 * T);
+              const M = mod360(357.52911 + 35999.05029 * T);
+              const Mr = M * DEG;
+              const C = (1.914602 - 0.004817 * T) * Math.sin(Mr) + 0.019993 * Math.sin(2 * Mr);
+              const omega = 125.04 - 1934.136 * T;
+              const lambda = L0 + C - 0.00569 - 0.00478 * Math.sin(omega * DEG);
+              const eps = 23.439 + 0.00256 * Math.cos(omega * DEG);
+              const dec = Math.asin(Math.sin(eps * DEG) * Math.sin(lambda * DEG)) * RAD;
+              const y2 = Math.tan(eps * DEG / 2) ** 2;
+              const eqt = 4 * RAD * (y2 * Math.sin(2 * L0 * DEG) - 2 * 0.016709 * Math.sin(Mr));
+              const transit = 12 + (-lng / 15) - (eqt / 60);
+              const ha = angle => {
+                const c = (Math.sin(-angle * DEG) - Math.sin(lat * DEG) * Math.sin(dec * DEG))
+                  / (Math.cos(lat * DEG) * Math.cos(dec * DEG));
+                return Math.abs(c) > 1 ? null : Math.acos(c) * RAD / 15;
+              };
+              const off = getCasaOffset(date);
+              const fmt = utcH => {
+                if (utcH === null) return null;
+                let tot = ((utcH * 60 + off) % 1440 + 1440) % 1440;
+                let h = Math.floor(tot / 60), m = Math.round(tot % 60);
+                if (m === 60) { m = 0; h = (h + 1) % 24; }
+                return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+              };
+              const hSun = ha(0.8333), hFajr = ha(19), hIsha = ha(17);
+              const asrA = Math.atan(1 / (1 + Math.tan(Math.abs(lat - dec) * DEG))) * RAD;
+              return {
+                fajr: fmt(hFajr !== null ? transit - hFajr : null),
+                dhuhr: fmt(transit + 5 / 60),
+                asr: fmt(ha(-asrA) !== null ? transit + ha(-asrA) : null),
+                maghrib: fmt(hSun !== null ? transit + hSun + 5 / 60 : null),
+                isha: fmt(hIsha !== null ? transit + hIsha : null),
+              };
+            }
+
+            // ── Heure actuelle à Casablanca ────────────────────────────
+            const now = new Date();
+            const casaParts = new Intl.DateTimeFormat('en-US', {
+              timeZone: 'Africa/Casablanca', hour: 'numeric', minute: 'numeric', hour12: false
+            }).formatToParts(now);
+            const casaH = parseInt(casaParts.find(p => p.type === 'hour').value);
+            const casaM = parseInt(casaParts.find(p => p.type === 'minute').value);
+            const nowMin = casaH * 60 + casaM;
+            console.log(`Casablanca: ${String(casaH).padStart(2,'0')}:${String(casaM).padStart(2,'0')}`);
+
+            // ── Envoyer les pushes ─────────────────────────────────────
+            const NAMES = { fajr:'Fajr', dhuhr:'Dhuhr', asr:'Asr', maghrib:'Maghrib', isha:'Isha' };
+            let sent = 0, expired = [];
+
+            for (const [deviceKey, entry] of entries) {
+              if (!entry.city || !entry.subscription?.endpoint) continue;
+              const prayers = entry.prayers || { fajr:true, dhuhr:true, asr:true, maghrib:true, isha:true };
+              const advance = entry.advance || 0;
+              const times = calcPrayers(now, entry.city.lat, entry.city.lng);
+
+              for (const [k, time] of Object.entries(times)) {
+                if (!prayers[k] || !time) continue;
+                const [ph, pm] = time.split(':').map(Number);
+                const pMin = ph * 60 + pm;
+
+                const isAtTime = Math.abs(pMin - nowMin) <= 2;
+                const isAdvanceTime = advance > 0 && Math.abs((pMin - advance) - nowMin) <= 2;
+                if (!isAtTime && !isAdvanceTime) continue;
+
+                const prayerName = NAMES[k] || k;
+                const title = isAdvanceTime
+                  ? `${advance} min → ${prayerName}`
+                  : `🕌 ${prayerName} — ${time}`;
+
+                try {
+                  await webpush.sendNotification(
+                    entry.subscription,
+                    JSON.stringify({
+                      title,
+                      body: isAdvanceTime ? `${prayerName} dans ${advance} minutes` : "C'est l'heure de la prière",
+                      prayer: k,
+                      isAdvance: isAdvanceTime,
+                      sound: isAdvanceTime ? (entry.soundPre || 'tone') : (entry.soundAt || 'adhan'),
+                      time
+                    }),
+                    { TTL: 300, urgency: 'high' } // urgency:high contourne le DND Android
+                  );
+                  console.log(`✓ ${k} push envoyé`);
+                  sent++;
+                } catch (err) {
+                  if ([410, 404].includes(err.statusCode)) expired.push(deviceKey);
+                  else console.log(`  Erreur ${err.statusCode}: ${err.message}`);
+                }
+              }
+            }
+
+            // ── Nettoyer les subscriptions expirées ────────────────────
+            if (expired.length > 0) {
+              const headers = {
+                'Authorization': `token ${process.env.GIST_TOKEN}`,
+                'Content-Type': 'application/json'
+              };
+              const clean = { ...subscriptions };
+              expired.forEach(k => delete clean[k]);
+              await fetch(`https://api.github.com/gists/${process.env.GIST_ID}`, {
+                method: 'PATCH',
+                headers,
+                body: JSON.stringify({
+                  files: { 'subscriptions.json': { content: JSON.stringify(clean, null, 2) } }
+                })
+              });
+              console.log(`Supprimé ${expired.length} subscription(s) expirée(s)`);
+            }
+
+            console.log(`Terminé: ${sent} push envoyé(s)`);

@@ -1394,6 +1394,15 @@ const KAABA_LAT=21.4225,KAABA_LNG=39.8262;
 const PRAYER_KEYS=['fajr','sunrise','dhuhr','asr','maghrib','isha'];
 const TZ='Africa/Casablanca';
 
+// ─── VAPID Push (sans Firebase) ──────────────────────────────
+// Remplacez ces valeurs après avoir généré vos clés :
+//   npx web-push generate-vapid-keys
+// La clé publique est safe dans le JS côté client.
+// La clé privée va UNIQUEMENT dans GitHub Secrets.
+const VAPID_PUBLIC_KEY = ''; // Ex: 'BEl62iUYgUivxIkv69y...'
+const GIST_ID = '';           // ID du Gist privé GitHub (depuis l'URL)
+const GIST_TOKEN = '';        // Token GitHub scope "gist" uniquement
+
 // ─── Cities ───────────────────────────────────────────────────
 const CITIES=[
 {id:'tanger',ar:'طنجة',fr:'Tanger',lat:35.7595,lng:-5.834},
@@ -3100,6 +3109,12 @@ function setupEvents(){
       clearAppBadge();
     }
     checkNotifBar();
+    // Mettre à jour la subscription VAPID selon l'état
+    if (e.target.checked && VAPID_PUBLIC_KEY) {
+      subscribeToPush().catch(() => {});
+    } else if (!e.target.checked) {
+      unsubscribeFromPush().catch(() => {});
+    }
     // Update permission badge
     const permBadge=$('s-notif-perm-badge');
     if('Notification' in window){
@@ -3558,6 +3573,125 @@ function requestNotifPermission(){
   }
 }
 
+// ─── Conversion clé VAPID ────────────────────────────────────
+function urlBase64ToUint8Array(base64) {
+  const pad = '='.repeat((4 - base64.length % 4) % 4);
+  const b64 = (base64 + pad).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(b64);
+  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+}
+
+// ─── Abonnement Push VAPID ───────────────────────────────────
+async function subscribeToPush() {
+  if (!('PushManager' in window)) return null;
+  if (!VAPID_PUBLIC_KEY) return null;
+  if (Notification.permission !== 'granted') return null;
+
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+    }
+    await storeSubscriptionInGist(sub);
+    return sub;
+  } catch (e) {
+    console.warn('[Push] Subscribe failed:', e.message);
+    return null;
+  }
+}
+
+// ─── Stockage dans GitHub Gist ────────────────────────────────
+// Le Gist sert de base de données minimaliste pour les subscriptions.
+// Chaque appareil a une entrée indexée par un hash de son endpoint.
+async function storeSubscriptionInGist(subscription) {
+  if (!subscription || !GIST_ID || !GIST_TOKEN) return;
+
+  // Clé unique par appareil (pas d'info personnelle)
+  const deviceKey = btoa(subscription.endpoint).slice(-20).replace(/[^a-zA-Z0-9]/g, '');
+
+  const entry = {
+    subscription: subscription.toJSON(),
+    city: state.position ? {
+      lat: state.position.lat,
+      lng: state.position.lng,
+      id: state.position.cityId
+    } : null,
+    prayers: state.notifications.prayers,
+    advance: state.notifications.advance,
+    soundAt: state.notifications.soundAt,
+    soundPre: state.notifications.soundPre,
+    locale: state.locale,
+    updatedAt: new Date().toISOString()
+  };
+
+  try {
+    const headers = {
+      'Authorization': `token ${GIST_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    };
+
+    // Lire le Gist existant
+    let files = {};
+    const getResp = await fetch(`https://api.github.com/gists/${GIST_ID}`, { headers });
+    if (getResp.ok) {
+      const gist = await getResp.json();
+      const existing = gist.files?.['subscriptions.json'];
+      if (existing?.content) {
+        try { files = JSON.parse(existing.content); } catch {}
+      }
+    }
+
+    files[deviceKey] = entry;
+
+    await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({
+        files: { 'subscriptions.json': { content: JSON.stringify(files, null, 2) } }
+      })
+    });
+  } catch (e) {
+    console.warn('[Push] Gist storage failed:', e.message);
+  }
+}
+
+// ─── Désabonnement ───────────────────────────────────────────
+async function unsubscribeFromPush() {
+  if (!GIST_ID || !GIST_TOKEN) return;
+  const reg = await navigator.serviceWorker.ready;
+  const sub = await reg.pushManager.getSubscription();
+  if (!sub) return;
+
+  const deviceKey = btoa(sub.endpoint).slice(-20).replace(/[^a-zA-Z0-9]/g, '');
+
+  try {
+    const headers = { 'Authorization': `token ${GIST_TOKEN}` };
+    const getResp = await fetch(`https://api.github.com/gists/${GIST_ID}`, { headers });
+    if (getResp.ok) {
+      const gist = await getResp.json();
+      const existing = gist.files?.['subscriptions.json'];
+      if (existing?.content) {
+        const files = JSON.parse(existing.content);
+        delete files[deviceKey];
+        await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+          method: 'PATCH',
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            files: { 'subscriptions.json': { content: JSON.stringify(files, null, 2) } }
+          })
+        });
+      }
+    }
+  } catch {}
+
+  await sub.unsubscribe();
+}
+
 let notifTimeouts=[];
 let notifCheckInterval=null;
 let firedNotifs=new Set(); // tracks 'fajr-atime','dhuhr-advance' etc. to prevent duplicates
@@ -3578,6 +3712,15 @@ function scheduleNotifications(){
   checkAndFireNotifications();
   // Poll every 15s as safety net (setTimeout is unreliable when backgrounded)
   notifCheckInterval=setInterval(checkAndFireNotifications,15000);
+
+  // Couche 3 : VAPID push — iOS + garantie Android app fermée
+  // S'active seulement si les clés sont configurées
+  if (state.notifications.enabled && VAPID_PUBLIC_KEY) {
+    subscribeToPush().catch(() => {});
+  } else if (!state.notifications.enabled) {
+    // Désabonner si notifications désactivées
+    unsubscribeFromPush().catch(() => {});
+  }
 }
 
 // Sync prayer times + notification settings to Service Worker
