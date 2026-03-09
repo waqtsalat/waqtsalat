@@ -9,7 +9,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   webServer: {
-    command: 'npx serve -l 3000 -s .',
+    command: 'npx vite build && npx vite preview --port 3000',
     port: 3000,
     reuseExistingServer: !process.env.CI,
   },

@@ -4,12 +4,14 @@
   "private": true,
   "description": "PWA horaires de prière — Maroc uniquement — Méthode Habous",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint . && node scripts/check-syntax.mjs",
+    "lint": "eslint .",
     "fetch-dataset": "node scripts/fetch-dataset.mjs",
-    "build": "node scripts/build.mjs",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed"
   },
@@ -17,6 +19,7 @@
     "@playwright/test": "^1.58.2",
     "@vitest/coverage-v8": "^3.0.0",
     "eslint": "^10.0.3",
+    "vite-plugin-singlefile": "^2.3.0",
     "vitest": "^3.0.0"
   }
 }
