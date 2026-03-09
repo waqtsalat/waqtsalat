@@ -1,6 +1,6 @@
 export default [
   {
-    files: ['src/**/*.mjs', 'sw.js', 'scripts/**/*.mjs'],
+    files: ['src/**/*.mjs', 'src/**/*.js', 'sw.js', 'scripts/**/*.mjs'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
