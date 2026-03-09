@@ -49,6 +49,7 @@ export default [
         __VAPID_PUBLIC_KEY__: 'readonly',
         __GIST_ID__: 'readonly',
         __GIST_TOKEN__: 'readonly',
+        __BUILD_TIMESTAMP__: 'readonly',
         // External libraries (lazy-loaded)
         THREE: 'readonly',
         // Node globals (for scripts)
