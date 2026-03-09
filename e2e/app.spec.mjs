@@ -10,8 +10,9 @@ test.describe('Onboarding wizard', () => {
     const langButtons = onboarding.locator('.lang-choices button');
     await expect(langButtons).toHaveCount(3);
 
-    // Arabic is selected by default
-    await expect(langButtons.filter({ hasText: 'العربية' })).toHaveClass(/selected/);
+    // Exactly one language button is selected (depends on browser locale)
+    const selectedButtons = onboarding.locator('.lang-choices button.selected');
+    await expect(selectedButtons).toHaveCount(1);
 
     // "Next" button is visible
     await expect(page.locator('#ob-lang-next')).toBeVisible();
@@ -69,10 +70,9 @@ test.describe('Prayer Times tab', () => {
     expect(count).toBeGreaterThanOrEqual(5);
   });
 
-  test('shows countdown hero section', async ({ page }) => {
-    await expect(page.locator('#countdown-hero')).toBeVisible();
-    await expect(page.locator('#next-prayer-name')).toBeVisible();
-    await expect(page.locator('#countdown')).toBeVisible();
+  test('shows inline countdown in prayer list', async ({ page }) => {
+    // Countdown is displayed inline within the next prayer row
+    await expect(page.locator('#inline-countdown')).toBeAttached();
   });
 
   test('shows city name', async ({ page }) => {
