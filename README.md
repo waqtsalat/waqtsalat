@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icons/icon.svg" alt="WaqtSalat Logo" width="120" height="120">
+  <img src="public/icons/icon.svg" alt="WaqtSalat Logo" width="120" height="120">
 </p>
 
 <h1 align="center">وقت الصلاة — WaqtSalat</h1>
