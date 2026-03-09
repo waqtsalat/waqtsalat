@@ -1,4 +1,4 @@
-const SW_VERSION = '1.6.0';
+const SW_VERSION = '__SW_VERSION__';
 const CACHE_NAME = 'waqtsalat-v' + SW_VERSION;
 const SOUND_CACHE_NAME = 'waqtsalat-sounds-v1';
 const NOTIF_CACHE_NAME = 'waqtsalat-notif-v1';

@@ -84,6 +84,10 @@ jobs:
           cp index.html sw.js manifest.webmanifest _site/
           cp -r icons src _site/
 
+      - name: Stamp SW version with git SHA (busts cache every deploy)
+        run: |
+          sed -i "s|__SW_VERSION__|${GITHUB_SHA::8}|" _site/sw.js
+
       - name: Inject VAPID config into index.html
         env:
           VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
