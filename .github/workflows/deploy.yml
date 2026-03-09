@@ -57,29 +57,47 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Prepare deployment directory
-        run: |
-          mkdir _site
-          cp index.html sw.js manifest.webmanifest _site/
-          cp -r icons src _site/
-
-      - name: Inject commit hash into version
-        run: |
-          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-          sed -i "s|>v1.0.0<|>v1.0.0-${SHORT_SHA}<|" _site/index.html
-
-      - name: Inject VAPID config into index.html
+      - name: Build
         env:
           VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
           GIST_ID: ${{ secrets.GIST_ID }}
           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+        run: npm run build
+
+      - name: Verify VAPID injection
         run: |
-          sed -i "s|const VAPID_PUBLIC_KEY = '';|const VAPID_PUBLIC_KEY = '${VAPID_PUBLIC_KEY}';|" _site/index.html
-          sed -i "s|const GIST_ID = '';|const GIST_ID = '${GIST_ID}';|" _site/index.html
-          sed -i "s|const GIST_TOKEN = '';|const GIST_TOKEN = '${GIST_TOKEN}';|" _site/index.html
+          if grep -q "__VAPID_PUBLIC_KEY__" dist/index.html; then
+            echo "ERROR: VAPID placeholder was not replaced"
+            exit 1
+          fi
+
+      - name: Verify build size
+        run: |
+          gzip -c dist/index.html | wc -c | awk '{
+            if ($1 > 102400) {
+              print "ERROR: index.html gzipped is " $1 " bytes (>100KB)"
+              exit 1
+            } else {
+              print "OK: index.html gzipped is " $1 " bytes"
+            }
+          }'
+
+      - name: Prepare deployment directory
+        run: |
+          mkdir _site
+          cp -r dist/* _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

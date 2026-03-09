@@ -66,41 +66,24 @@ Visit the live app: **[waqtsalat.github.io/waqtsalat](https://waqtsalat.github.i
 
 ## Quick Start
 
-No build step required. Just serve the files:
-
 ```bash
-# Clone the repository
 git clone https://github.com/waqtsalat/waqtsalat.git
 cd waqtsalat
-
-# Serve locally (any static server works)
-npx serve .
-# or
-python3 -m http.server 8000
+npm install
+npm run dev
 ```
 
-Open `http://localhost:8000` in your browser. That's it.
+Open the URL shown by Vite (usually `http://localhost:5173`).
 
 ## Development
 
 ```bash
-# Install dev dependencies (testing only)
-npm install
-
-# Run tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm run test:coverage
-
-# Fetch reference dataset from Al Adhan API
-npm run fetch-dataset
-
-# Build single-file HTML (minified)
-npm run build
+npm install          # Install dev dependencies
+npm run dev          # Start dev server with HMR
+npm run build        # Build for production (dist/)
+npm run preview      # Preview production build locally
+npm test             # Run unit tests
+npm run test:e2e     # Run Playwright e2e tests
 ```
 
 ## Project Structure
@@ -108,11 +91,12 @@ npm run build
 ```
 waqtsalat/
 ├── index.html              # The entire app (HTML + CSS + JS + SVG + data)
-├── sw.js                   # Service Worker (cache-first, versioned)
-├── manifest.webmanifest    # PWA manifest
-├── icons/
-│   ├── icon.svg            # App icon
-│   └── icon-maskable.svg   # Maskable icon for Android
+├── public/
+│   ├── sw.js               # Service Worker (cache-first, versioned)
+│   ├── manifest.webmanifest # PWA manifest
+│   └── icons/
+│       ├── icon.svg         # App icon
+│       └── icon-maskable.svg # Maskable icon for Android
 ├── src/                    # Source modules (dev/test, inlined at build)
 │   ├── prayer.mjs          # Prayer calculation engine
 │   ├── cities.mjs          # Moroccan cities database
@@ -125,7 +109,7 @@ waqtsalat/
 │   └── fetch-dataset.mjs   # Reference data fetcher (Al Adhan API)
 ├── .github/workflows/
 │   └── deploy.yml          # GitHub Pages deployment
-├── PRD.md                  # Product Requirements Document
+├── vite.config.mjs         # Vite build configuration
 ├── CLAUDE.md               # Claude Code development guide
 └── LICENSE                 # GPL-3.0
 ```

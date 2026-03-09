@@ -642,9 +642,9 @@ const TZ='Africa/Casablanca';
 //   npx web-push generate-vapid-keys
 // La clé publique est safe dans le JS côté client.
 // La clé privée va UNIQUEMENT dans GitHub Secrets.
-const VAPID_PUBLIC_KEY = ''; // Ex: 'BEl62iUYgUivxIkv69y...'
-const GIST_ID = '';           // ID du Gist privé GitHub (depuis l'URL)
-const GIST_TOKEN = '';        // Token GitHub scope "gist" uniquement
+const VAPID_PUBLIC_KEY = __VAPID_PUBLIC_KEY__;
+const GIST_ID = __GIST_ID__;
+const GIST_TOKEN = __GIST_TOKEN__;
 
 // ─── Cities ───────────────────────────────────────────────────
 const CITIES = window.__WAQT_CITIES || [];
