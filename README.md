@@ -34,9 +34,11 @@
 
 ## Morocco Only
 
-> **This application is designed exclusively for Morocco.**
+> **This application is built for Morocco.**
 >
-> All prayer times are calculated using the method of the **Ministere des Habous et des Affaires Islamiques** (Fajr 19°, Isha 17°). The timezone is hardcoded to `Africa/Casablanca` with Morocco-specific DST handling (including Ramadan decrees). Only Moroccan cities are included. This app will **not** produce correct prayer times for any other country.
+> Prayer times follow the **Ministere des Habous et des Affaires Islamiques** method (Fajr 19°, Isha 17°), the timezone is `Africa/Casablanca` with Morocco-specific DST handling, and only Moroccan cities are included.
+>
+> **From another country?** The codebase is modular and well-documented — you're welcome to [fork this project](https://github.com/waqtsalat/waqtsalat/fork) and adapt it for your country's calculation method, timezone, and cities. The prayer calculation engine in `src/prayer.mjs` is a clean starting point. We'd love to see what you build!
 
 ---
 
@@ -179,7 +181,7 @@ npm test
 ## FAQ
 
 **Q: Does this work outside Morocco?**
-A: No. The prayer times use the Moroccan Habous method and only Moroccan cities are included. The timezone is fixed to `Africa/Casablanca`. Use a different app for other countries.
+A: Not out of the box — prayer times use the Moroccan Habous method, only Moroccan cities are included, and the timezone is fixed to `Africa/Casablanca`. However, the codebase is modular and designed to be forked. You can adapt `src/prayer.mjs`, `src/cities.mjs`, and the timezone handling for your country.
 
 **Q: Why is there no choice of calculation method?**
 A: This app targets Moroccan Muslims who follow the official Habous timings. Simplicity is a feature.
