@@ -48,13 +48,13 @@ export function renderPrayers() {
     return h * 60 + m;
   });
 
-  // Find first and second upcoming prayers (current time + 30 min buffer)
+  // Find first and second upcoming prayers
   // A prayer is considered "passed" 30 mins after its time
   const PASS_BUFFER = 30;
-  const effectiveNowMin = nowMin + PASS_BUFFER;
   
   for (let i = 0; i < mins.length; i++) {
-    if (mins[i] !== null && mins[i] > effectiveNowMin) {
+    const isPassed = mins[i] !== null && (mins[i] + PASS_BUFFER) <= nowMin;
+    if (mins[i] !== null && !isPassed) {
       if (nextIdx === -1) {
         nextIdx = i;
       } else if (secondNextIdx === -1) {
@@ -63,8 +63,6 @@ export function renderPrayers() {
       }
     }
   }
-
-  // If no second upcoming prayer found, wrap to tomorrow's Fajr (handled separately)
 
   displayPrayers.forEach((key, i) => {
     const li = document.createElement('li');
