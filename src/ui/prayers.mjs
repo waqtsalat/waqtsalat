@@ -39,6 +39,7 @@ export function renderPrayers() {
   const nowCasa = nowInCasa();
   const nowMin = nowCasa.getHours() * 60 + nowCasa.getMinutes();
   let nextIdx = -1;
+  let secondNextIdx = -1;
 
   const displayPrayers = PRAYER_KEYS;
   const mins = displayPrayers.map(k => {
@@ -47,24 +48,41 @@ export function renderPrayers() {
     return h * 60 + m;
   });
 
+  // Find first and second upcoming prayers (current time + 30 min buffer)
+  // A prayer is considered "passed" 30 mins after its time
+  const PASS_BUFFER = 30;
+  const effectiveNowMin = nowMin + PASS_BUFFER;
+  
   for (let i = 0; i < mins.length; i++) {
-    if (mins[i] !== null && mins[i] > nowMin) { nextIdx = i; break; }
+    if (mins[i] !== null && mins[i] > effectiveNowMin) {
+      if (nextIdx === -1) {
+        nextIdx = i;
+      } else if (secondNextIdx === -1) {
+        secondNextIdx = i;
+        break;
+      }
+    }
   }
 
-  const currentIdx = nextIdx > 0 ? nextIdx - 1 : (nextIdx === 0 ? -1 : displayPrayers.length - 1);
+  // If no second upcoming prayer found, wrap to tomorrow's Fajr (handled separately)
 
   displayPrayers.forEach((key, i) => {
     const li = document.createElement('li');
     li.setAttribute('role', 'listitem');
-    const passed = mins[i] !== null && mins[i] <= nowMin;
+    // A prayer is "passed" if 30+ mins have elapsed since its time
+    const passed = mins[i] !== null && (mins[i] + PASS_BUFFER) <= nowMin;
 
-    if (i === currentIdx) {
-      li.classList.add('current-prayer'); li.setAttribute('aria-current', 'true');
-    } else if (i === nextIdx) {
+    if (i === nextIdx) {
+      // First upcoming prayer: Yellow highlight (current-prayer style)
+      li.classList.add('current-prayer');
+      li.setAttribute('aria-current', 'true');
+    } else if (i === secondNextIdx) {
+      // Second upcoming prayer: White highlight (next-prayer style)
       li.classList.add('next-prayer');
     } else if (passed) {
       li.classList.add('passed');
-    } else if (nextIdx >= 0 && i > nextIdx) {
+    } else if (nextIdx >= 0 && i > nextIdx && i !== secondNextIdx) {
+      // Future prayers beyond the second one
       const stepsAfterNext = i - nextIdx;
       const opacity = Math.max(0.78, 0.85 - stepsAfterNext * 0.15);
       li.style.opacity = opacity;
@@ -94,7 +112,17 @@ export function renderPrayers() {
     li.setAttribute('role', 'listitem');
     const isMaghribOrLater = nextIdx >= 5 || nextIdx < 0;
     if (!isMaghribOrLater) li.classList.add('tomorrow-fajr');
-    if (nextIdx < 0) { li.classList.add('next-prayer'); }
+    
+    // Highlight tomorrow's Fajr if it's the first or second upcoming prayer
+    if (nextIdx < 0) {
+      // All today's prayers passed: tomorrow's Fajr is current-prayer (yellow)
+      li.classList.add('current-prayer');
+      li.setAttribute('aria-current', 'true');
+    } else if (secondNextIdx < 0) {
+      // Only one prayer left today: tomorrow's Fajr is next-prayer (white)
+      li.classList.add('next-prayer');
+    }
+    
     const nameSpan = document.createElement('span');
     nameSpan.className = 'prayer-name'; nameSpan.textContent = t('tomorrowFajr', state.locale);
     const timeSpan = document.createElement('span');
