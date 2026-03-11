@@ -1,0 +1,15 @@
+# robots.txt for WaqtSalat - Prayer Times for Morocco
+# https://waqtsalat.github.io/waqtsalat/
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://waqtsalat.github.io/waqtsalat/sitemap.xml
+
+# Crawl delay (optional, for being nice to crawlers)
+Crawl-delay: 1
+
+# Disallow any sensitive or internal paths (none currently)
+# Disallow: /api/
+# Disallow: /admin/

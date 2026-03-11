@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d5a2e">
+<title>كيف تُحسب مواقيت الصلاة | How Prayer Times Are Calculated - WaqtSalat</title>
+
+<!-- SEO Meta Tags -->
+<meta name="description" content="شرح تفصيلي لطريقة حساب مواقيت الصلاة في المغرب. طريقة الأحباس، الزوايا الفلكية، حسابات الفجر، العصر، والمزيد. خوارزميات Jean Meeus الفلكية.">
+<meta name="keywords" content="طريقة حساب مواقيت الصلاة, prayer time calculation method, Habous method Morocco, زوايا الصلاة, فجر 19 درجة, عشاء 17 درجة, Islamic prayer calculation, Jean Meeus">
+<meta name="author" content="WaqtSalat">
+<meta name="robots" content="index, follow">
+<meta name="language" content="Arabic">
+<link rel="canonical" href="https://waqtsalat.github.io/waqtsalat/info/how-calculated.html">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://waqtsalat.github.io/waqtsalat/info/how-calculated.html">
+<meta property="og:title" content="كيف تُحسب مواقيت الصلاة | How Prayer Times Are Calculated">
+<meta property="og:description" content="شرح تفصيلي لطريقة حساب مواقيت الصلاة في المغرب وفقاً لطريقة الأحباس الرسمية.">
+<meta property="og:image" content="https://waqtsalat.github.io/waqtsalat/icons/og-image.png">
+<meta property="og:locale" content="ar_MA">
+<meta property="og:site_name" content="WaqtSalat">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://waqtsalat.github.io/waqtsalat/info/how-calculated.html">
+<meta name="twitter:title" content="كيف تُحسب مواقيت الصلاة | How Prayer Times Are Calculated">
+<meta name="twitter:description" content="طريقة حساب مواقيت الصلاة المغربية - طريقة الأحباس">
+<meta name="twitter:image" content="https://waqtsalat.github.io/waqtsalat/icons/og-image.png">
+
+<!-- Schema.org LD+JSON: Article -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "كيف تُحسب مواقيت الصلاة في المغرب",
+  "alternateHeadline": "How Prayer Times Are Calculated in Morocco",
+  "url": "https://waqtsalat.github.io/waqtsalat/info/how-calculated.html",
+  "description": "شرح تفصيلي لطريقة حساب مواقيت الصلاة في المغرب باستخدام طريقة الأحباس والخوارزميات الفلكية.",
+  "author": {
+    "@type": "Organization",
+    "name": "WaqtSalat"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "WaqtSalat",
+    "url": "https://waqtsalat.github.io/waqtsalat/"
+  },
+  "inLanguage": ["ar", "fr", "en"],
+  "articleSection": "Religious",
+  "keywords": ["prayer times calculation", "Habous method", "Islamic astronomy", "Morocco prayer times", "Fajr angle", "Isha angle"]
+}
+</script>
+
+<!-- Schema.org LD+JSON: HowTo -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How WaqtSalat calculates prayer times",
+  "description": "The astronomical method used to calculate Islamic prayer times for Morocco.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Get location coordinates",
+      "text": "Retrieve the latitude and longitude of the selected city or from GPS."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Calculate sun position",
+      "text": "Use Jean Meeus astronomical algorithms to compute the sun's declination and equation of time for the given date."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Calculate prayer angles",
+      "position": 3,
+      "text": "Apply the Habous method angles: Fajr at 19°, Isha at 17°, and Asr using the Maliki shadow method."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Convert to local time",
+      "text": "Convert the calculated times to Morocco timezone (Africa/Casablanca) and apply user adjustments."
+    }
+  ]
+}
+</script>
+
+<!-- Schema.org LD+JSON: BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "WaqtSalat", "item": "https://waqtsalat.github.io/waqtsalat/"},
+    {"@type": "ListItem", "position": 2, "name": "طريقة الحساب", "item": "https://waqtsalat.github.io/waqtsalat/info/how-calculated.html"}
+  ]
+}
+</script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --primary: #0d5a2e; --accent: #1a8d5f; --bg: #f8faf9; --fg: #1a1a1a; --muted: #666; --card: #fff; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.7; padding: 1rem; max-width: 800px; margin: 0 auto; }
+header { text-align: center; padding: 2rem 1rem; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border-radius: 12px; margin-bottom: 2rem; }
+h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+h2 { font-size: 1.4rem; color: var(--primary); margin: 1.5rem 0 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; }
+h3 { font-size: 1.1rem; color: var(--accent); margin: 1rem 0 0.5rem; }
+h4 { font-size: 1rem; color: var(--fg); margin: 0.75rem 0 0.5rem; }
+p { margin-bottom: 1rem; }
+ul, ol { margin: 1rem 0 1rem 1.5rem; }
+li { margin-bottom: 0.5rem; }
+nav, footer { margin-top: 2rem; padding: 1rem; background: var(--card); border-radius: 8px; }
+nav a, footer a { color: var(--accent); text-decoration: none; margin: 0 0.5rem; }
+nav a:hover, footer a:hover { text-decoration: underline; }
+.formula-box { background: #1a1a1a; color: #f0f0f0; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; font-family: 'Courier New', monospace; overflow-x: auto; }
+.formula { color: #98c379; }
+.angle-box { background: var(--card); padding: 1.5rem; border-radius: 12px; border-right: 4px solid var(--accent); margin: 1.5rem 0; }
+.prayer-calc { background: var(--card); padding: 1.5rem; border-radius: 12px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.prayer-calc h3 { color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th, td { padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; }
+th { background: var(--bg); font-weight: 600; }
+code { background: #f0f0f0; padding: 0.2rem 0.5rem; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.9em; }
+.cta-btn { display: inline-block; background: var(--accent); color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📐 كيف تُحسب مواقيت الصلاة</h1>
+  <p>How Prayer Times Are Calculated - The Habous Method</p>
+</header>
+
+<nav>
+  <a href="https://waqtsalat.github.io/waqtsalat/">⬅️ الرئيسية</a>
+  <a href="about.html">ℹ️ حول</a>
+  <a href="privacy.html">🔒 الخصوصية</a>
+</nav>
+
+<main>
+  <section>
+    <h2>نظرة عامة</h2>
+    
+    <p>يعتمد WaqtSalat على طريقة وزارة الأوقاف والشؤون الإسلامية المغربية (طريقة الأحباس) لحساب مواقيت الصلاة. هذه الطريقة هي المعيار الرسمي في المملكة المغربية وتُستخدم في جميع المساجد والمؤسسات الدينية.</p>
+
+    <p>تعتمد الحسابات على:</p>
+    <ul>
+      <li><strong>الموقع الجغرافي:</strong> خط العرض وخط الطول لكل مدينة</li>
+      <li><strong>تاريخ اليوم:</strong> لتحديد موقع الشمس الفلكي</li>
+      <li><strong>الزوايا الرسمية:</strong> 19° للفجر، 17° للعشاء</li>
+      <li><strong>خوارزميات فلكية:</strong> مستندة على كتاب Jean Meeus "Astronomical Algorithms"</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>طريقة الأحباس المغربية</h2>
+    
+    <p>تتميز طريقة الأحباس عن غيرها من الطرق العالمية بعدة خصائص:</p>
+
+    <div class="angle-box">
+      <h3>الزوايا المعتمدة</h3>
+      <table>
+        <tr>
+          <th>الصلاة</th>
+          <th>الزاوية</th>
+          <th>الوصف</th>
+        </tr>
+        <tr>
+          <td>الفجر</td>
+          <td><code>19°</code> تحت الأفق</td>
+          <td>الفجر الصادق (الضوء الأبيض)</td>
+        </tr>
+        <tr>
+          <td>الشروق</td>
+          <td><code>0.833°</code></td>
+          <td>ظهور حافة الشمس (مع التصحيح الجوي)</td>
+        </tr>
+        <tr>
+          <td>الظهر</td>
+          <td>-</td>
+          <td>عبور الشمس خط الزوال</td>
+        </tr>
+        <tr>
+          <td>العصر</td>
+          <td>الظل = 1×</td>
+          <td>وفق المذهب المالكي</td>
+        </tr>
+        <tr>
+          <td>المغرب</td>
+          <td><code>0.833°</code></td>
+          <td>غروب حافة الشمس</td>
+        </tr>
+        <tr>
+          <td>العشاء</td>
+          <td><code>17°</code> تحت الأفق</td>
+          <td>اختفاء الشفق الأحمر</td>
+        </tr>
+      </table>
+    </div>
+
+    <p>هذه الزوايا (19° للفجر و 17° للعشاء) هي نفسها المستخدمة من قبل وزارة الأوقاف المغربية، وتختلف عن الطرق الأخرى مثل:</p>
+    <ul>
+      <li><strong>ISNA (أمريكا الشمالية):</strong> 15° فجر، 15° عشاء</li>
+      <li><strong>Muslim World League:</strong> 18° فجر، 17° عشاء</li>
+      <li><strong>Umm al-Qura (السعودية):</strong> 18.5° فجر، 90 دقيقة بعد المغرب</li>
+      <li><strong>مصر:</strong> 19.5° فجر، 17.5° عشاء</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>الأساس الفلكي للحسابات</h2>
+    
+    <h3>1. حساب موقع الشمس</h3>
+    <p>لكل يوم من السنة، يتم حساب:</p>
+    <ul>
+      <li><strong>الميل الشمسي (Solar Declination):</strong> زاوية الشمس بالنسبة لخط الاستواء السماوي</li>
+      <li><strong>معادلة الزمن (Equation of Time):</strong> الفرق بين وقت الساعة الشمسية والوقت المتوسط</li>
+    </ul>
+
+    <div class="formula-box">
+      <p class="formula">// Solar Declination (radians)</p>
+      <p class="formula">δ = 0.006918 - 0.399912*cos(θ) + 0.070257*sin(θ)</p>
+      <p class="formula">      - 0.006758*cos(2θ) + 0.000907*sin(2θ)</p>
+      <p class="formula">      - 0.002697*cos(3θ) + 0.001480*sin(3θ)</p>
+      <br>
+      <p class="formula">// Where θ = 2π * (dayOfYear - 1) / 365</p>
+    </div>
+
+    <h3>2. حساب زاوية الساعة (Hour Angle)</h3>
+    <p>لكل صلاة، يتم حساب زاوية الساعة بناءً على:</p>
+    <ul>
+      <li>زاوية الشمس تحت/فوق الأفق المطلوبة</li>
+      <li>خط عرض الموقع</li>
+      <li>الميل الشمسي</li>
+    </ul>
+
+    <div class="formula-box">
+      <p class="formula">// Hour Angle formula</p>
+      <p class="formula">cos(HA) = -tan(lat) * tan(dec) - sin(angle) / (cos(lat) * cos(dec))</p>
+      <br>
+      <p class="formula">// Time from solar noon</p>
+      <p class="formula">Time = HA * 12 / π hours</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>حساب كل صلاة</h2>
+    
+    <div class="prayer-calc">
+      <h3>🌅 صلاة الفجر (Fajr)</h3>
+      <p>يُحسب وقت الفجر عندما تكون الشمس على زاوية <strong>19° تحت الأفق الشرقي</strong>. هذه هي الزاوية التي يظهر عندها "الفجر الصادق" - الضوء الأبيض المنتشر على الأفق.</p>
+      <p><strong>الصيغة:</strong> <code>cos(HA) = -tan(lat)*tan(dec) - sin(19°)/(cos(lat)*cos(dec))</code></p>
+      <p>وقت الفجر = وقت الظهر - زاوية الساعة (بالدقائق)</p>
+    </div>
+
+    <div class="prayer-calc">
+      <h3>☀️ الشروق (Sunrise)</h3>
+      <p>يُحسب وقت الشروق عندما تظهر حافة الشمس العليا على الأفق. نستخدم زاوية <strong>-0.833°</strong> (مع الأخذ بالاعتبار الانكسار الجوي وانحراف الشمس عن المركز).</p>
+      <p><strong>الصيغة:</strong> <code>cos(HA) = -tan(lat)*tan(dec) - sin(-0.833°)/(cos(lat)*cos(dec))</code></p>
+    </div>
+
+    <div class="prayer-calc">
+      <h3>🌞 صلاة الظهر (Dhuhr)</h3>
+      <p>صلاة الظهر هي أبسط الصلوات حساباً - تكون عندما تعبر الشمس <strong>خط الزوال المحلي</strong> (أعلى نقطة في السماء).</p>
+      <p>الوقت = 12:00 + معادلة الزمن + تصحيح خط الطول</p>
+      <ul>
+        <li><strong>معادلة الزمن:</strong> تصحيح للفرق بين الساعة الشمسية والساعة المتوسطة</li>
+        <li><strong>تصحيح خط الطول:</strong> لأن المغرب ليس كله على خط الزوال المرجعي</li>
+      </ul>
+    </div>
+
+    <div class="prayer-calc">
+      <h3>🌤️ صلاة العصر (Asr)</h3>
+      <p>يُحسب وقت العصر وفقاً للمذهب المالكي (المعتمد في المغرب): عندما يصبح <strong>ظل كل شيء مساوياً لطوله بالإضافة إلى ظل الزوال</strong>.</p>
+      <p>هذا يختلف عن المذهب الشافعي الذي يعتبر الظل يساوي طولين.</p>
+      <div class="formula-box">
+        <p class="formula">// Maliki Asr: shadow = object length + shadow at noon</p>
+        <p class="formula">// Angle from vertical = arctan(1) = 45°</p>
+        <p class="formula">angle = arctan(1 / (1 + tan(|lat - dec|)))</p>
+      </div>
+    </div>
+
+    <div class="prayer-calc">
+      <h3>🌅 صلاة المغرب (Maghrib)</h3>
+      <p>يكون وقت المغرب عند <strong>غروب الشمس تماماً</strong> - عندما تختفي حافة الشمس العليا تحت الأفق الغربي.</p>
+      <p>نفس زاوية الشروق (<code>-0.833°</code>) لكن باتجاه غربي.</p>
+      <p>وقت المغرب = وقت الظهر + زاوية الساعة</p>
+    </div>
+
+    <div class="prayer-calc">
+      <h3>🌙 صلاة العشاء (Isha)</h3>
+      <p>يُحسب وقت العشاء عندما تكون الشمس على زاوية <strong>17° تحت الأفق الغربي</strong> - وهي لحظة اختفاء الشفق الأحمر تماماً.</p>
+      <p><strong>الصيغة:</strong> <code>cos(HA) = -tan(lat)*tan(dec) - sin(17°)/(cos(lat)*cos(dec))</code></p>
+      <p>في ليالي الصيف الطويلة، قد تتأخر صلاة العشاء كثيراً في المدن الشمالية مثل طنجة.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>التصحيحات المطبقة</h2>
+    
+    <p>يُطبق WaqtSalat عدة تصحيحات لضمان الدقة:</p>
+    
+    <ol>
+      <li><strong>الانكسار الجوي (Atmospheric Refraction):</strong> تصحيح لانحناء الضوء في الغلاف الجوي (حوالي 34 دقيقة قوسية عند الأفق)</li>
+      <li><strong>نصف قطر الشمس:</strong> حساب من مركز الشمس أو حافتها (16 دقيقة قوسية)</li>
+      <li><strong>التوقيت المحلي:</strong> تحويل إلى توقيت المغرب (Africa/Casablanca)</li>
+      <li><strong>التوقيت الصيفي:</strong> مراعاة التغييرات المحتملة في التوقيت</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>المرجع الفلكي</h2>
+    
+    <p>تعتمد خوارزميات WaqtSalat على كتاب <strong>"Astronomical Algorithms"</strong> للعالم <strong>Jean Meeus</strong>، وهو المرجع القياسي في الحسابات الفلكية. هذا الكتاب يوفر صيغ رياضية دقيقة لحساب:</p>
+    <ul>
+      <li>موقع الشمس (الميل الشمسي ومعادلة الزمن)</li>
+      <li>ارتفاع واتجاه الشمس</li>
+      <li>أوقات الشروق والغروب</li>
+      <li>التواريخ الهجرية</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>الدقة</h2>
+    
+    <p>مع هذه الحسابات، يكون WaqtSalat دقيقاً ضمن <strong>±1 دقيقة</strong> من المواقيت الرسمية الصادرة عن وزارة الأوقاف. الفروقات البسيطة قد تنشأ من:</p>
+    <ul>
+      <li>دقة إحداثيات الموقع المستخدمة</li>
+      <li>الاختلافات في تطبيق الانكسار الجوي</li>
+      <li>التقريب في الحسابات الرسمية</li>
+    </ul>
+    <p>لذلك ننصح دائماً بالتأكد من مسجدك المحلي، ويمكنك ضبط الأوقات يدوياً (±15 دقيقة) من الإعدادات.</p>
+  </section>
+
+  <section>
+    <h2>روابط مفيدة</h2>
+    <ul>
+      <li><a href="https://www.habous.gov.ma" target="_blank" rel="noopener">وزارة الأوقاف والشؤون الإسلامية</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Salah_times" target="_blank" rel="noopener">Wikipedia: Salah Times</a></li>
+      <li><a href="https://github.com/waqtsalat/waqtsalat" target="_blank" rel="noopener">WaqtSalat على GitHub</a></li>
+    </ul>
+  </section>
+
+  <div style="text-align: center; margin: 2rem 0;">
+    <a href="https://waqtsalat.github.io/waqtsalat/" class="cta-btn">📱 جرب WaqtSalat الآن</a>
+  </div>
+</main>
+
+<footer>
+  <nav>
+    <a href="https://waqtsalat.github.io/waqtsalat/">🏠 الرئيسية</a>
+    <a href="about.html">ℹ️ حول</a>
+    <a href="privacy.html">🔒 الخصوصية</a>
+    <a href="https://github.com/waqtsalat/waqtsalat">💻 GitHub</a>
+  </nav>
+  <p style="margin-top: 1rem; text-align: center; color: var(--muted); font-size: 0.85rem;">
+    WaqtSalat © 2026 - تطبيق مجاني ومفتوح المصدر لمواقيت الصلاة في المغرب
+  </p>
+</footer>
+
+</body>
+</html>
