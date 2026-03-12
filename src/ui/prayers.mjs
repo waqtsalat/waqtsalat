@@ -138,8 +138,16 @@ export function renderPrayers() {
 
   // Inline countdown
   // Determine the target prayer index and day offset
+  // The countdown should target the NEXT prayer that hasn't started yet,
+  // not the current prayer that's in progress (within 30 min buffer)
   let targetIdx = nextIdx;
   let targetDayOffset = 0;
+
+  // If the "next" prayer has already started (time is in the past),
+  // target the second next prayer instead
+  if (targetIdx >= 0 && mins[targetIdx] !== null && mins[targetIdx] <= nowMin) {
+    targetIdx = secondNextIdx;
+  }
 
   if (targetIdx < 0) {
     // All today's prayers passed: target is tomorrow's Fajr
