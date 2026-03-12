@@ -137,19 +137,30 @@ export function renderPrayers() {
   }
 
   // Inline countdown
-  if (nextIdx >= 0) {
-    updateCountdown(mins[nextIdx], nowCasa);
-  } else {
-    updateCountdown(mins[0] + 1440, nowCasa);
+  // Determine the target prayer index and day offset
+  let targetIdx = nextIdx;
+  let targetDayOffset = 0;
+
+  if (targetIdx < 0) {
+    // All today's prayers passed: target is tomorrow's Fajr
+    targetIdx = 0;
+    targetDayOffset = 1;
   }
 
-  startCountdown(nextIdx >= 0 ? mins[nextIdx] : (mins[0] + 1440));
+  const targetMin = mins[targetIdx];
+  updateCountdown(targetMin, nowCasa, targetDayOffset);
+  startCountdown(targetIdx, targetDayOffset);
 }
 
-function updateCountdown(targetMin, now) {
+function updateCountdown(targetMin, now, dayOffset = 0) {
   const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-  let diff = targetMin * 60 - nowSec;
+  const targetSec = targetMin * 60 + dayOffset * 86400;
+  let diff = targetSec - nowSec;
+
+  // Safety: if diff is still negative (shouldn't happen with correct dayOffset),
+  // add a day
   if (diff < 0) diff += 86400;
+
   const h = Math.floor(diff / 3600);
   const m = Math.floor((diff % 3600) / 60);
   const s = diff % 60;
@@ -158,12 +169,23 @@ function updateCountdown(targetMin, now) {
   if (el) el.textContent = txt;
 }
 
-function startCountdown(targetMin) {
+function startCountdown(targetIdx, targetDayOffset) {
   if (countdownInterval) clearInterval(countdownInterval);
   let lastNowMin = -1;
   countdownInterval = setInterval(() => {
     const now = nowInCasa();
-    updateCountdown(targetMin, now);
+    // Re-calculate targetMin from current prayerTimes on each tick
+    const pt = getPrayerTimes();
+    const displayPrayers = PRAYER_KEYS;
+    const mins = displayPrayers.map(k => {
+      if (!pt || !pt[k]) return null;
+      const [h, m] = pt[k].split(':').map(Number);
+      return h * 60 + m;
+    });
+
+    const actualTargetMin = mins[targetIdx] ?? mins[0];
+    updateCountdown(actualTargetMin, now, targetDayOffset);
+
     const nowMin = now.getHours() * 60 + now.getMinutes();
     if (nowMin !== lastNowMin) {
       lastNowMin = nowMin;
