@@ -71,6 +71,43 @@ export function renderPrayers() {
   
   console.log('DEBUG prayers: final nextIdx =', nextIdx, 'secondNextIdx =', secondNextIdx);
 
+  // Inline countdown - Calculate targetIdx BEFORE rendering list
+  // The countdown should target the NEXT prayer that hasn't started yet,
+  // not the current prayer that's in progress (within 30 min buffer)
+  let targetIdx = nextIdx;
+  let targetDayOffset = 0;
+
+  console.log('DEBUG: nextIdx =', nextIdx, 'secondNextIdx =', secondNextIdx);
+  console.log('DEBUG: nowMin =', nowMin);
+  console.log('DEBUG: mins =', mins);
+
+  // If the "next" prayer has already started (time is in the past),
+  // target the second next prayer instead
+  if (targetIdx >= 0 && mins[targetIdx] !== null && mins[targetIdx] <= nowMin) {
+    console.log('DEBUG: next prayer already started, using secondNextIdx');
+    targetIdx = secondNextIdx;
+  }
+
+  console.log('DEBUG: after first check, targetIdx =', targetIdx);
+
+  // Special case: If next prayer is Chourouk (sunrise), skip it and target Dhuhr
+  // Chourouk is not a prayer with countdown, it's just a time marker
+  if (targetIdx === 1) {
+    console.log('DEBUG: targetIdx is 1 (Chourouk), changing to 2 (Dhuhr)');
+    targetIdx = 2; // Target Dhuhr instead
+  }
+
+  console.log('DEBUG: after Chourouk check, targetIdx =', targetIdx);
+
+  if (targetIdx < 0) {
+    // All today's prayers passed: target is tomorrow's Fajr
+    console.log('DEBUG: all prayers passed, targeting tomorrow Fajr');
+    targetIdx = 0;
+    targetDayOffset = 1;
+  }
+
+  console.log('DEBUG: final targetIdx =', targetIdx, 'targetDayOffset =', targetDayOffset);
+
   displayPrayers.forEach((key, i) => {
     const li = document.createElement('li');
     li.setAttribute('role', 'listitem');
@@ -98,7 +135,8 @@ export function renderPrayers() {
     const timeSpan = document.createElement('span');
     timeSpan.className = 'prayer-time'; timeSpan.textContent = prayerTimes[key] || '--:--';
     li.appendChild(nameSpan);
-    if (i === nextIdx) {
+    // Place countdown on targetIdx row (may differ from nextIdx when Chourouk is skipped)
+    if (i === targetIdx && targetDayOffset === 0) {
       const cdSpan = document.createElement('span');
       cdSpan.className = 'prayer-countdown-inline';
       cdSpan.id = 'inline-countdown';
@@ -143,44 +181,7 @@ export function renderPrayers() {
     list.appendChild(li);
   }
 
-  // Inline countdown
-  // Determine the target prayer index and day offset
-  // The countdown should target the NEXT prayer that hasn't started yet,
-  // not the current prayer that's in progress (within 30 min buffer)
-  let targetIdx = nextIdx;
-  let targetDayOffset = 0;
-
-  console.log('DEBUG: nextIdx =', nextIdx, 'secondNextIdx =', secondNextIdx);
-  console.log('DEBUG: nowMin =', nowMin);
-  console.log('DEBUG: mins =', mins);
-
-  // If the "next" prayer has already started (time is in the past),
-  // target the second next prayer instead
-  if (targetIdx >= 0 && mins[targetIdx] !== null && mins[targetIdx] <= nowMin) {
-    console.log('DEBUG: next prayer already started, using secondNextIdx');
-    targetIdx = secondNextIdx;
-  }
-
-  console.log('DEBUG: after first check, targetIdx =', targetIdx);
-
-  // Special case: If next prayer is Chourouk (sunrise), skip it and target Dhuhr
-  // Chourouk is not a prayer with countdown, it's just a time marker
-  if (targetIdx === 1) {
-    console.log('DEBUG: targetIdx is 1 (Chourouk), changing to 2 (Dhuhr)');
-    targetIdx = 2; // Target Dhuhr instead
-  }
-
-  console.log('DEBUG: after Chourouk check, targetIdx =', targetIdx);
-
-  if (targetIdx < 0) {
-    // All today's prayers passed: target is tomorrow's Fajr
-    console.log('DEBUG: all prayers passed, targeting tomorrow Fajr');
-    targetIdx = 0;
-    targetDayOffset = 1;
-  }
-
-  console.log('DEBUG: final targetIdx =', targetIdx, 'targetDayOffset =', targetDayOffset);
-
+  // Start countdown with calculated target
   const targetMin = mins[targetIdx];
   updateCountdown(targetMin, nowCasa, targetDayOffset);
   startCountdown(targetIdx, targetDayOffset);
