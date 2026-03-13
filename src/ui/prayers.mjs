@@ -143,23 +143,36 @@ export function renderPrayers() {
   let targetIdx = nextIdx;
   let targetDayOffset = 0;
 
+  console.log('DEBUG: nextIdx =', nextIdx, 'secondNextIdx =', secondNextIdx);
+  console.log('DEBUG: nowMin =', nowMin);
+  console.log('DEBUG: mins =', mins);
+
   // If the "next" prayer has already started (time is in the past),
   // target the second next prayer instead
   if (targetIdx >= 0 && mins[targetIdx] !== null && mins[targetIdx] <= nowMin) {
+    console.log('DEBUG: next prayer already started, using secondNextIdx');
     targetIdx = secondNextIdx;
   }
+
+  console.log('DEBUG: after first check, targetIdx =', targetIdx);
 
   // Special case: If next prayer is Chourouk (sunrise), skip it and target Dhuhr
   // Chourouk is not a prayer with countdown, it's just a time marker
   if (targetIdx === 1) {
+    console.log('DEBUG: targetIdx is 1 (Chourouk), changing to 2 (Dhuhr)');
     targetIdx = 2; // Target Dhuhr instead
   }
 
+  console.log('DEBUG: after Chourouk check, targetIdx =', targetIdx);
+
   if (targetIdx < 0) {
     // All today's prayers passed: target is tomorrow's Fajr
+    console.log('DEBUG: all prayers passed, targeting tomorrow Fajr');
     targetIdx = 0;
     targetDayOffset = 1;
   }
+
+  console.log('DEBUG: final targetIdx =', targetIdx, 'targetDayOffset =', targetDayOffset);
 
   const targetMin = mins[targetIdx];
   updateCountdown(targetMin, nowCasa, targetDayOffset);
