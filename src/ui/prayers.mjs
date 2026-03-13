@@ -52,17 +52,24 @@ export function renderPrayers() {
   // A prayer is considered "passed" 30 mins after its time
   const PASS_BUFFER = 30;
   
+  console.log('DEBUG prayers: nowMin =', nowMin, 'mins =', mins);
+  
   for (let i = 0; i < mins.length; i++) {
     const isPassed = mins[i] !== null && (mins[i] + PASS_BUFFER) <= nowMin;
+    console.log(`DEBUG prayers: i=${i}, mins[i]=${mins[i]}, isPassed=${isPassed}`);
     if (mins[i] !== null && !isPassed) {
       if (nextIdx === -1) {
         nextIdx = i;
+        console.log('DEBUG prayers: set nextIdx =', i);
       } else if (secondNextIdx === -1) {
         secondNextIdx = i;
+        console.log('DEBUG prayers: set secondNextIdx =', i);
         break;
       }
     }
   }
+  
+  console.log('DEBUG prayers: final nextIdx =', nextIdx, 'secondNextIdx =', secondNextIdx);
 
   displayPrayers.forEach((key, i) => {
     const li = document.createElement('li');
