@@ -149,6 +149,12 @@ export function renderPrayers() {
     targetIdx = secondNextIdx;
   }
 
+  // Special case: If next prayer is Chourouk (sunrise), skip it and target Dhuhr
+  // Chourouk is not a prayer with countdown, it's just a time marker
+  if (targetIdx === 1) {
+    targetIdx = 2; // Target Dhuhr instead
+  }
+
   if (targetIdx < 0) {
     // All today's prayers passed: target is tomorrow's Fajr
     targetIdx = 0;
