@@ -21,7 +21,7 @@ export function renderPrayers() {
   const now = new Date();
   const { lat, lng } = state.position;
   const casaNow = nowInCasa();
-  const todayStr = casaNow.getFullYear() + '-' + (casaNow.getMonth() + 1) + '-' + casaNow.getDate();
+  const todayStr = casaNow.getUTCFullYear() + '-' + (casaNow.getUTCMonth() + 1) + '-' + casaNow.getUTCDate();
   const dayChanged = lastRenderDate !== null && lastRenderDate !== todayStr;
   lastRenderDate = todayStr;
   prayerTimes = getPrayerTimesForDate(now, lat, lng, state.adjustments);
@@ -37,7 +37,7 @@ export function renderPrayers() {
   const list = $('prayer-list');
   list.innerHTML = '';
   const nowCasa = nowInCasa();
-  const nowMin = nowCasa.getHours() * 60 + nowCasa.getMinutes();
+  const nowMin = nowCasa.getUTCHours() * 60 + nowCasa.getUTCMinutes();
   let nextIdx = -1;
   let secondNextIdx = -1;
 
@@ -188,7 +188,7 @@ export function renderPrayers() {
 }
 
 function updateCountdown(targetMin, now, dayOffset = 0) {
-  const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+  const nowSec = now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds();
   const targetSec = targetMin * 60 + dayOffset * 86400;
   let diff = targetSec - nowSec;
 
@@ -221,7 +221,7 @@ function startCountdown(targetIdx, targetDayOffset) {
     const actualTargetMin = mins[targetIdx] ?? mins[0];
     updateCountdown(actualTargetMin, now, targetDayOffset);
 
-    const nowMin = now.getHours() * 60 + now.getMinutes();
+    const nowMin = now.getUTCHours() * 60 + now.getUTCMinutes();
     if (nowMin !== lastNowMin) {
       lastNowMin = nowMin;
       renderPrayers();
