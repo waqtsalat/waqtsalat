@@ -34,20 +34,40 @@ async function saveNotifData(data) {
 }
 
 // ─── Casablanca Time Helper ─────────────────────────────────
-function nowInCasablanca() {
-  const now = new Date();
-  const parts = {};
-  new Intl.DateTimeFormat('en-US', {
+// Morocco abolished DST permanently by decree (adopted 2026-06-25):
+// on 2026-09-20 at 02:00 local (GMT+1) clocks reverted to GMT. Devices
+// whose tzdata predates the decree still report GMT+1 afterwards, so the
+// abolition is pinned here. Kept in sync with src/prayer.mjs
+// (getCasablancaOffset) — the SW cannot import modules.
+var MOROCCO_DST_ABOLISHED_MS = Date.UTC(2026, 8, 20, 1, 0, 0);
+
+function casablancaOffsetMin(now) {
+  if (now.getTime() >= MOROCCO_DST_ABOLISHED_MS) return 0;
+  var parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'Africa/Casablanca',
-    hour: 'numeric', minute: 'numeric', second: 'numeric',
-    hour12: false,
-    year: 'numeric', month: 'numeric', day: 'numeric'
-  }).formatToParts(now).forEach(p => { parts[p.type] = p.value; });
+    timeZoneName: 'shortOffset'
+  }).formatToParts(now);
+  var tz = '';
+  for (var i = 0; i < parts.length; i++) {
+    if (parts[i].type === 'timeZoneName') tz = parts[i].value;
+  }
+  var match = tz.match(/GMT([+-]?\d+)?(?::(\d+))?/);
+  if (!match) return 0;
+  var hours = parseInt(match[1] || '0', 10);
+  var mins = parseInt(match[2] || '0', 10);
+  return hours * 60 + (hours < 0 ? -mins : mins);
+}
+
+function nowInCasablanca() {
+  var now = new Date();
+  var wall = new Date(now.getTime() + casablancaOffsetMin(now) * 60000);
   return {
-    h: parseInt(parts.hour === '24' ? '0' : parts.hour),
-    m: parseInt(parts.minute),
-    day: parts.day, month: parts.month, year: parts.year,
-    todayStr: parts.year + '-' + parts.month + '-' + parts.day
+    h: wall.getUTCHours(),
+    m: wall.getUTCMinutes(),
+    day: String(wall.getUTCDate()),
+    month: String(wall.getUTCMonth() + 1),
+    year: String(wall.getUTCFullYear()),
+    todayStr: wall.getUTCFullYear() + '-' + (wall.getUTCMonth() + 1) + '-' + wall.getUTCDate()
   };
 }
 

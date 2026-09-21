@@ -159,6 +159,15 @@ function asrShadowAngle(dec, lat) {
 // ─── Format Prayer Times for Casablanca Timezone ───────────────
 
 /**
+ * Morocco permanently abolished DST by decree (adopted 2026-06-25):
+ * on 2026-09-20 at 02:00 local (GMT+1) clocks reverted to GMT, permanently.
+ * Device tz databases released before the decree still report GMT+1 for
+ * Africa/Casablanca after this instant, so the app pins the decree
+ * itself instead of trusting the device's tzdata.
+ */
+const MOROCCO_DST_ABOLISHED_MS = Date.UTC(2026, 8, 20, 1, 0, 0); // 2026-09-20 02:00 GMT+1
+
+/**
  * Get prayer times formatted as HH:MM strings in Africa/Casablanca timezone.
  * @param {Date} date - The date
  * @param {number} lat - Latitude
@@ -167,10 +176,16 @@ function asrShadowAngle(dec, lat) {
  * @returns {Object} Prayer times as HH:MM strings in local time
  */
 export function getPrayerTimesForDate(date, lat, lng, adjustments = {}) {
-  const utcTimes = calculatePrayerTimes(date, lat, lng);
-
-  // Get UTC offset for Africa/Casablanca on this date
+  // Get UTC offset for Africa/Casablanca on this date (decree-aware)
   const offsetMinutes = getCasablancaOffset(date);
+
+  // Derive the prayer calendar date from the corrected Casablanca wall
+  // clock so the result does not depend on the device's system timezone
+  // or the freshness of its tzdata.
+  const wall = new Date(date.getTime() + offsetMinutes * 60000);
+  const wallDate = new Date(wall.getUTCFullYear(), wall.getUTCMonth(), wall.getUTCDate());
+
+  const utcTimes = calculatePrayerTimes(wallDate, lat, lng);
 
   const result = {};
   for (const [prayer, hm] of Object.entries(utcTimes)) {
@@ -195,9 +210,15 @@ export function getPrayerTimesForDate(date, lat, lng, adjustments = {}) {
 
 /**
  * Get UTC offset for Africa/Casablanca in minutes for a given date.
- * Uses Intl API to correctly handle Morocco's DST rules.
+ *
+ * Morocco's DST is decree-based, and devices whose tzdata predates a decree
+ * report stale offsets. The 2026-09-20 DST abolition is therefore pinned
+ * here; dates before the abolition fall back to the device's Intl data
+ * (historical Moroccan rules are stable across all tzdata releases).
  */
 export function getCasablancaOffset(date) {
+  if (date.getTime() >= MOROCCO_DST_ABOLISHED_MS) return 0; // DST abolished permanently
+
   // Use Intl to get the actual offset
   const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: 'Africa/Casablanca',

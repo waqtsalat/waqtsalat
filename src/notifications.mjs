@@ -90,7 +90,7 @@ export function checkAndFireNotifications(prayerTimes) {
 
   const now = nowInCasa();
   const nowMs = now.getTime();
-  const todayStr = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+  const todayStr = now.getUTCFullYear() + '-' + (now.getUTCMonth() + 1) + '-' + now.getUTCDate();
 
   if (firedNotifsDate !== todayStr) {
     firedNotifs.clear();
@@ -103,8 +103,9 @@ export function checkAndFireNotifications(prayerTimes) {
   ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].forEach(k => {
     if (!prayers[k] || !prayerTimes[k]) return;
     const [h, m] = prayerTimes[k].split(':').map(Number);
-    const target = new Date(now);
-    target.setHours(h, m, 0, 0);
+    // nowInCasa() returns a UTC-shifted wall-clock Date: prayer target must
+    // be built with UTC accessors to stay in the same wall-clock space.
+    const target = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), h, m, 0, 0));
     const prayerMs = target.getTime();
 
     if (advanceMin > 0) {
